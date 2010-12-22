@@ -26,7 +26,7 @@ shopt -s checkwinsize
 # set variable identifying the chroot you work in (used in the prompt below)
 if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
     debian_chroot=$(cat /etc/debian_chroot)
-
+    debian_chroot_string='${debian_chroot:+($debian_chroot)}'
 fi
 
 # set a fancy prompt (non-color, unless we know we "want" color)
@@ -51,20 +51,36 @@ if [ -n "$force_color_prompt" ]; then
 fi
 
 if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
+   if [ $USER == 'root' ];then
+      # red
+      prompt_user='\[\e[37;41m\]\u\[\e[0m\]'
+   elif [ $USER == 'danrabinowitz' ]; then
+      # no color
+      prompt_user='\u'
+   else
+      # DIFFERENT COLOR
+      prompt_user='\[\e[37;41m\]\u\[\e[0m\]'
+   fi
+   # TODO: DJR: 12/22/10: Consider adding color depending on which host we're on.  Like red for VHGDB.
 else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
+   prompt_user='\u'
 fi
-unset color_prompt force_color_prompt
+prompt_main1=${prompt_user}'@\H:\w\$ '
+unset prompt_user
+
+PS1='${debian_chroot_string}'$prompt_main1
+unset prompt_main1
 
 # If this is an xterm set the title to user@host:dir
 case "$TERM" in
 xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot:+($debian_chroot)}\u@\h: \w\a\]$PS1"
+    PS1="\[\e]0;${debian_chroot_string}\u@\h: \w\a\]$PS1"
     ;;
 *)
     ;;
 esac
+
+unset color_prompt force_color_prompt debian_chroot_string debian_chroot
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
