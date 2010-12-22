@@ -14,7 +14,21 @@ if [ -n "$BASH_VERSION" ]; then
     fi
 fi
 
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    PATH="$HOME/bin:$PATH"
+export EDITOR=mate
+
+# Hmmm, where should aliases go?
+alias ls="ls -FG"
+alias rm="rm -i"
+
+# use colors based on ~/.dircols
+if [ -f ~/.dircols ]; then
+        export DIRCOL=`dircolors -b ~/.dircols`
+        export LS_COLORS=`echo $DIRCOL | cut -f2 -d"'"`
 fi
+
+# Sample shell function
+# function work()
+# {
+#  cd ~/arena-build/work/$@
+#}
+
