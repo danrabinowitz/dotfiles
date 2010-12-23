@@ -20,7 +20,8 @@ autodetach on
 defutf8 on
 
 # minimal status line with clock flush right
-hardstatus alwayslastline "%{=b}%{G} : %{b}%w %=%{kG}%C%A"
+#hardstatus alwayslastline "%{=b}%{G} : %{b}%w %=%{kG}%C%A"
+hardstatus alwayslastline "%{=b}%{G} : %{b}%w"
 
 # copy screen clipboard to mac clipboard
 bind b eval "writebuf" "exec sh -c 'pbcopy < /tmp/screen-exchange'"
