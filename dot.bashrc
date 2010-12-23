@@ -349,13 +349,13 @@ alias l.="ls -d .*"
 # --------------------------------------------------------------------
 
 # push SSH public key to another box
-push_ssh_cert() {
+push_VHG_ssh_cert() {
     local _host
-    test -f ~/.ssh/id_dsa.pub || ssh-keygen -t dsa
+    key_pub='/Volumes/VHG-Dan/dot/ssh/id_dsa.pub'
     for _host in "$@";
     do
         echo $_host
-        ssh $_host 'cat >> ~/.ssh/authorized_keys' < ~/.ssh/id_dsa.pub
+        ssh $_host 'mkdir -p .ssh;cat >> ~/.ssh/authorized_keys' < $key_pub
     done
 }
 
