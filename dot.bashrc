@@ -316,6 +316,8 @@ LS_COMMON="-hBFG"
 
 #alias ls="ls -FG"
 
+LS_COLOR=''
+
 # if the dircolors utility is available, set that up to
 dircolors="$(type -P gdircolors dircolors | head -1)"
 test -n "$dircolors" && {
@@ -324,10 +326,10 @@ test -n "$dircolors" && {
     test -e "$HOME/.dircolors"        && COLORS="$HOME/.dircolors"
     test ! -e "$COLORS"               && COLORS=
     eval `$dircolors --sh $COLORS`
+    LS_COLOR=' --color=auto'
 }
 unset dircolors
 
-LS_COLOR=''
 # enable color support of ls and also add handy aliases
 if [ -x /usr/bin/dircolors ]; then
     LS_COLOR=' --color=auto'
