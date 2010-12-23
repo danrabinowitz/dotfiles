@@ -16,10 +16,6 @@ fi
 
 export EDITOR=mate
 
-# Hmmm, where should aliases go?
-alias ls="ls -FG"
-alias rm="rm -i"
-
 # use colors based on ~/.dircols
 if [ -f ~/.dircols ]; then
         export DIRCOL=`dircolors -b ~/.dircols`

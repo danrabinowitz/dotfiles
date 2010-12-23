@@ -269,6 +269,7 @@ fi
 alias du1='du -h --max-depth=1'
 alias fn='find . -name'
 alias hi='history | tail -20'
+alias rm="rm -i"
 
 # Alias definitions.
 # You may want to put all your additions into a separate file like
@@ -311,7 +312,9 @@ _expand() {
 # ----------------------------------------------------------------------
 
 # we always pass these to ls(1)
-LS_COMMON="-hBG"
+LS_COMMON="-hBFG"
+
+#alias ls="ls -FG"
 
 # if the dircolors utility is available, set that up to
 dircolors="$(type -P gdircolors dircolors | head -1)"
