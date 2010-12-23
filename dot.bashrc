@@ -325,7 +325,9 @@ test -n "$dircolors" && {
 unset dircolors
 
 # enable color support of ls and also add handy aliases
+echo hi
 if [ -x /usr/bin/dircolors ]; then
+echo hi2
     eval "`dircolors -b`"
     alias ls='ls --color=auto'
     #alias dir='dir --color=auto'
