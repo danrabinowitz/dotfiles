@@ -200,7 +200,7 @@ if [ "$color_prompt" = yes ]; then
    if [ $USER == 'root' ];then
       # red
       prompt_user='\[\e[37;41m\]\u\[\e[0m\]'
-   elif [ $USER == 'danrabinowitz' ]; then
+   elif [ $USER == 'danrabinowitz' ] || [ $USER == 'djr' ]; then
       # no color
       prompt_user='\u'
    else
