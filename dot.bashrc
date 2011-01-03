@@ -214,7 +214,7 @@ fi
 prompt_main1=${prompt_user}'@\H:\w\$ '
 unset prompt_user
 
-PS1='${debian_chroot_string}'$prompt_main1
+PS1='`_ret=$?; if test $_ret -ne 0; then echo "$_ret:"; set ?=$_ret; unset _ret; fi`${debian_chroot_string}'$prompt_main1
 unset prompt_main1
 
 # If this is an xterm set the title to user@host:dir
@@ -365,6 +365,16 @@ push_VHG_ssh_cert() {
     done
 }
 
+push_USM_ssh_cert() {
+    local _host
+    key_pub='/Volumes/USM-Dan/dot/ssh/id_dsa.pub'
+    for _host in "$@";
+    do
+        echo $_host
+        ssh $_host 'mkdir -p .ssh;cat >> ~/.ssh/authorized_keys' < $key_pub
+    done
+}
+
 # --------------------------------------------------------------------
 # PATH MANIPULATION FUNCTIONS
 # --------------------------------------------------------------------
@@ -457,6 +467,10 @@ test -n "$INTERACTIVE" -a -n "$LOGIN" && {
 if [ -f /etc/bash_completion ]; then
     . /etc/bash_completion
 fi
+
+
+complete -c -f command sudo
+
 
 # TODO: Consider this idea
 # Create a temp file at the start of .bashrc, and delete it at the end.
