@@ -110,7 +110,8 @@ export EDITOR=mate
 
 # PAGER
 if test -n "$(command -v less)" ; then
-    PAGER="less -FirSwX"
+# Use "-R" per this post: http://playingwithsid.blogspot.com/2008/01/raw-control-characters-in-less-pager.html
+    PAGER="less -FirSwXR"
     MANPAGER="less -FiRswX"
 else
     PAGER=more
@@ -312,7 +313,8 @@ _expand() {
 # ----------------------------------------------------------------------
 
 # we always pass these to ls(1)
-LS_COMMON="-hBFG"
+#LS_COMMON="-hBFG"
+LS_COMMON="-hF"
 
 #alias ls="ls -FG"
 
@@ -475,3 +477,13 @@ complete -c -f command sudo
 # TODO: Consider this idea
 # Create a temp file at the start of .bashrc, and delete it at the end.
 # Check if it exists on starting .bashrc, and if it does then exit, assuming that there's a problem with .bashrc
+
+
+# -------------------------------------------------------------------
+# Dan's Custom stuff: VHG
+# -------------------------------------------------------------------
+#RAILS_ENV=
+
+if [ -f ~/.bashrc_local ]; then
+    . ~/.bashrc_local
+fi
