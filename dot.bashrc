@@ -66,6 +66,14 @@ export PATH=/opt/local/bin:/opt/local/sbin:$PATH
 
 export PATH=/usr/local/git/libexec/git-core:$PATH
 
+# Include /opt/local/bin and sbin if they exist
+if [ -d "/opt/local/bin" ] ; then
+    PATH="$PATH:/opt/local/bin"
+fi
+if [ -d "/opt/local/sbin" ] ; then
+    PATH="$PATH:/opt/local/sbin"
+fi
+
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
@@ -272,6 +280,8 @@ alias fn='find . -name'
 alias hi='history | tail -20'
 alias rm="rm -i"
 
+
+
 # Alias definitions.
 # You may want to put all your additions into a separate file like
 # ~/.bash_aliases, instead of adding them here directly.
@@ -375,6 +385,21 @@ push_USM_ssh_cert() {
         echo $_host
         ssh $_host 'mkdir -p .ssh;cat >> ~/.ssh/authorized_keys' < $key_pub
     done
+}
+
+set_iterm_bgcolor () {
+   local R=$1
+   local G=$2
+   local B=$3
+   /usr/bin/osascript <<EOF
+tell application "iTerm"
+    tell the first terminal
+        tell the current session
+            set background color to {$(($R*65535/255)), $(($G*65535/255)), $(($B*65535/255))}
+        end tell
+    end tell
+end tell
+EOF
 }
 
 # --------------------------------------------------------------------
