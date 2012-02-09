@@ -59,3 +59,4 @@ complete -F _complete_ssh_hosts ssh
 if [ -f ~/.profile_local ]; then
     . ~/.profile_local
 fi
+=======
