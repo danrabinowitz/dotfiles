@@ -1,6 +1,7 @@
 ; TODO: Install http://jblevins.org/projects/markdown-mode/
-; TODO: Get emacs configs sent to remote server along with dotfiles repo
+; TODO: Get emacs configs sent to remote server along with dotfiles repo. .emacs is handled but not the .emacs.d directory
 ; TODO: Check out https://github.com/purcell/emacs.d
+; TODO: In 99-Archive/physics.rutgers.edu/Main.Feb98.tgz there is a folder called Main/Computer/Programming/Emacs .  Check it out to see if there is anything of value there.
 
 (define-key esc-map "G" 'goto-line) 
 (global-font-lock-mode 1)
