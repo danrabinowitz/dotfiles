@@ -220,7 +220,20 @@ if [ "$color_prompt" = yes ]; then
 else
    prompt_user='\u'
 fi
-prompt_main1=${prompt_user}'@\H:\w\$ '
+
+prompt_host='\H'
+if [ "$color_prompt" = yes ]; then
+  if [ hostname == 'VHGDB-Testing' ];then
+    COLOR="${BLUE}"
+    prompt_host='${COLOR}\H${PS_CLEAR}'
+  elif [ hostname == 'vhgdb' ]; then
+    COLOR="${RED}"
+    prompt_host='${COLOR}\H${PS_CLEAR}'
+  fi
+fi
+
+
+prompt_main1=${prompt_user}'@'${prompt_host}':\w\$ '
 unset prompt_user
 
 PS1='`_ret=$?; if test $_ret -ne 0; then echo "$_ret:"; set ?=$_ret; unset _ret; fi`${debian_chroot_string}'$prompt_main1
