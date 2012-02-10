@@ -221,14 +221,16 @@ else
    prompt_user='\u'
 fi
 
+echo hostname
+echo 'aaa'
 prompt_host='\H'
 if [ "$color_prompt" = yes ]; then
-  if [ hostname == 'VHGDB-Testing' ];then
+  if [ `hostname` == 'VHGDB-Testing' ];then
     COLOR="${BLUE}"
-    prompt_host='${COLOR}\H${PS_CLEAR}'
-  elif [ hostname == 'vhgdb' ]; then
+    prompt_host=${COLOR}'\H'${PS_CLEAR}
+  elif [ `hostname` == 'vhgdb' ]; then
     COLOR="${RED}"
-    prompt_host='${COLOR}\H${PS_CLEAR}'
+    prompt_host=${COLOR}'\H'${PS_CLEAR}
   fi
 fi
 
