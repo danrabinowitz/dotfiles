@@ -221,8 +221,6 @@ else
    prompt_user='\u'
 fi
 
-echo hostname
-echo 'aaa'
 prompt_host='\H'
 if [ "$color_prompt" = yes ]; then
   if [ `hostname` == 'VHGDB-Testing' ];then
