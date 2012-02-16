@@ -1,62 +1,42 @@
-# ~/.profile: executed by the command interpreter for login shells.
-# This file is not read by bash(1), if ~/.bash_profile or ~/.bash_login
-# exists.
+# ~/.profile
+# This file is designed to work on OS X and Debian
 
-# The default umask is set in /etc/profile
-# On debian, for setting the umask for ssh logins, install and configure the libpam-umask package.
-umask 022
+###############################################################################
+# What should go where
+#   Authoritative version in .bashrc
+#
+# Anything that should be available to graphical applications OR to sh (or bash invoked as sh) MUST be in ~/.profile
+# Anything that should be available to non-login shells should be in ~/.bashrc.
+#   ~/.bashrc must not output anything
+#   Outstanding question: Should .bashrc source .profile? The other way around? Neither?
+# Anything that should be available only to login shells should go in ~/.bash_profile
+# Ensure that ~/.bash_login does not exist.
 
-# if running bash
-if [ -n "$BASH_VERSION" ]; then
-    # include .bashrc if it exists
-    if [ -f "$HOME/.bashrc" ]; then
-        . "$HOME/.bashrc"
-    fi
-fi
+###############################################################################
+# Sourcing other files
+# ~/.bash_profile should source ~/.bashrc
+# ~/.bash_profile should probably also source .profile since ~/.profile isn't run if ~/.bash_profile exists.
+#   Outstanding question: Do we need to set a variable in .bashrc to make sure it isn't run twice, since it could be run from /etc/profile?
 
-export EDITOR=mate
-
-# use colors based on ~/.dircols
-if [ -f ~/.dircols ]; then
-        export DIRCOL=`dircolors -b ~/.dircols`
-        export LS_COLORS=`echo $DIRCOL | cut -f2 -d"'"`
-fi
-
-# Sample shell function
-# function work()
-# {
-#  cd ~/arena-build/work/$@
-#}
-
-
-
-_complete_ssh_hosts ()
-{
-        COMPREPLY=()
-        cur="${COMP_WORDS[COMP_CWORD]}"
-        comp_ssh_hosts=`#cat ~/.ssh/known_hosts | \
-                        #cut -f 1 -d ' ' | \
-                        #sed -e s/,.*//g | \
-                        #grep -v ^# | \
-                        #uniq | \
-                        grep -v "\[" ;
-                cat ~/.ssh/config | \
-                        grep "^Host " | \
-                        awk '{print $2}'
-                `
-        COMPREPLY=( $(compgen -W "${comp_ssh_hosts}" -- $cur))
-        return 0
-}
-complete -F _complete_ssh_hosts ssh
-
-#complete -W "$(echo `cat ~/.ssh/known_hosts | cut -f 1 -d ' ' | sed -e s/,.*//g | uniq | grep -v "\["`;)" ssh
-
-# -------------------------------------------------------------------
-# Dan's Custom stuff: VHG
-# -------------------------------------------------------------------
-#RAILS_ENV=
+###############################################################################
+# Justification for what should go where
+# From the bash man page: For login shells, bash looks for ~/.bash_profile,
+# ~/.bash_login, and ~/.profile, in that order, and reads and executes commands
+# from the first one that exists and is readable.
+#
+# For non-login shells, only .bashrc is read.
+#
+# Sources
+# http://www.joshstaiger.org/archives/2005/07/bash_profile_vs.html
+# http://linux.die.net/man/1/bash
+# https://rvm.beginrescueend.com/support/faq/#shell_login
+#
+###############################################################################
+# End of discussion
+###############################################################################
+# Tests
+echo "start of .profile"
 
 if [ -f ~/.profile_local ]; then
     . ~/.profile_local
 fi
-
