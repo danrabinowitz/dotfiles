@@ -185,6 +185,7 @@ ACK_PAGER="$PAGER"
 # PROMPT
 # ----------------------------------------------------------------------
 
+GREEN_FG_RED_BG="\[\033[0;32m\033[0;41m\]"
 RED="\[\033[0;31m\]"
 BROWN="\[\033[0;33m\]"
 GREY="\[\033[0;97m\]"
@@ -274,7 +275,7 @@ if [ "$color_prompt" = yes ]; then
     COLOR="${BLUE}"
     prompt_host=${COLOR}'\H'${PS_CLEAR}
   elif [ `hostname` == 'vhgdb' ]; then
-    COLOR="${RED}"
+    COLOR="${GREEN_FG_RED_BG}"
     prompt_host=${COLOR}'\H'${PS_CLEAR}
   fi
 fi
