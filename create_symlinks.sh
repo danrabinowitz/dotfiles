@@ -15,4 +15,5 @@ create_symlink_for_dotfiles_git 'dircolors'
 create_symlink_for_dotfiles_git 'profile'
 create_symlink_for_dotfiles_git 'screenrc'
 create_symlink_for_dotfiles_git 'emacs'
+create_symlink_for_dotfiles_git 'irbrc'
 
