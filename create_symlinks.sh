@@ -4,7 +4,11 @@
 #############################################################################
 create_symlink_for_dotfiles_git() {
 if [ -f ".$@" ] ; then
-  mv ".$@" ".$@_orig"
+  if [ -L ".$@" ] ; then
+    rm ".$@"
+  else
+    mv ".$@" ".$@_orig"
+  fi
 fi
 ln -s .dotfiles.git/dot."$@" ".$@"
 }
