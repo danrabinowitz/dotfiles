@@ -3,6 +3,14 @@
 # Lots of good stuff here: http://www.ruby-forum.com/topic/84414#new
 
 puts "Loading Dan's custom irbrc file..."
+#############################################################################
+# From: https://gist.github.com/794915
+# Add all gems in the global gemset to the $LOAD_PATH so they can be used even
+# in places like 'rails console'.
+if defined?(::Bundler)
+  $LOAD_PATH.concat Dir.glob("#{ENV['rvm_path']}/gems/#{ENV['rvm_ruby_string']}@global/gems/*/lib")
+end
+#############################################################################
 require 'irb/completion'
 require 'rubygems'
 require 'wirble'
@@ -11,7 +19,6 @@ Wirble.init
 Wirble.colorize
 
 #IRB.conf[:AUTO_INDENT]=true
-
 
 #############################################################################
 class Dan
