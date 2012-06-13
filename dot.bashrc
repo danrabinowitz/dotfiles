@@ -595,3 +595,5 @@ complete -F _complete_ssh_hosts ssh
 if [ -f ~/.bashrc_local ]; then
     . ~/.bashrc_local
 fi
+
+PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
