@@ -1,0 +1,20 @@
+[user]
+	name = Dan Rabinowitz
+	email = djr@danielrabinowitz.com
+[color]
+  ui = true
+[color "branch"]
+  current = yellow reverse
+  local = yellow
+  remote = green
+[color "diff"]
+  meta = yellow bold
+  frag = magenta bold
+  old = red bold
+  new = green bold
+[format]
+  pretty = format:%C(blue)%ad%Creset %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) [%an]%Creset
+[core]
+  autocrlf = false
+  editor = emacs
+  excludesfile = ~/.gitignore_global
