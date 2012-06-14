@@ -50,7 +50,7 @@
 ;; This is a DEFINITE plus on my local machine. I still need to check how it works via ssh to a Linux box
 (unless window-system
   (require 'mouse)
-  (xterm-mouse-mode t)
+;  (xterm-mouse-mode t)
   (global-set-key [mouse-4] '(lambda ()
                               (interactive)
                               (scroll-down 1)))
