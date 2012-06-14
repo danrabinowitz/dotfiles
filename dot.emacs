@@ -40,6 +40,8 @@
 ;; Optional: set up a quick key to toggle nav
 (global-set-key [f8] 'nav-toggle)
 
+;; This is an experiment. Always enable nav
+(nav-toggle)
 
 ;; The following textmate code doesn't seem to work for me at this time -- 6/13/2012. Keybinding issue.
 ;(add-to-list 'load-path "~/.emacs.d/vendor/textmate.el")
@@ -64,8 +66,9 @@
 )
 
 ;; Cool. This enables Easy PG which allows me to edit a .gpg file by auto-decrypting it. It re-encrypts it on save.
-(require 'epa-file)
-(epa-file-enable)
+;; Update: This seems to be enabled by default, at least on Emacs24 on OS X
+;(require 'epa-file)
+;(epa-file-enable)
 
 
 ;; From: http://jblevins.org/projects/markdown-mode/
@@ -74,3 +77,6 @@
    "Major mode for editing Markdown files" t)
 (setq auto-mode-alist
    (cons '("\\.markdown" . markdown-mode) auto-mode-alist))
+
+;(add-to-list 'load-path "~/.emacs.d/vendor/git-emacs")
+;(require 'git-emacs)
