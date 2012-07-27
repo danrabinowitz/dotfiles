@@ -597,3 +597,15 @@ if [ -f ~/.bashrc_local ]; then
 fi
 
 PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+real_rails=`which rails`
+rails() {
+    args="$@"
+#    echo $1
+    if [ "$1" == "db" ]; then
+        args="$args --include-password"
+        echo "Running rails db with --include-password appended"
+    fi
+#    echo "$args"
+    "$real_rails" $args
+}

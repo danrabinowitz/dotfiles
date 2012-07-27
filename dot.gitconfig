@@ -18,3 +18,6 @@
   autocrlf = false
   editor = emacs
   excludesfile = ~/.gitignore_global
+  whitespace = trailing-space,space-before-tab
+[apply]
+  whitespace = fix

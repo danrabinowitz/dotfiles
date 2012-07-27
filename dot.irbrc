@@ -13,6 +13,7 @@ end
 #############################################################################
 require 'irb/completion'
 require 'rubygems'
+
 require 'wirble'
 Wirble.init
 # This page has info for changing Wirble colors: http://pablotron.org/software/wirble/README
@@ -60,6 +61,13 @@ class Object
   end
 end
 #############################################################################
+
+# Cool: http://coderwall.com/p/6yqm-q?i=1&p=1&q=&t=shell
+# copy [1,2,3,4]
+# "[1, 2, 3, 4]" is now in your clipboard.
+def copy(*args) IO.popen('pbcopy', 'r+') { |clipboard| clipboard.puts args.map(&:inspect) }; end
+
+
 
 # Local Variables:
 # mode: ruby
