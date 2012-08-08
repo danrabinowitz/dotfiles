@@ -1,7 +1,14 @@
+;; From: http://www.emacswiki.org/emacs/InitFile#init_file
+;; Your init file contains personal EmacsLisp code that you want to execute when you start Emacs.
+;; * For GnuEmacs, it is ~/.emacs or _emacs or ~/.emacs.d/init.el.
+;; * For XEmacs, it is ~/.xemacs or ~/.xemacs/init.el.
+;; * For AquamacsEmacs, it is ~/.emacs or ~/Library/Preferences/Aquamacs Emacs/Preferences.el
+
 ;; TODO: Get emacs configs sent to remote server along with dotfiles repo. .emacs is handled but not the .emacs.d directory
 ;; TODO: Check out https://github.com/purcell/emacs.d
 ;; TODO: In 99-Archive/physics.rutgers.edu/Main.Feb98.tgz there is a folder called Main/Computer/Programming/Emacs .  Check it out to see if there is anything of value there.
 ;; I've done most of this that's relevant: http://www.ysiad.com/2011/emacs-setup-for-ruby-on-rails/
+;; TODO: Anything to do with this? http://www.emacswiki.org/emacs/CategoryDotEmacs
 
 (define-key esc-map "G" 'goto-line)
 (global-font-lock-mode 1)
