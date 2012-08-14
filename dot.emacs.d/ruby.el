@@ -6,6 +6,7 @@
 ;; Loads ruby mode when a .rb file is opened.
 (autoload 'ruby-mode "ruby-mode" "Major mode for editing ruby code." t)
 (setq auto-mode-alist  (cons '(".rb$" . ruby-mode) auto-mode-alist))
+(setq auto-mode-alist  (cons '(".rake$" . ruby-mode) auto-mode-alist))
 
 (add-hook 'ruby-mode-hook
 	  (lambda()
