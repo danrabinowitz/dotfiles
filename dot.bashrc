@@ -177,9 +177,8 @@ export PAGER MANPAGER
 # Ack
 ACK_PAGER="$PAGER"
 
-# make less more friendly for non-text input files, see lesspipe(1)
-#[ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
-
+# Now that we have set up $PAGER, make sure we USE it. I type less usually, so alias it to $PAGER
+alias less="$PAGER"
 
 # ----------------------------------------------------------------------
 # PROMPT
