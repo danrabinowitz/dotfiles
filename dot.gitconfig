@@ -22,11 +22,12 @@
 [apply]
   whitespace = fix
 [alias]
-  dc = diff --color-words
+  d = diff --color-words
   s = status
   a = !git add . && git status
   c = commit
   cm = commit -m
+  alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
 [push]
   default = current
 [github]
