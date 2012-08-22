@@ -1,6 +1,6 @@
 [user]
-	name = Dan Rabinowitz
-	email = djr@danielrabinowitz.com
+  name = Dan Rabinowitz
+  email = djr@danielrabinowitz.com
 [color]
   ui = true
 [color "branch"]
@@ -21,3 +21,13 @@
   whitespace = trailing-space,space-before-tab
 [apply]
   whitespace = fix
+[alias]
+  dc = diff --color-words
+  s = status
+  a = !git add . && git status
+  c = commit
+  cm = commit -m
+[push]
+  default = current
+[github]
+  user = danrabinowitz
