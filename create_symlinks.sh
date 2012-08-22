@@ -7,6 +7,7 @@ if [ -f ".$@" ] ; then
   if [ -L ".$@" ] ; then
     rm ".$@"
   else
+    echo "$@ already exists, so it is being moved to $@_orig"
     mv ".$@" ".$@_orig"
   fi
 fi
