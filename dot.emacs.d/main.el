@@ -28,6 +28,9 @@
 (add-hook 'ruby-mode-hook
           (lambda () (run-hooks 'djr-code-modes-hook)))
 
+;; http://trey-jackson.blogspot.com/2007/12/emacs-tip-5-hippie-expand.html
+(global-set-key (kbd "M-/") 'hippie-expand)
+
 ;; This directory has emacs lisp files. As opposed to vendor which has directories of emacs lisp files. Should I keep them separate?
 (add-to-list 'load-path "~/.emacs.d/lisp/")
 
