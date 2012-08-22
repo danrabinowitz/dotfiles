@@ -107,12 +107,6 @@ umask 0022
 PATH="$PATH:/usr/local/sbin:/usr/sbin:/sbin"
 PATH="/usr/local/bin:$PATH"
 
-# MacPorts Installer addition on 2010-07-28_at_15:38:19: adding an appropriate PATH variable for use with MacPorts.
-export PATH=/opt/local/bin:/opt/local/sbin:$PATH
-# Finished adapting your PATH environment variable for use with MacPorts.
-
-export PATH=/usr/local/git/libexec/git-core:$PATH
-
 # Include /opt/local/bin and sbin if they exist
 if [ -d "/opt/local/bin" ] ; then
     PATH="$PATH:/opt/local/bin"
@@ -280,7 +274,7 @@ if [ "$color_prompt" = yes ]; then
 fi
 
 
-prompt_main1=${prompt_user}'@'${prompt_host}':\w\$ '
+prompt_main1=${prompt_user}'@'${prompt_host}':\w$(__git_ps1 " (%s)")\$ '
 unset prompt_user
 
 PS1='`_ret=$?; if test $_ret -ne 0; then echo "$_ret:"; set ?=$_ret; unset _ret; fi`${debian_chroot_string}'$prompt_main1
@@ -328,6 +322,10 @@ if [ "$UNAME" = Darwin ]; then
 #    test -d /opt/jruby &&
 #    JRUBY_HOME="/opt/jruby"
 #    export JRUBY_HOME
+
+  if [ -f `brew --prefix`/etc/bash_completion ]; then
+    . `brew --prefix`/etc/bash_completion
+  fi
 fi
 
 # ----------------------------------------------------------------------
