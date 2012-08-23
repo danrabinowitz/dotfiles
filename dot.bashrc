@@ -1,3 +1,4 @@
+# -*- mode: sh; -*-
 # ~/.bashrc
 # This file is designed to work on OS X and Debian
 
@@ -274,10 +275,40 @@ if [ "$color_prompt" = yes ]; then
 fi
 
 
-prompt_main1=${prompt_user}'@'${prompt_host}':\w$(__git_ps1 " (%s)")\$ '
+function set_git_dirty {
+    st=$(git status 2>/dev/null | tail -n 1)
+    if [[ $st == "" ]]; then
+        git_dirty=''
+    elif [[ $st == "nothing to commit (working directory clean)" ]]; then
+        git_dirty=''
+    else
+        git_dirty='*'
+    fi
+}
+
+
+function set_return_value_to_display_in_prompt {
+    _ret=$?
+    return_value_to_display_in_prompt=''
+    if test $_ret -ne 0; then
+	return_value_to_display_in_prompt="$_ret:"
+	set ?=$_ret
+	unset _ret
+    fi
+}
+
+# NOTE: This is a nice repo. I could probably clean up my .bashrc and structure it into multiple files
+#   https://github.com/jimeh/git-aware-prompt
+
+
+txtylw='\e[0;33m' # Yellow
+txtrst='\e[0m'    # Text Reset
+
+prompt_main1=${prompt_user}'@'${prompt_host}':\w$(__git_ps1 " (%s)")'"\[$txtylw\]\$git_dirty\[$txtrst\]"' \$ '
 unset prompt_user
 
-PS1='`_ret=$?; if test $_ret -ne 0; then echo "$_ret:"; set ?=$_ret; unset _ret; fi`${debian_chroot_string}'$prompt_main1
+PROMPT_COMMAND="set_return_value_to_display_in_prompt; set_git_dirty; $PROMPT_COMMAND"
+export PS1="\$return_value_to_display_in_prompt"'${debian_chroot_string}'"$prompt_main1"
 unset prompt_main1
 
 # If this is an xterm set the title to user@host:dir
@@ -289,7 +320,7 @@ xterm*|rxvt*)
     ;;
 esac
 
-unset color_prompt force_color_prompt debian_chroot_string debian_chroot
+unset force_color_prompt debian_chroot_string debian_chroot
 
 # ----------------------------------------------------------------------
 # MACOS X / DARWIN SPECIFIC
