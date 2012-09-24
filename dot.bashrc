@@ -151,6 +151,7 @@ export LANG LANGUAGE LC_CTYPE LC_ALL
 #export HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
 # ... or force ignoredups and ignorespace
 export HISTCONTROL=ignoreboth
+export HISTFILESIZE=3500
 
 # ----------------------------------------------------------------------
 # PAGER / EDITOR
@@ -637,3 +638,5 @@ rails() {
 #    echo "$args"
     "$real_rails" $args
 }
+
+alias r=rails

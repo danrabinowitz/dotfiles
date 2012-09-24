@@ -48,3 +48,7 @@
 
 ;; Load javascript code
 (load "~/.emacs.d/javascript.el")
+
+;; Load coffeescript mode
+(add-to-list 'load-path "~/.emacs.d/vendor/coffee-mode")
+(require 'coffee-mode)

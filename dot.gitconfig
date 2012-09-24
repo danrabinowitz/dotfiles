@@ -28,6 +28,7 @@
   c = commit
   cm = commit -m
   alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
+  staged = diff --cached
 [push]
   default = current
 [github]

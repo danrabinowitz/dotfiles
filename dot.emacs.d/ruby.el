@@ -5,8 +5,22 @@
 
 ;; Loads ruby mode when a .rb file is opened.
 (autoload 'ruby-mode "ruby-mode" "Major mode for editing ruby code." t)
-(setq auto-mode-alist  (cons '(".rb$" . ruby-mode) auto-mode-alist))
-(setq auto-mode-alist  (cons '(".rake$" . ruby-mode) auto-mode-alist))
+
+(defun set-mode-for-filename-patterns (mode filename-pattern-list)
+  (mapcar
+   (lambda (filename-pattern)
+     (setq
+      auto-mode-alist
+      (cons (cons filename-pattern mode) auto-mode-alist)))
+   filename-pattern-list))
+
+(set-mode-for-filename-patterns
+ 'ruby-mode
+ '("\\.rb$"
+   "\\.erb$"
+   "\\.rake$"
+   "Rakefile$"
+   "Gemfile$"))
 
 (add-hook 'ruby-mode-hook
 	  (lambda()
@@ -53,3 +67,5 @@
 		 (flymake-mode))
 	     ))
 
+(add-to-list 'load-path "~/.emacs.d/forks/ruby-test-mode")
+(require 'ruby-test-mode)
