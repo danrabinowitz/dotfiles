@@ -1,6 +1,6 @@
 [user]
   name = Dan Rabinowitz
-  email = djr@danielrabinowitz.com
+#  email = djr@danielrabinowitz.com
 [color]
   ui = true
 [color "branch"]
@@ -29,7 +29,7 @@
   cm = commit -m
   alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
   staged = diff --cached
-[push]
-  default = current
-[github]
-  user = danrabinowitz
+#[push]
+#  default = current
+#[github]
+#  user = danrabinowitz

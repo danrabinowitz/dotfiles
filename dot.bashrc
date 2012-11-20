@@ -428,7 +428,8 @@ test -n "$dircolors" && {
     test -e "$HOME/.dircolors"        && COLORS="$HOME/.dircolors"
     test ! -e "$COLORS"               && COLORS=
     eval `$dircolors --sh $COLORS`
-    LS_COLOR=' --color=auto'
+#    LS_COLOR=' --color=auto'
+    LS_COLOR='-G'
 }
 unset dircolors
 
