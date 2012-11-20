@@ -282,6 +282,8 @@ function set_git_dirty {
         git_dirty=''
     elif [[ $st == "nothing to commit (working directory clean)" ]]; then
         git_dirty=''
+    elif [[ $st == "nothing to commit, working directory clean" ]]; then
+        git_dirty=''
     else
         git_dirty='*'
     fi
@@ -641,3 +643,4 @@ rails() {
 }
 
 alias r=rails
+export GIT_AUTHOR_NAME="Dan Rabinowitz"
