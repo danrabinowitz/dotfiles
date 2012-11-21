@@ -328,33 +328,6 @@ unset force_color_prompt debian_chroot_string debian_chroot
 # ----------------------------------------------------------------------
 
 if [ "$UNAME" = Darwin ]; then
-    # put ports on the paths if /opt/local exists
-    test -x /opt/local -a ! -L /opt/local && {
-        PORTS=/opt/local
-
-        # setup the PATH and MANPATH
-        PATH="$PORTS/bin:$PORTS/sbin:$PATH"
-        MANPATH="$PORTS/share/man:$MANPATH"
-
-        # nice little port alias
-        alias port="sudo nice -n +18 $PORTS/bin/port"
-    }
-
-    test -x /usr/pkg -a ! -L /usr/pkg && {
-        PATH="/usr/pkg/sbin:/usr/pkg/bin:$PATH"
-        MANPATH="/usr/pkg/share/man:$MANPATH"
-    }
-
-    # setup java environment. puke.
-#    JAVA_HOME="/System/Library/Frameworks/JavaVM.framework/Home"
-#    ANT_HOME="/Developer/Java/Ant"
-#    export ANT_HOME JAVA_HOME
-
-    # hold jruby's hand
-#    test -d /opt/jruby &&
-#    JRUBY_HOME="/opt/jruby"
-#    export JRUBY_HOME
-
   if [ -f `brew --prefix`/etc/bash_completion ]; then
     . `brew --prefix`/etc/bash_completion
   fi
@@ -640,3 +613,14 @@ rails() {
 }
 
 alias r=rails
+
+
+export LESS_TERMCAP_mb=$'\E[01;31m'
+export LESS_TERMCAP_md=$'\E[01;34m'
+export LESS_TERMCAP_me=$'\E[0m'
+export LESS_TERMCAP_se=$'\E[0m'
+export LESS_TERMCAP_so=$'\E[01;44;33m'
+export LESS_TERMCAP_ue=$'\E[0m'
+export LESS_TERMCAP_us=$'\E[01;32m'
+
+alias man='man -P less'
