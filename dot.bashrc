@@ -282,6 +282,8 @@ function set_git_dirty {
         git_dirty=''
     elif [[ $st == "nothing to commit (working directory clean)" ]]; then
         git_dirty=''
+    elif [[ $st == "nothing to commit, working directory clean" ]]; then
+        git_dirty=''
     else
         git_dirty='*'
     fi
@@ -401,7 +403,8 @@ test -n "$dircolors" && {
     test -e "$HOME/.dircolors"        && COLORS="$HOME/.dircolors"
     test ! -e "$COLORS"               && COLORS=
     eval `$dircolors --sh $COLORS`
-    LS_COLOR=' --color=auto'
+#    LS_COLOR=' --color=auto'
+    LS_COLOR='-G'
 }
 unset dircolors
 
@@ -614,7 +617,6 @@ rails() {
 
 alias r=rails
 
-
 export LESS_TERMCAP_mb=$'\E[01;31m'
 export LESS_TERMCAP_md=$'\E[01;34m'
 export LESS_TERMCAP_me=$'\E[0m'
@@ -624,3 +626,5 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
 alias man='man -P less'
+
+export GIT_AUTHOR_NAME="Dan Rabinowitz"

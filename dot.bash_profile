@@ -13,3 +13,9 @@ if [ -f "$HOME/.bashrc" ]; then
 fi
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+
+PATH=/usr/local/bin:/usr/local/sbin:$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+if [ -f "$HOME/.dotfiles.git/dot.bash_profile_livingsocial_dev" ]; then
+    . "$HOME/.dotfiles.git/dot.bash_profile_livingsocial_dev"
+fi
