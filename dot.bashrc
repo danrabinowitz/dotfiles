@@ -151,7 +151,7 @@ export LANG LANGUAGE LC_CTYPE LC_ALL
 #export HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
 # ... or force ignoredups and ignorespace
 export HISTCONTROL=ignoreboth
-export HISTFILESIZE=3500
+export HISTFILESIZE=5500
 
 # ----------------------------------------------------------------------
 # PAGER / EDITOR
