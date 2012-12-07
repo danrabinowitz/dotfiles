@@ -15,7 +15,7 @@ require 'irb/completion'
 require 'rubygems'
 
 require 'wirble'
-Wirble.init
+Wirble.init(:skip_prompt => true, :skip_history => true)
 # This page has info for changing Wirble colors: http://pablotron.org/software/wirble/README
 Wirble.colorize
 
@@ -66,6 +66,32 @@ end
 # copy [1,2,3,4]
 # "[1, 2, 3, 4]" is now in your clipboard.
 def copy(*args) IO.popen('pbcopy', 'r+') { |clipboard| clipboard.puts args.map(&:inspect) }; end
+
+
+if ENV['RAILS_ENV']
+  rails_env = ENV['RAILS_ENV']
+  rails_root = File.basename(Dir.pwd)
+  prompt = "#{rails_root}[#{rails_env.sub('production', 'prod').sub('development', 'dev')}]"
+  IRB.conf[:PROMPT] ||= {}
+
+  IRB.conf[:PROMPT][:RAILS] = {
+    :PROMPT_I => "#{prompt}>> ",
+    :PROMPT_S => "#{prompt}* ",
+    :PROMPT_C => "#{prompt}? ",
+    :RETURN   => "=> %s\n"
+  }
+
+  IRB.conf[:PROMPT_MODE] = :RAILS
+
+  #Redirect log to STDOUT, which means the console itself
+  IRB.conf[:IRB_RC] = Proc.new do
+    logger = Logger.new(STDOUT)
+    ActiveRecord::Base.logger = logger
+    ActiveResource::Base.logger = logger
+    ActiveRecord::Base.instance_eval { alias :[] :find }
+  end
+
+end
 
 
 
