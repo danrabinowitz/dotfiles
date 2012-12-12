@@ -14,6 +14,7 @@ end
 require 'irb/completion'
 require 'rubygems'
 
+require 'ap'
 require 'wirble'
 Wirble.init(:skip_prompt => true, :skip_history => true)
 # This page has info for changing Wirble colors: http://pablotron.org/software/wirble/README
