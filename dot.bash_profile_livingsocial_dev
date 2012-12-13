@@ -6,4 +6,17 @@ export RUBY_GC_MALLOC_LIMIT=500000000
 export RUBY_HEAP_SLOTS_GROWTH_FACTOR=1
 
 alias mark_live_deals='RAILS_ENV=development script/offline_tasks.rb mark_live_deals'
-alias ringleader='ringleader ~/LS/src/configs/ringleader.yml'
+alias ringleader='ringleader ~/code/configs/ringleader.yml'
+
+# Flush memcached: From the 3rd comment here:
+# http://www.mernin.com/blog/2008/10/how-to-flush-the-contents-of-a-memcached-instance/
+alias flushmcd='echo "flush_all" | nc localhost 11211'
+
+
+function mark_live_deals {
+		echo "Marking live deals..."
+		pushd ~/work/pipeline > /dev/null
+		RAILS_ENV=development ./script/offline_tasks.rb mark_live_deals
+		popd > /dev/null
+		echo "Done."
+}

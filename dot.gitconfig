@@ -33,3 +33,5 @@
 #  default = current
 #[github]
 #  user = danrabinowitz
+[push]
+	default = simple
