@@ -310,7 +310,7 @@ txtrst='\e[0m'    # Text Reset
 prompt_main1=${prompt_user}'@'${prompt_host}':\w$(__git_ps1 " (%s)")'"\[$txtylw\]\$git_dirty\[$txtrst\]"' \$ '
 unset prompt_user
 
-PROMPT_COMMAND="set_return_value_to_display_in_prompt; set_git_dirty; history -a; history -n; $PROMPT_COMMAND"
+PROMPT_COMMAND="set_return_value_to_display_in_prompt; set_git_dirty; history -a; $PROMPT_COMMAND"
 export PS1="\$return_value_to_display_in_prompt"'${debian_chroot_string}'"$prompt_main1"
 unset prompt_main1
 
