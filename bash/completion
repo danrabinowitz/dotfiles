@@ -1,0 +1,81 @@
+# This is on by default so why bother?
+# shopt -s hostcomplete >/dev/null 2>&1
+
+# This seems like a good idea.
+shopt -s no_empty_cmd_completion >/dev/null 2>&1
+
+# complete hostnames from this file
+: ${HOSTFILE:=~/.ssh/known_hosts}
+
+
+# TODO: Refactor this to use the Path manipulation functions such as pathprepend and pathappend in ~/Config/bash/path
+if [ "$UNAME" = Darwin ]; then
+  if [ -f `brew --prefix`/etc/bash_completion ]; then
+    . `brew --prefix`/etc/bash_completion
+  fi
+else
+
+    test -z "$BASH_COMPLETION" && {
+	bash=${BASH_VERSION%.*}; bmajor=${bash%.*}; bminor=${bash#*.}
+	test -n "$PS1" && test $bmajor -gt 1 && {
+        # search for a bash_completion file to source
+            for f in /usr/local/etc/bash_completion \
+                     /usr/pkg/etc/bash_completion \
+                     /opt/local/etc/bash_completion \
+                     /etc/bash_completion
+            do
+		test -f $f && {
+                    . $f
+                    break
+		}
+            done
+	}
+	unset bash bmajor bminor
+    }
+fi
+
+# override and disable tilde expansion
+_expand() {
+    return 0
+}
+
+# This next section is for completion. It DOES belong in .bashrc since it is for interactive only
+# enable programmable completion features (you don't need to enable
+# this, if it's already enabled in /etc/bash.bashrc and /etc/profile
+# sources /etc/bash.bashrc).
+if [ -f /etc/bash_completion ]; then
+    . /etc/bash_completion
+fi
+
+
+complete -c -f command sudo
+
+# Begin block: Copied from old ~/.profile file
+_complete_ssh_hosts ()
+{
+        COMPREPLY=()
+        cur="${COMP_WORDS[COMP_CWORD]}"
+        comp_ssh_hosts=`#cat ~/.ssh/known_hosts | \
+                        #cut -f 1 -d ' ' | \
+                        #sed -e s/,.*//g | \
+                        #grep -v ^# | \
+                        #uniq | \
+                        grep -v "\[" ;
+                cat ~/.ssh/config | \
+                        grep "^Host " | \
+                        awk '{print $2}'
+                `
+        COMPREPLY=( $(compgen -W "${comp_ssh_hosts}" -- $cur))
+        return 0
+}
+complete -F _complete_ssh_hosts ssh
+
+#complete -W "$(echo `cat ~/.ssh/known_hosts | cut -f 1 -d ' ' | sed -e s/,.*//g | uniq | grep -v "\["`;)" ssh
+
+
+
+
+# The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
+# Local Variables:
+# mode: sh
+# End:

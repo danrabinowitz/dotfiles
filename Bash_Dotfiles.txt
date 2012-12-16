@@ -1,0 +1,67 @@
+###############################################################################
+# What should go where
+#   Authoritative version in .bashrc
+
+
+################################################################################
+# The next 3 lines are the authoritative part
+################################################################################
+
+# ~/.bash_profile should be super-simple and just load .profile and .bashrc (in that order)
+# ~/.profile has the stuff NOT specifically related to bash, such as environment variables PATH and friends
+# ~/.bashrc has anything you'd want at an interactive command line. Command prompt, EDITOR variable, bash aliases for my use
+
+
+# How to decide where to put something:
+# If it needs to be accessed for
+
+
+
+
+
+
+
+################################################################################
+Non-login, non-interactive: Only .bashrc is read, and our .bashrc does nothing for non-interactive shells. So this is super-fast, since it does nothing.
+
+Non-login, interactive: Only .bashrc is read. This is the usual case for opening a new tab in iTerm or (I think) a new session or window in screen
+
+Login, non-interactive: .profile and .bashrc are read, bt .bashrc does nothing. Does this ever happen?
+
+Login, interactive
+
+
+################################################################################
+#
+# Anything that should be available to graphical applications OR to sh (or bash invoked as sh) MUST be in ~/.profile
+# Anything that should be available to non-login shells should be in ~/.bashrc.
+#   ~/.bashrc must not output anything
+# Anything that should be available only to login shells should go in ~/.bash_profile
+# Ensure that ~/.bash_login does not exist.
+
+
+###############################################################################
+# Sourcing other files
+# ~/.bash_profile should source ~/.bashrc
+# ~/.bash_profile should probably also source .profile since ~/.profile isn't run if ~/.bash_profile exists.
+#   Outstanding question: Do we need to set a variable in .bashrc to make sure it isn't run twice, since it could be run from /etc/profile?
+
+###############################################################################
+# Justification for what should go where
+# From the bash man page: For login shells, bash looks for ~/.bash_profile,
+# ~/.bash_login, and ~/.profile, in that order, and reads and executes commands
+# from the first one that exists and is readable.
+#
+# For non-login shells, only .bashrc is read.
+#
+# Sources
+# http://www.joshstaiger.org/archives/2005/07/bash_profile_vs.html
+# http://linux.die.net/man/1/bash
+# https://rvm.beginrescueend.com/support/faq/#shell_login
+#
+
+
+More:
+http://stefaanlippens.net/my_bashrc_aliases_profile_and_other_stuff and the older http://stefaanlippens.net/bashrc_and_others
+
+

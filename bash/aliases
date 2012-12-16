@@ -1,0 +1,83 @@
+# Must be loaded after $PAGER is set
+
+# Prompt before removing a file
+alias rm="rm -i"
+
+alias man='man -P less'
+
+real_rails=`which rails`
+rails() {
+    args="$@"
+#    echo $1
+    if [ "$1" == "db" ]; then
+        args="$args --include-password"
+        echo "Running rails db with --include-password appended"
+    fi
+#    echo "$args"
+    "$real_rails" $args
+}
+alias r=rails
+
+
+
+# disk usage with human sizes and minimal depth
+alias du1='du -h --max-depth=1'
+
+# Usage: pls [<var>]
+# List path entries of PATH or environment variable <var>.
+pls () { eval echo \$${1:-PATH} |tr : '\n'; }
+
+# I don't think I'm using this. Comment out on 12/15/12, and delete after Jan 1 2014 if unused.
+# use gem-man(1) if available:
+#man () {
+#    gem man -s "$@" 2>/dev/null ||
+#    command man "$@"
+#}
+
+# SSH key management
+# TODO: DRY this up. Or delete.
+# push SSH public key to another box
+push_VHG_ssh_cert() {
+    local _host
+    key_pub='/Volumes/VHG-Dan/dot/ssh/id_dsa.pub'
+    for _host in "$@";
+    do
+        echo $_host
+        ssh $_host 'mkdir -p .ssh;cat >> ~/.ssh/authorized_keys' < $key_pub
+    done
+}
+
+push_USM_ssh_cert() {
+    local _host
+    key_pub='/Volumes/USM-Dan/dot/ssh/id_dsa.pub'
+    for _host in "$@";
+    do
+        echo $_host
+        ssh $_host 'mkdir -p .ssh;cat >> ~/.ssh/authorized_keys' < $key_pub
+    done
+}
+
+# This is crap. Delete it.
+set_iterm_bgcolor () {
+   local R=$1
+   local G=$2
+   local B=$3
+   /usr/bin/osascript <<EOF
+tell application "iTerm"
+    tell the first terminal
+        tell the current session
+            set background color to {$(($R*65535/255)), $(($G*65535/255)), $(($B*65535/255))}
+        end tell
+    end tell
+end tell
+EOF
+}
+
+# Disabled aliases
+# alias fn='find . -name'
+# alias hi='history | tail -20'
+
+# The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
+# Local Variables:
+# mode: sh
+# End:
