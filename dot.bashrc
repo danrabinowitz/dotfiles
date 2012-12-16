@@ -39,6 +39,9 @@
 # End of discussion
 ###############################################################################
 
+source ~/Config/testing/logging.sh
+log_with_bash_info "Start of .bashrc"
+
 # If not running interactively, don't do anything
 # This "interactive" quality is distinct from the login/non-login shell (vis a vis .profile / .bashrc). It simply ensures that nothing is output for non-interactive shells.
 [ -z "$PS1" ] && return

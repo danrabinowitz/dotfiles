@@ -37,6 +37,9 @@
 # Tests
 echo "start of .profile"
 
+source ~/Config/testing/logging.sh
+log_with_bash_info "Start of .profile"
+
 if [ -f ~/.profile_local ]; then
     . ~/.profile_local
 fi
