@@ -3,6 +3,8 @@
 # Prompt before removing a file
 alias rm="rm -i"
 
+alias subl="/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl"
+
 alias man='man -P less'
 
 real_rails=`which rails`
