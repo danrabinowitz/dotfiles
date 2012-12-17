@@ -5,6 +5,8 @@ alias rm="rm -i"
 
 alias subl="/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl"
 
+alias git-email-ls="git config user.email dan.rabinowitz@livingsocial.com && git commit --amend --reset-author"
+
 alias man='man -P less'
 
 real_rails=`which rails`

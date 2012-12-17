@@ -43,10 +43,7 @@ puniq () {
 export PATH=/bin:/usr/bin
 
 pathprepend /usr/local/bin
-
-if [ $EUID -eq 0 ] ; then
-        pathappend /usr/local/sbin:/usr/sbin:/sbin
-fi
+pathappend /usr/local/sbin:/usr/sbin:/sbin
 
 # I was using this, but I think it's obsolete with brew. Remove after Jan 1 2014 if unused.
 # Include /opt/local/bin and sbin if they exist
