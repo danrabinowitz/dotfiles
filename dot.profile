@@ -1,42 +1,51 @@
 # ~/.profile
+# For notes about this file, and what goes in ~/.bash_profile versus ~/.profile versus ~/.bashrc see Bash_Dotfiles.txt
+
+#############################################################################
 # This file is designed to work on OS X and Debian
 
-###############################################################################
-# What should go where
-#   Authoritative version in .bashrc
-#
-# Anything that should be available to graphical applications OR to sh (or bash invoked as sh) MUST be in ~/.profile
-# Anything that should be available to non-login shells should be in ~/.bashrc.
-#   ~/.bashrc must not output anything
-#   Outstanding question: Should .bashrc source .profile? The other way around? Neither?
-# Anything that should be available only to login shells should go in ~/.bash_profile
-# Ensure that ~/.bash_login does not exist.
+# TODO:
 
-###############################################################################
-# Sourcing other files
-# ~/.bash_profile should source ~/.bashrc
-# ~/.bash_profile should probably also source .profile since ~/.profile isn't run if ~/.bash_profile exists.
-#   Outstanding question: Do we need to set a variable in .bashrc to make sure it isn't run twice, since it could be run from /etc/profile?
+echo "Start of ~/.profile"
 
-###############################################################################
-# Justification for what should go where
-# From the bash man page: For login shells, bash looks for ~/.bash_profile,
-# ~/.bash_login, and ~/.profile, in that order, and reads and executes commands
-# from the first one that exists and is readable.
-#
-# For non-login shells, only .bashrc is read.
-#
-# Sources
-# http://www.joshstaiger.org/archives/2005/07/bash_profile_vs.html
-# http://linux.die.net/man/1/bash
-# https://rvm.beginrescueend.com/support/faq/#shell_login
-#
-###############################################################################
-# End of discussion
-###############################################################################
-# Tests
-echo "start of .profile"
+################################################################################
+# Below here is for stuff which is "run time modifying" stuff
+
+# The default umask is set in /etc/profile
+# On debian, for setting the umask for ssh logins, install and configure the libpam-umask package.
+# TODO: Can we check if debian and if libpam-umask is installed and warn if not?
+# default umask
+umask 0022
+
+# disable core dumps
+ulimit -S -c 0
+
+# PATH STUFF
+. ~/Config/bash/path
+
+
+
+
+################################################################################
+# Stuff that is not bash-specific and not specific to interactive use, but which is NOT "run time modifying" stuf
+# This environment variable is NOT bash-specific and not specific to interactive use. So I am trying to put it in .profile
+export GIT_AUTHOR_NAME="Dan Rabinowitz"
+
+# Shell options which could be useful in a non-interactive session
+shopt -s extglob >/dev/null 2>&1
+
+
+
+
 
 if [ -f ~/.profile_local ]; then
     . ~/.profile_local
 fi
+
+# TODO: Output to a log that .profile was run. Include the date, the PID, the PPID, etc.
+
+
+# The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
+# Local Variables:
+# mode: sh
+# End:

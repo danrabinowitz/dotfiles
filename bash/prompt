@@ -1,0 +1,152 @@
+GREEN_FG_RED_BG="\[\033[0;32m\033[0;41m\]"
+RED="\[\033[0;31m\]"
+BROWN="\[\033[0;33m\]"
+GREY="\[\033[0;97m\]"
+BLUE="\[\033[0;34m\]"
+PS_CLEAR="\[\033[0m\]"
+SCREEN_ESC="\[\033k\033\134\]"
+
+if [ "$LOGNAME" = "root" ]; then
+    COLOR1="${RED}"
+    COLOR2="${BROWN}"
+    P="#"
+elif hostname | grep -q 'github\.com'; then
+    GITHUB=yep
+    COLOR1="\[\e[0;94m\]"
+    COLOR2="\[\e[0;92m\]"
+    P="\$"
+else
+    COLOR1="${BLUE}"
+    COLOR2="${BROWN}"
+    P="\$"
+fi
+
+prompt_simple() {
+    unset PROMPT_COMMAND
+    PS1="[\u@\h:\w]\$ "
+    PS2="> "
+}
+
+prompt_compact() {
+    unset PROMPT_COMMAND
+    PS1="${COLOR1}${P}${PS_CLEAR} "
+    PS2="> "
+}
+
+prompt_color() {
+    PS1="${GREY}[${COLOR1}\u${GREY}@${COLOR2}\h${GREY}:${COLOR1}\W${GREY}]${COLOR2}$P${PS_CLEAR} "
+    PS2="\[;1m\]continue \[m\]> "
+}
+
+
+# set variable identifying the chroot you work in (used in the prompt below)
+if [ -z "$debian_chroot" ] && [ -r /etc/debian_chroot ]; then
+    debian_chroot=$(cat /etc/debian_chroot)
+    debian_chroot_string='${debian_chroot:+($debian_chroot)}'
+fi
+
+# set a fancy prompt (non-color, unless we know we "want" color)
+case "$TERM" in
+    xterm-color) color_prompt=yes;;
+esac
+
+# uncomment for a colored prompt, if the terminal has the capability; turned
+# off by default to not distract the user: the focus in a terminal window
+# should be on the output of commands, not on the prompt
+force_color_prompt=yes
+
+if [ -n "$force_color_prompt" ]; then
+    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
+        # We have color support; assume it's compliant with Ecma-48
+        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
+        # a case would tend to support setf rather than setaf.)
+        color_prompt=yes
+    else
+        color_prompt=
+    fi
+fi
+
+if [ "$color_prompt" = yes ]; then
+   if [ $USER == 'root' ];then
+      # red
+      prompt_user='\[\e[37;41m\]\u\[\e[0m\]'
+   elif [ $USER == 'danrabinowitz' ] || [ $USER == 'djr' ]; then
+      # no color
+      prompt_user='\u'
+   else
+      # DIFFERENT COLOR
+      prompt_user='\[\e[37;41m\]\u\[\e[0m\]'
+   fi
+   # TODO: DJR: 12/22/10: Consider adding color depending on which host we're on.  Like red for VHGDB.
+else
+   prompt_user='\u'
+fi
+
+prompt_host='\H'
+if [ "$color_prompt" = yes ]; then
+  if [ `hostname` == 'VHGDB-Testing' ];then
+    COLOR="${BLUE}"
+    prompt_host=${COLOR}'\H'${PS_CLEAR}
+  elif [ `hostname` == 'vhgdb' ]; then
+    COLOR="${GREEN_FG_RED_BG}"
+    prompt_host=${COLOR}'\H'${PS_CLEAR}
+  fi
+fi
+
+
+function set_git_dirty {
+    st=$(git status 2>/dev/null | tail -n 1)
+    if [[ $st == "" ]]; then
+        git_dirty=''
+    elif [[ $st == "nothing to commit (working directory clean)" ]]; then
+        git_dirty=''
+    elif [[ $st == "nothing to commit, working directory clean" ]]; then
+        git_dirty=''
+    else
+        git_dirty='*'
+    fi
+}
+
+
+function set_return_value_to_display_in_prompt {
+    _ret=$?
+    return_value_to_display_in_prompt=''
+    if test $_ret -ne 0; then
+	return_value_to_display_in_prompt="$_ret:"
+	set ?=$_ret
+	unset _ret
+    fi
+}
+
+# NOTE: This is a nice repo. I could probably clean up my .bashrc and structure it into multiple files
+#   https://github.com/jimeh/git-aware-prompt
+
+
+txtylw='\e[0;33m' # Yellow
+txtrst='\e[0m'    # Text Reset
+
+prompt_main1=${prompt_user}'@'${prompt_host}':\w$(__git_ps1 " (%s)")'"\[$txtylw\]\$git_dirty\[$txtrst\]"' \$ '
+unset prompt_user
+
+PROMPT_COMMAND="set_return_value_to_display_in_prompt; set_git_dirty; history -a; $PROMPT_COMMAND"
+export PS1="\$return_value_to_display_in_prompt"'${debian_chroot_string}'"$prompt_main1"
+unset prompt_main1
+
+# If this is an xterm set the title to user@host:dir
+case "$TERM" in
+xterm*|rxvt*)
+    PS1="\[\e]0;${debian_chroot_string}\u@\h: \w\a\]$PS1"
+    ;;
+*)
+    ;;
+esac
+
+unset force_color_prompt debian_chroot_string debian_chroot
+
+
+
+
+# The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
+# Local Variables:
+# mode: sh
+# End:
