@@ -20,3 +20,6 @@ function mark_live_deals {
 		popd > /dev/null
 		echo "Done."
 }
+
+
+RAILS_ENV='development'
