@@ -1,2 +1,2 @@
-.DS_Store
-*~
+/dot.emacs.d/auto-save-list
+/dot.emacs.d/backup
