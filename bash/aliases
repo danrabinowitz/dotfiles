@@ -18,7 +18,7 @@ rails() {
 }
 alias r=rails
 
-
+alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
 
 # disk usage with human sizes and minimal depth
 alias du1='du -h --max-depth=1'
