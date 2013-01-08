@@ -24,6 +24,41 @@ rails() {
 }
 alias r=rails
 
+function rails_console {
+  function set_rails_command_for_dir {
+    local dir=$1
+#    echo "Changing to ${dir}"
+    cd $dir
+    if [ -e "script/rails" ]; then
+      # echo "Found script/rails"
+      rails_command_for_dir="script/rails c"
+      return 0
+    fi
+    if [ -e "script/console" ]; then
+      # echo "Found script/console"
+      rails_command_for_dir="script/console"
+      return 0
+    fi
+
+
+    if [[ $dir == "/" ]]; then
+      rails_command_for_dir="irb"
+      return 0
+    fi
+    local new_dir=$(dirname `pwd`)
+    set_rails_command_for_dir $new_dir
+    return $?
+  }
+  local rails_command_for_dir=""
+  pushd . >& /dev/null
+  set_rails_command_for_dir `pwd`
+  echo "Running "$rails_command_for_dir
+  $rails_command_for_dir
+  popd >& /dev/null
+}
+
+alias rc=rails_console
+
 alias bil="bundle install --local"
 
 
