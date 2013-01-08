@@ -10,6 +10,7 @@ alias gca="git commit --amend -C HEAD"
 
 alias man='man -P less'
 
+# Ruby and Rails
 real_rails=`which rails`
 rails() {
     args="$@"
@@ -22,6 +23,9 @@ rails() {
     "$real_rails" $args
 }
 alias r=rails
+
+alias bil="bundle install --local"
+
 
 alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
 
