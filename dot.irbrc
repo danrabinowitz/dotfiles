@@ -3,6 +3,10 @@
 # Lots of good stuff here: http://www.ruby-forum.com/topic/84414#new
 
 puts "Loading Dan's custom irbrc file..."
+if defined? ETC_IRBRC_LOADED
+  puts "There is a global /etc/irbrc file already loaded!"
+end
+
 #############################################################################
 # From: https://gist.github.com/794915
 # Add all gems in the global gemset to the $LOAD_PATH so they can be used even
