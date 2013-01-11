@@ -8,17 +8,27 @@ puts "Loading Dan's custom irbrc file..."
 # Add all gems in the global gemset to the $LOAD_PATH so they can be used even
 # in places like 'rails console'.
 if defined?(::Bundler)
-  $LOAD_PATH.concat Dir.glob("#{ENV['rvm_path']}/gems/#{ENV['rvm_ruby_string']}@global/gems/*/lib")
+  if ENV['rvm_path'] && ENV['rvm_ruby_string']
+    $LOAD_PATH.concat Dir.glob("#{ENV['rvm_path']}/gems/#{ENV['rvm_ruby_string']}@global/gems/*/lib")
+  else
+    $LOAD_PATH.concat Dir.glob("#{Gem::path.detect{ |p| p=~/global$/ }}/gems/*/lib")
+  end
+  $LOAD_PATH.uniq!
 end
 #############################################################################
 require 'irb/completion'
-require 'rubygems'
 
-require 'ap'
-require 'wirble'
-Wirble.init(:skip_prompt => true, :skip_history => true)
-# This page has info for changing Wirble colors: http://pablotron.org/software/wirble/README
-Wirble.colorize
+%w(rubygems awesome_print).each do |lib|
+  begin
+    require lib
+  rescue LoadError
+    puts "Unable to load #{lib}. Continuing..."
+  end
+end
+
+if defined?(AwesomePrint)
+  AwesomePrint.irb!
+end
 
 #IRB.conf[:AUTO_INDENT]=true
 
@@ -69,8 +79,8 @@ end
 def copy(*args) IO.popen('pbcopy', 'r+') { |clipboard| clipboard.puts args.map(&:inspect) }; end
 
 
-if ENV['RAILS_ENV']
-  rails_env = ENV['RAILS_ENV']
+if ENV['RAILS_ENV'] || Rails.env
+  rails_env = ENV['RAILS_ENV'] || Rails.env
   rails_root = File.basename(Dir.pwd)
   prompt = "#{rails_root}[#{rails_env.sub('production', 'prod').sub('development', 'dev')}]"
   IRB.conf[:PROMPT] ||= {}
@@ -94,7 +104,9 @@ if ENV['RAILS_ENV']
 
 end
 
-
+history_filename = "~/.irb-history#{'-' + rails_root if rails_root}.rb"
+IRB.conf[:HISTORY_FILE] = File.expand_path(history_filename)
+IRB.conf[:SAVE_HISTORY] = 10000
 
 # Local Variables:
 # mode: ruby
