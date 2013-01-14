@@ -82,9 +82,8 @@ end
 # "[1, 2, 3, 4]" is now in your clipboard.
 def copy(*args) IO.popen('pbcopy', 'r+') { |clipboard| clipboard.puts args.map(&:inspect) }; end
 
-
-if ENV['RAILS_ENV'] || Rails.env
-  rails_env = ENV['RAILS_ENV'] || Rails.env
+rails_env = ENV['RAILS_ENV'] || ((defined? Rails) && Rails.env)
+if rails_env
   rails_root = File.basename(Dir.pwd)
   prompt = "#{rails_root}[#{rails_env.sub('production', 'prod').sub('development', 'dev')}]"
   IRB.conf[:PROMPT] ||= {}
