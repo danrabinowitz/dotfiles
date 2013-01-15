@@ -42,6 +42,8 @@ if [ -f ~/.profile_local ]; then
     . ~/.profile_local
 fi
 
+export CLICOLOR=1
+
 # TODO: Output to a log that .profile was run. Include the date, the PID, the PPID, etc.
 
 
