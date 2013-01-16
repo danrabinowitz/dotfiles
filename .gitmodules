@@ -1,6 +1,6 @@
 [submodule "dot.emacs.d/vendor/coffee-mode"]
 	path = dot.emacs.d/vendor/coffee-mode
-	url = git://github.com/defunkt/coffee-mode.git
+	url = git@github.com:defunkt/coffee-mode.git
 [submodule "dot.emacs.d/vendor/ruby-electric"]
 	path = dot.emacs.d/vendor/ruby-electric
 	url = https://github.com/qoobaa/ruby-electric.git
