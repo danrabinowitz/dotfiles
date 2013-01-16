@@ -4,3 +4,6 @@
 [submodule "dot.emacs.d/vendor/ruby-electric"]
 	path = dot.emacs.d/vendor/ruby-electric
 	url = https://github.com/qoobaa/ruby-electric.git
+[submodule "dot.emacs.d/forks/ruby-test-mode"]
+	path = dot.emacs.d/forks/ruby-test-mode
+	url = git@github.com:danrabinowitz/ruby-test-mode.git
