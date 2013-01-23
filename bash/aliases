@@ -59,7 +59,7 @@ function rails_console {
 
 alias rc=rails_console
 
-alias bil="bundle install --local"
+alias bil="bundle install --local || bundle install"
 
 
 alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
