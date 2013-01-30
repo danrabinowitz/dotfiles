@@ -17,10 +17,18 @@ if defined?(::Bundler)
   else
     $LOAD_PATH.concat Dir.glob("#{Gem::path.detect{ |p| p=~/global$/ }}/gems/*/lib")
   end
-  $LOAD_PATH.uniq!
 end
+
+if ENV['djr_local_gems']
+  puts "Using custom djr_local_gems path"
+  $LOAD_PATH.concat Dir.glob("#{ENV['djr_local_gems']}/gems/*/lib")
+end
+
+$LOAD_PATH.uniq!
 #############################################################################
 require 'irb/completion'
+
+#gem install awesome_print --install-dir ~/.gems/
 
 %w(rubygems awesome_print).each do |lib|
   begin
@@ -85,6 +93,9 @@ def copy(*args) IO.popen('pbcopy', 'r+') { |clipboard| clipboard.puts args.map(&
 rails_env = ENV['RAILS_ENV'] || ((defined? Rails) && Rails.env)
 if rails_env
   rails_root = File.basename(Dir.pwd)
+  if Dir.pwd =~ /\/([^\/]+)\/releases\/\d{14}$/
+    rails_root = $1
+  end
   prompt = "#{rails_root}[#{rails_env.sub('production', 'prod').sub('development', 'dev')}]"
   IRB.conf[:PROMPT] ||= {}
 
