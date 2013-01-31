@@ -4,7 +4,7 @@
 
 puts "Loading Dan's custom irbrc file..."
 if defined? ETC_IRBRC_LOADED
-  puts "There is a global /etc/irbrc file already loaded!"
+  puts "WARNING: It seems that there is a global /etc/irbrc file already loaded!"
 end
 
 #############################################################################
@@ -18,17 +18,21 @@ if defined?(::Bundler)
     $LOAD_PATH.concat Dir.glob("#{Gem::path.detect{ |p| p=~/global$/ }}/gems/*/lib")
   end
 end
+#############################################################################
+# On machines where I do not have the ability (or do not want) to add gems, add this line to .bashrc_local:
+# export djr_local_gems=$HOME'/.gems'
+# and then run this to install a gem:
+# gem install awesome_print --install-dir $djr_local_gems
+# Then, the next few lines will ensure that these gems get loaded.
 
 if ENV['djr_local_gems']
   puts "Using custom djr_local_gems path"
   $LOAD_PATH.concat Dir.glob("#{ENV['djr_local_gems']}/gems/*/lib")
 end
-
+#############################################################################
 $LOAD_PATH.uniq!
 #############################################################################
 require 'irb/completion'
-
-#gem install awesome_print --install-dir ~/.gems/
 
 %w(rubygems awesome_print).each do |lib|
   begin
@@ -89,14 +93,15 @@ end
 # copy [1,2,3,4]
 # "[1, 2, 3, 4]" is now in your clipboard.
 def copy(*args) IO.popen('pbcopy', 'r+') { |clipboard| clipboard.puts args.map(&:inspect) }; end
-
-rails_env = ENV['RAILS_ENV'] || ((defined? Rails) && Rails.env)
+#############################################################################
+# Rails-specific setup
+rails_env = ((defined? Rails) && Rails.env) || ENV['RAILS_ENV']
 if rails_env
-  rails_root = File.basename(Dir.pwd)
+  rails_appname = File.basename(Dir.pwd)
   if Dir.pwd =~ /\/([^\/]+)\/releases\/\d{14}$/
-    rails_root = $1
+    rails_appname = $1
   end
-  prompt = "#{rails_root}[#{rails_env.sub('production', 'prod').sub('development', 'dev')}]"
+  prompt = "#{rails_appname}[#{rails_env.sub('production', 'prod').sub('development', 'dev')}]"
   IRB.conf[:PROMPT] ||= {}
 
   IRB.conf[:PROMPT][:RAILS] = {
@@ -116,9 +121,13 @@ if rails_env
     ActiveRecord::Base.instance_eval { alias :[] :find }
   end
 
+  def log
+    ActiveRecord::Base.clear_active_connections!
+    ActiveRecord::Base.logger = Logger.new(STDOUT)
+  end
 end
-
-history_filename = "~/.irb-history#{'-' + rails_root if rails_root}.rb"
+#############################################################################
+history_filename = "~/.irb-history#{'-' + rails_appname if rails_appname}.rb"
 IRB.conf[:HISTORY_FILE] = File.expand_path(history_filename)
 IRB.conf[:SAVE_HISTORY] = 10000
 
