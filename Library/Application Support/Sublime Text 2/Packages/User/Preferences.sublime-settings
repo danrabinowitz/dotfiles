@@ -12,5 +12,6 @@
   "line_padding_bottom": 1,
   "line_padding_top": 1,
   "fade_fold_buttons": false,
-  "bold_folder_labels": true
+  "bold_folder_labels": true,
+  "drag_text": false
 }
