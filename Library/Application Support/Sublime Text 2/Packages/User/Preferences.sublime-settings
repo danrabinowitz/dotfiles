@@ -7,5 +7,10 @@
   ],
   "tab_size": 2,
   "translate_tabs_to_spaces": true,
-  "show_full_path": true
+  "show_full_path": true,
+  "highlight_line": true,
+  "line_padding_bottom": 1,
+  "line_padding_top": 1,
+  "fade_fold_buttons": false,
+  "bold_folder_labels": true
 }
