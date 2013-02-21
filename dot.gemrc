@@ -1,3 +1,12 @@
-gem: --no-rdoc --no-ri
+--- 
 install: --no-rdoc --no-ri
+:bulk_threshold: 1000
 update: --no-rdoc --no-ri
+:update_sources: true
+:backtrace: false
+:verbose: true
+:sources: 
+- http://rubygems.org/
+- http://gems.livingsocial.net/
+gem: --no-rdoc --no-ri
+:benchmark: false

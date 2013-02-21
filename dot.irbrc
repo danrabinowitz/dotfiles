@@ -38,7 +38,8 @@ require 'irb/completion'
   begin
     require lib
   rescue LoadError
-    puts "Unable to load #{lib}. Continuing..."
+    rvm_current = `rvm current`.strip.split('@').last
+    puts "Unable to load #{lib}. Continuing, but you may want to run 'rvm gemset use global && gem install #{lib} && rvm gemset use #{rvm_current}'"
   end
 end
 
