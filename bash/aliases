@@ -121,6 +121,9 @@ function notify_branches_which_are_behind {
     mdfind -onlyin ~ '(kMDItemFSName = ".git" )'|grep -v -e '/Users/danrabinowitz/.rvm' -e '/Users/danrabinowitz/.Trash' -e '/Users/danrabinowitz/.sbt/staging/' | while read gitdir; do repodir=$(echo $gitdir | sed 's/\/.git$//') && (cd "$repodir" >& /dev/null && git fetch >& /dev/null && (git status 2>/dev/null | grep -c '^# Your branch is behind' >& /dev/null)) && (echo "NOTICE: $repodir is behind" | growlnotify -s) ; done
 }
 
+alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
+
+
 # Disabled aliases
 # alias fn='find . -name'
 # alias hi='history | tail -20'
