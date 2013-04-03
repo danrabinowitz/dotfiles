@@ -43,3 +43,5 @@
 #  user = danrabinowitz
 [push]
 	default = simple
+[pull]
+	rebase = true
