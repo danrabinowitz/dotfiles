@@ -109,7 +109,7 @@ fi
 # PAGER / EDITOR
 # ----------------------------------------------------------------------
 
-export EDITOR=emacs
+export EDITOR=vim
 
 # PAGER
 if test -n "$(command -v less)" ; then
