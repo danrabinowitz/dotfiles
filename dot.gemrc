@@ -7,6 +7,6 @@ update: --no-rdoc --no-ri
 :verbose: true
 :sources: 
 - http://rubygems.org/
-- http://gems.livingsocial.net/
+- http://geminabox.lsqa.net/
 gem: --no-rdoc --no-ri
 :benchmark: false
