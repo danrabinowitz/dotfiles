@@ -38,7 +38,8 @@ require 'irb/completion'
   begin
     require lib
   rescue LoadError
-    puts "Unable to load #{lib}. Continuing..."
+    rvm_current = `rvm current`.strip.split('@').last
+    puts "Unable to load #{lib}. Continuing, but you may want to run 'rvm gemset use global && gem install #{lib} && rvm gemset use #{rvm_current}'"
   end
 end
 
@@ -127,6 +128,12 @@ if rails_env
   end
 end
 #############################################################################
+Kernel::at_exit do
+  histfile = File::expand_path(".irb-history", ENV["HOME"])
+  puts "TODO: Ensure that #{histfile} is a symlink to /dev/null"
+  puts " This ensures that history does not get written to .irb-history and ONLY goes to the real history."
+end
+
 history_filename = "~/.irb-history#{'-' + rails_appname if rails_appname}.rb"
 IRB.conf[:HISTORY_FILE] = File.expand_path(history_filename)
 IRB.conf[:SAVE_HISTORY] = 10000

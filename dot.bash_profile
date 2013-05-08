@@ -16,8 +16,8 @@ fi
 
 PATH=/usr/local/bin:/usr/local/sbin:$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
-if [ -f "$HOME/.dotfiles.git/dot.bash_profile_livingsocial_dev" ]; then
-    . "$HOME/.dotfiles.git/dot.bash_profile_livingsocial_dev"
+if [ -f "$HOME/.bash_profile_local" ]; then
+    . "$HOME/.bash_profile_local"
 fi
 
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
