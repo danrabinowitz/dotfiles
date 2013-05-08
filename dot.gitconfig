@@ -12,13 +12,21 @@
   frag = magenta bold
   old = red bold
   new = green bold
+[color "status"]
+    added = green
+    changed = yellow
+    untracked = red
 [format]
   pretty = format:%C(blue)%ad%Creset %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) [%an <%ae>]%Creset
+#  pretty = format:'%C(yellow)%h%C(cyan)%d%Creset %s %C(white)- %an, %ar%Creset'
+
 [core]
   autocrlf = false
   editor = emacs
   excludesfile = ~/.gitignore_global
   whitespace = trailing-space,space-before-tab
+#  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+#  pager = less -FRSX
 [apply]
   whitespace = fix
 [alias]
@@ -35,3 +43,5 @@
 #  user = danrabinowitz
 [push]
 	default = simple
+[pull]
+	rebase = true

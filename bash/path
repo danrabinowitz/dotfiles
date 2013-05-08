@@ -75,6 +75,9 @@ unset pathremove pathprepend pathappend
 
 PATH=$(puniq $PATH)
 
+# Set CDPATH for bash completion
+CDPATH=".:~:~/Code"
+
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
 # mode: sh
