@@ -1,17 +1,20 @@
-// Settings in here override those in "Default/Preferences.sublime-settings", and
-// are overridden in turn by file type specific settings.
 {
-  "rulers":
-  [
-      80
-  ],
-  "tab_size": 2,
-  "translate_tabs_to_spaces": true,
-  "show_full_path": true,
-  "highlight_line": true,
-  "line_padding_bottom": 1,
-  "line_padding_top": 1,
-  "fade_fold_buttons": false,
-  "bold_folder_labels": true,
-  "drag_text": false
+	"bold_folder_labels": true,
+	"drag_text": false,
+	"fade_fold_buttons": false,
+	"font_size": 17.0,
+	"highlight_line": true,
+	"ignored_packages":
+	[
+		"Vintage"
+	],
+	"line_padding_bottom": 1,
+	"line_padding_top": 1,
+	"rulers":
+	[
+		80
+	],
+	"show_full_path": true,
+	"tab_size": 2,
+	"translate_tabs_to_spaces": true
 }
