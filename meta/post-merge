@@ -1,0 +1,5 @@
+#!/bin/bash
+echo "This is post-merge"
+echo "This is just a placeholder."
+
+echo "Soon, this will call process_dotfiles.sh"
