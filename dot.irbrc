@@ -96,7 +96,7 @@ end
 def copy(*args) IO.popen('pbcopy', 'r+') { |clipboard| clipboard.puts args.map(&:inspect) }; end
 #############################################################################
 # Rails-specific setup
-rails_env = ((defined? Rails) && Rails.env) || ENV['RAILS_ENV']
+rails_env = (defined? Rails) && Rails.env
 if rails_env
   rails_appname = File.basename(Dir.pwd)
   if Dir.pwd =~ /\/([^\/]+)\/releases\/\d{14}$/
@@ -115,16 +115,18 @@ if rails_env
   IRB.conf[:PROMPT_MODE] = :RAILS
 
   #Redirect log to STDOUT, which means the console itself
-  IRB.conf[:IRB_RC] = Proc.new do
-    logger = Logger.new(STDOUT)
-    ActiveRecord::Base.logger = logger
-    ActiveResource::Base.logger = logger
-    ActiveRecord::Base.instance_eval { alias :[] :find }
-  end
+  if defined? ActiveRecord
+    IRB.conf[:IRB_RC] = Proc.new do
+      logger = Logger.new(STDOUT)
+      ActiveRecord::Base.logger = logger
+      ActiveResource::Base.logger = logger
+      ActiveRecord::Base.instance_eval { alias :[] :find }
+    end
 
-  def log
-    ActiveRecord::Base.clear_active_connections!
-    ActiveRecord::Base.logger = Logger.new(STDOUT)
+    def log
+      ActiveRecord::Base.clear_active_connections!
+      ActiveRecord::Base.logger = Logger.new(STDOUT)
+    end
   end
 end
 #############################################################################
