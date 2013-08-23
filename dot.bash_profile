@@ -14,8 +14,6 @@ fi
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
-PATH=/usr/local/bin:/usr/local/sbin:$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
 if [ -f "$HOME/.bash_profile_local" ]; then
     . "$HOME/.bash_profile_local"
 fi
