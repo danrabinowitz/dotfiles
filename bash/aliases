@@ -11,18 +11,16 @@ alias gca="git commit --amend -C HEAD"
 alias man='man -P less'
 
 # Ruby and Rails
-real_rails=`which rails`
-rails() {
-    args="$@"
-#    echo $1
-    if [ "$1" == "db" ]; then
-        args="$args --include-password"
-        echo "Running rails db with --include-password appended"
-    fi
-#    echo "$args"
-    "$real_rails" $args
-}
-alias r=rails
+#real_rails=`which rails`
+#rails() {
+#    args="$@"
+#    if [ "$1" == "db" ]; then
+#        args="$args --include-password"
+#        echo "Running rails db with --include-password appended"
+#    fi
+#    "$real_rails" $args
+#}
+#alias r=rails
 
 function rails_console {
   function set_rails_command_for_dir {
