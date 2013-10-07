@@ -119,7 +119,7 @@ if rails_env
     IRB.conf[:IRB_RC] = Proc.new do
       logger = Logger.new(STDOUT)
       ActiveRecord::Base.logger = logger
-      ActiveResource::Base.logger = logger
+      ActiveResource::Base.logger = logger if defined? ActiveResource
       ActiveRecord::Base.instance_eval { alias :[] :find }
     end
 
