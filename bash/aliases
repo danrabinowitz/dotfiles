@@ -29,14 +29,14 @@ function rails_console {
     local dir=$1
 #    echo "Changing to ${dir}"
     cd $dir
-    if [ -e "script/rails" ]; then
-      # echo "Found script/rails"
-      rails_command_for_dir="script/rails c"
-      return 0
-    fi
     if [ -e "script/console" ]; then
       # echo "Found script/console"
       rails_command_for_dir="script/console"
+      return 0
+    fi
+    if [ -e "script/rails" ]; then
+      # echo "Found script/rails"
+      rails_command_for_dir="script/rails c"
       return 0
     fi
 
