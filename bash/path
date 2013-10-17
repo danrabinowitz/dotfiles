@@ -45,14 +45,10 @@ export PATH=/bin:/usr/bin
 pathprepend /usr/local/bin
 pathappend /usr/local/sbin:/usr/sbin:/sbin
 
-# I was using this, but I think it's obsolete with brew. Remove after Jan 1 2014 if unused.
-# Include /opt/local/bin and sbin if they exist
-#if [ -d "/opt/local/bin" ] ; then
-#    PATH="$PATH:/opt/local/bin"
-#fi
-#if [ -d "/opt/local/sbin" ] ; then
-#    PATH="$PATH:/opt/local/sbin"
-#fi
+# Added on Oct 16, 2013 for node npm
+if [ -d "/usr/local/share/npm/bin" ] ; then
+    pathappend /usr/local/share/npm/bin
+fi
 
 # With XQuartz (needed for Selenium testing)
 if [ -d "/opt/X11/bin" ] ; then
