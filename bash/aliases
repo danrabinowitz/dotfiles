@@ -123,6 +123,9 @@ alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/
 
 alias nomorebundleexec='gem install rubygems-bundler && gem regenerate_binstubs'
 
+# From: https://coderwall.com/p/o5ewia
+alias reinstallnokogiri='gem install nokogiri -- --with-xml2-dir=/usr --with-xslt-dir=/opt/local --with-iconv-dir=/opt/local'
+
 # From: https://twitter.com/kntreadway/status/390531943260909568
 function conflicts { subl -n `git diff --name-only --diff-filter=U | tr "\\n" " "`; }
 
