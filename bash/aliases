@@ -121,9 +121,10 @@ function notify_branches_which_are_behind {
 
 alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
 
+alias nomorebundleexec='gem install rubygems-bundler && gem regenerate_binstubs'
+
 # From: https://twitter.com/kntreadway/status/390531943260909568
 function conflicts { subl -n `git diff --name-only --diff-filter=U | tr "\\n" " "`; }
-
 
 # Disabled aliases
 # alias fn='find . -name'
