@@ -1,6 +1,5 @@
 bundler
 rubygems-bundler
 rake
-rvm
 awesome_print
 wirble

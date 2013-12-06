@@ -12,7 +12,7 @@ if [ -f "$HOME/.bashrc" ]; then
     . "$HOME/.bashrc"
 fi
 
-[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
+#[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
 
 if [ -f "$HOME/.bash_profile_local" ]; then
     . "$HOME/.bash_profile_local"
