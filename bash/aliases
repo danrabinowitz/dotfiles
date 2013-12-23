@@ -27,6 +27,11 @@ function rails_console {
     local dir=$1
 #    echo "Changing to ${dir}"
     cd $dir
+    if [ -e "bin/rails" ]; then
+      # echo "Found script/console"
+      rails_command_for_dir="bin/rails c"
+      return 0
+    fi
     if [ -e "script/console" ]; then
       # echo "Found script/console"
       rails_command_for_dir="script/console"
