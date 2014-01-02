@@ -18,6 +18,10 @@ if defined?(::Bundler)
     $LOAD_PATH.concat Dir.glob("#{Gem::path.detect{ |p| p=~/global$/ }}/gems/*/lib")
   end
 end
+
+# When I do not use rvm, I use this next line to provide access to gems which are outside bundler
+$LOAD_PATH.concat Gem.path.map{ |p| Dir.glob("#{p}/gems/*/lib") }.flatten
+
 #############################################################################
 # On machines where I do not have the ability (or do not want) to add gems, add this line to .bashrc_local:
 # export djr_local_gems=$HOME'/.gems'
@@ -40,6 +44,7 @@ require 'irb/completion'
   rescue LoadError
 #    rvm_current = `rvm current`.strip.split('@').last
 #    puts "Unable to load #{lib}. Continuing, but you may want to run 'rvm gemset use global && gem install #{lib} && rvm gemset use #{rvm_current}'"
+    puts "Unable to load #{lib}. Continuing, but you may want to run 'gem install #{lib}'"
   end
 end
 
