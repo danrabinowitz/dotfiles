@@ -6,6 +6,6 @@ update: --no-rdoc --no-ri
 :backtrace: false
 :verbose: true
 :sources: 
-- http://rubygems.org/
+- https://rubygems.org/
 gem: --no-rdoc --no-ri
 :benchmark: false
