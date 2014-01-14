@@ -5,8 +5,12 @@ alias rm="rm -i"
 
 alias subl="/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl"
 
+# git aliases
 alias git-email-ls="git config user.email dan.rabinowitz@livingsocial.com && git commit --amend --reset-author"
 alias gca='GIT_COMMITTER_DATE="`date`" git commit --amend --date="$(date)" -C HEAD'
+alias gl='git l'
+alias gs='git s'
+alias ga='git a'
 
 alias man='man -P less'
 
@@ -63,9 +67,6 @@ function rails_console {
 alias rc=rails_console
 
 alias bil="bundle install --local || bundle install"
-
-
-alias gg='git log --oneline --abbrev-commit --all --graph --decorate --color'
 
 # disk usage with human sizes and minimal depth
 alias du1='du -h --max-depth=1'
