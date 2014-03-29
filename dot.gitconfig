@@ -57,3 +57,5 @@
 	ff = false
 [diff]
 	algorithm = patience
+[credential]
+	helper = osxkeychain
