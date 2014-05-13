@@ -139,6 +139,12 @@ function conflicts { subl -n `git diff --name-only --diff-filter=U | tr "\\n" " 
 # alias fn='find . -name'
 # alias hi='history | tail -20'
 
+if [ $(uname) = "Darwin" ]; then
+  alias dns="sudo /usr/bin/killall -HUP mDNSResponder"
+fi
+
+
+
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
 # mode: sh
