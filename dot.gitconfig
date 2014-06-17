@@ -43,7 +43,8 @@
   l = log --graph
   log1 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
 # Next line is from: http://stackoverflow.com/questions/15316601/is-git-pull-the-least-problematic-way-of-updating-a-git-repository/15316602#15316602
-  up = "!git remote update -p; git merge --ff-only @{u}"
+#  up = "!git remote update -p; git merge --ff-only @{u}" # This version updates ALL Remotes
+  up = "!git fetch -p; git merge --ff-only @{u}"          # This version updates only the default remote
 
 
 #[push]
