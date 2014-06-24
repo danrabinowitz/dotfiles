@@ -45,6 +45,7 @@
 # Next line is from: http://stackoverflow.com/questions/15316601/is-git-pull-the-least-problematic-way-of-updating-a-git-repository/15316602#15316602
 #  up = "!git remote update -p; git merge --ff-only @{u}" # This version updates ALL Remotes
   up = "!git fetch -p; git merge --ff-only @{u}"          # This version updates only the default remote
+  ss = "!git show $(git stash list | cut -d":" -f 1)"     # show stash
 
 
 #[push]
