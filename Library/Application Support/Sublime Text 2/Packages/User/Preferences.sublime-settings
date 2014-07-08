@@ -1,6 +1,6 @@
 {
 	"bold_folder_labels": true,
-	"color_scheme": "Packages/Theme - Spacegray/base16-ocean.dark.tmTheme",
+	"color_scheme": "Packages/Solarized Color Scheme/Solarized (dark).tmTheme",
 	"drag_text": false,
 	"fade_fold_buttons": false,
 	"font_size": 12.0,
@@ -8,7 +8,14 @@
 	"ignored_packages":
 	[
 		"Vintage",
-		"SublimeLinter"
+		"Color Highlighter",
+		"TrailingSpaces",
+		"GitGutter",
+		"Solarized Color Scheme",
+		"Markdown Preview",
+		"Theme - Soda",
+		"SublimeSBT",
+		"Theme - Spacegray"
 	],
 	"line_padding_bottom": 1,
 	"line_padding_top": 1,
@@ -18,6 +25,5 @@
 	],
 	"show_full_path": true,
 	"tab_size": 2,
-	"theme": "Spacegray.sublime-theme",
 	"translate_tabs_to_spaces": true
 }
