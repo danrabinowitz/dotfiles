@@ -51,7 +51,7 @@
   up = "!git fetch -p; git merge --ff-only @{u}"          # This version updates only the default remote
   ss = "!git show $(git stash list | cut -d":" -f 1)"     # show stash
 
-  edjr = "!git config user.email you@example.com; git commit --amend --reset-author"
+  edjr = "!git config user.email djr@danielrabinowitz.com; git commit --amend --reset-author"
 
 # From Greg Vaughn: Now you can "git copr #{pr_number}" (check out pr is the mnemonic) and it will
 # pull down the PR in a local branch of pr-#{pr_number} and check it out for you.
