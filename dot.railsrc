@@ -1,2 +1,3 @@
 --skip-bundle
--d postgresql
+#-d postgresql
+--skip-test-unit #skips making the test unit folders (I use rspec)
