@@ -38,14 +38,48 @@
   a = !git add -A . && git status
   c = commit
   cm = commit -m
+#  cam = commit -a -m
+#  cav = commit -a --verbose
+
   alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
   staged = diff --cached
   l = log --graph
   log1 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+
 # Next line is from: http://stackoverflow.com/questions/15316601/is-git-pull-the-least-problematic-way-of-updating-a-git-repository/15316602#15316602
-#  up = "!git remote update -p; git merge --ff-only @{u}" # This version updates ALL Remotes
+  up-all = "!git remote update -p; git merge --ff-only @{u}" # This version updates ALL Remotes
   up = "!git fetch -p; git merge --ff-only @{u}"          # This version updates only the default remote
   ss = "!git show $(git stash list | cut -d":" -f 1)"     # show stash
+
+  edjr = "!git config user.email you@example.com; git commit --amend --reset-author"
+
+# From Greg Vaughn: Now you can "git copr #{pr_number}" (check out pr is the mnemonic) and it will
+# pull down the PR in a local branch of pr-#{pr_number} and check it out for you.
+  copr = "!f() { git fetch -fu origin refs/pull/$1/head:pr-$1; git checkout pr-$1; } ; f"
+# From Greg Vaughn: And if you use "git copr N" regularly, you're going to end up with a bunch
+# of pr-* local branches, so "git prunepr" will get rid of them for you.
+  prunepr = "!git for-each-ref refs/heads/pr-* --format='%(refname:short)' | while read ref ; do git branch -D $ref ; done"
+
+# From David Dreggors: Show the info about the last commit on each local branch
+  bb = !git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'
+
+
+# I do not use these aliases, but others with whom I pair might use them.
+  st = status
+  di = diff
+  co = checkout
+  ci = commit
+  br = branch
+  cp = cherry-pick
+  rb = rebase
+
+# More I do not generally use
+  ap=add -p
+  dc = diff --cached
+  ds = diff --stat
+  log2=log --pretty
+  log3=log --pretty=oneline --abbrev-commit --graph --decorate
+  log4=log --pretty --graph --decorate
 
 
 #[push]
