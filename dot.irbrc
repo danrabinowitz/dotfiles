@@ -145,6 +145,14 @@ history_filename = "~/.irb-history#{'-' + rails_appname if rails_appname}.rb"
 IRB.conf[:HISTORY_FILE] = File.expand_path(history_filename)
 IRB.conf[:SAVE_HISTORY] = 10000
 
+if defined?(BigDecimal)
+  class BigDecimal
+    def inspect
+      "#<BigDecimal: #{to_f}>"
+    end
+  end
+end
+
 # Local Variables:
 # mode: ruby
 # End:
