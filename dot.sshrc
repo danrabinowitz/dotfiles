@@ -1,1 +1,1 @@
-echo "This message comes from .sshrc on the local machine."
+dot.bashrc
