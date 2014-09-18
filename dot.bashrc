@@ -37,6 +37,10 @@
 # readline config. This simply sets the default, so there is no point.
 # : ${INPUTRC:=~/.inputrc}
 
+if test -n "$SSHHOME" ; then
+  echo "You are using sshrc ( https://github.com/Russell91/sshrc ). This message comes from .bashrc which is symlinked to by .sshrc"
+fi
+
 
 # ----------------------------------------------------------------------
 #  SHELL OPTIONS
