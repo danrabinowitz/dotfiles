@@ -27,9 +27,13 @@ ulimit -S -c 0
 
 
 ################################################################################
-# Stuff that is not bash-specific and not specific to interactive use, but which is NOT "run time modifying" stuf
+# Stuff that is not bash-specific and not specific to interactive use, but which is NOT "run time modifying" stuff
 # This environment variable is NOT bash-specific and not specific to interactive use. So I am trying to put it in .profile
-export GIT_AUTHOR_NAME="Dan Rabinowitz"
+git_config_global_username=`git config --global --get user.name`
+#echo "git_config_global_username = ${git_config_global_username}"
+if [ -z "$git_config_global_username" ]; then
+  export GIT_AUTHOR_NAME="Dan Rabinowitz"
+fi
 
 # Shell options which could be useful in a non-interactive session
 shopt -s extglob >/dev/null 2>&1
