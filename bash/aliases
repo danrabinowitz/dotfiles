@@ -30,45 +30,36 @@ alias man='man -P less'
 #}
 #alias r=rails
 
-function rails_console {
-  function set_rails_command_for_dir {
-    local dir=$1
-#    echo "Changing to ${dir}"
-    cd $dir
-    if [ -e "bin/rails" ]; then
-      # echo "Found script/console"
-      rails_command_for_dir="bin/rails c"
-      return 0
-    fi
-    if [ -e "script/console" ]; then
-      # echo "Found script/console"
-      rails_command_for_dir="script/console"
-      return 0
-    fi
-    if [ -e "script/rails" ]; then
-      # echo "Found script/rails"
-      rails_command_for_dir="script/rails c"
-      return 0
-    fi
+rails() {
+  args="$@"
+  real_rails=`which rails`
+  cmd=$real_rails
+  if [ -e "bin/rails" ]; then
+    cmd="bin/rails"
+  fi
+  "$cmd" $args
+}
+alias rc='rails c'
 
-
-    if [[ $dir == "/" ]]; then
-      rails_command_for_dir="irb"
-      return 0
-    fi
-    local new_dir=$(dirname `pwd`)
-    set_rails_command_for_dir $new_dir
-    return $?
-  }
-  local rails_command_for_dir=""
-  pushd . >& /dev/null
-  set_rails_command_for_dir `pwd`
-  echo "Running "$rails_command_for_dir
-  $rails_command_for_dir
-  popd >& /dev/null
+rake() {
+  args="$@"
+  real_rake=`which rake`
+  cmd=$real_rake
+  if [ -e "bin/rake" ]; then
+    cmd="bin/rake"
+  fi
+  "$cmd" $args
 }
 
-alias rc=rails_console
+rspec() {
+  args="$@"
+  real_rspec=`which rspec`
+  cmd=$real_rspec
+  if [ -e "bin/rspec" ]; then
+    cmd="bin/rspec"
+  fi
+  "$cmd" $args
+}
 
 alias bil="bundle install --local || bundle install"
 
