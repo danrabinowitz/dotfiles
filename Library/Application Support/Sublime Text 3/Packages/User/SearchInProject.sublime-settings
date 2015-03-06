@@ -1,0 +1,6 @@
+{
+  /* What engine to use; one of grep, ack, the_silver_searcher, or git_grep (or find_str, on Windows) */
+  /* The default is grep because it's widely available on *nix machines, but ack and The Silver Searcher are both faster, */
+  /* and git grep is also faster, but only works inside a Git repository */
+  "search_in_project_engine": "the_silver_searcher"
+}

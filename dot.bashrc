@@ -113,6 +113,7 @@ fi
 # PAGER / EDITOR
 # ----------------------------------------------------------------------
 
+# export EDITOR='sbl -w'
 export EDITOR=vim
 
 # PAGER
