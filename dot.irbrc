@@ -48,8 +48,13 @@ require 'irb/completion'
   end
 end
 
+begin
 if defined?(AwesomePrint)
+  require "awesome_print"
   AwesomePrint.irb!
+end
+rescue Exception => e
+  puts "Exception: #{e}"
 end
 
 #IRB.conf[:AUTO_INDENT]=true
