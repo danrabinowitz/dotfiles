@@ -1,0 +1,10 @@
+/* Having "asi" true is for LivingSocial only. */
+{
+
+	"jshint_options":
+	{
+		"asi" : true,
+    "multistr": true
+  }
+
+}
