@@ -4,10 +4,42 @@
 alias rm="rm -i"
 
 if [ -f /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl ]; then
-  alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
+#  alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
+  SUBLIME_TEXT_BIN="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
 elif [ -f /Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl ]; then
-  alias subl="/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl"
+#  alias subl="/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl"
+  SUBLIME_TEXT_BIN="/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl"
 fi
+
+subl() {
+  args="${@}"
+#  if [ ! -z "$args" -a "$args"!="." ]; then
+  if [ ! -z "$args" -a "${args}" != "." ]; then
+    echo "We have an argument:${args}: - 1"
+    eval $SUBLIME_TEXT_BIN "$args"
+  else
+    if [ "${args}" == "." ]; then
+      echo "We have an argument:${args}: - 2c"
+      echo "The argument is '.' which is rarely desired. Just call with no argument."
+    else
+      echo "No argument supplied"
+    fi
+    SUBLIME_PROJECT_FILES=`ls -1 *.sublime-project 2> /dev/null`
+
+    if [ "$SUBLIME_PROJECT_FILES" ]; then  # At least one project exists in current folder, open them all
+      for SUBLIME_PROJECT_FILE in "$SUBLIME_PROJECT_FILES"; do
+        echo "Using project file: ${SUBLIME_PROJECT_FILE}"
+        eval $SUBLIME_TEXT_BIN --project "$SUBLIME_PROJECT_FILE"
+      done
+    else  # no file specified and no projects available so open current directory
+      echo "No project file found. Opening current directory."
+      eval $SUBLIME_TEXT_BIN .
+    fi
+  fi
+}
+
+
+
 
 # git aliases
 alias git-email-ls="git config user.email dan.rabinowitz@livingsocial.com && git commit --amend --reset-author"
@@ -138,7 +170,7 @@ if [ $(uname) = "Darwin" ]; then
   alias dns="sudo /usr/bin/killall -HUP mDNSResponder"
 fi
 
-
+alias fs="foreman start"
 
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
