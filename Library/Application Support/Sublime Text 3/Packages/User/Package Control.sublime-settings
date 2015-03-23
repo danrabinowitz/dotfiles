@@ -1,0 +1,33 @@
+{
+	"auto_upgrade_last_run": null,
+	"in_process_packages":
+	[
+	],
+	"installed_packages":
+	[
+		"Alignment",
+		"ApplySyntax",
+		"CoffeeScript",
+		"Color Highlighter",
+		"Color Scheme - RSE",
+		"ColorPicker",
+		"GitGutter",
+		"Markdown Preview",
+		"Package Control",
+		"Play 2.0",
+		"Pretty JSON",
+		"SCSS",
+		"Search in Project",
+		"SideBarEnhancements",
+		"Solarized Color Scheme",
+		"Solarized Toggle",
+		"sublimelint",
+		"SublimeLinter",
+		"SublimeLinter-ruby",
+		"SublimeREPL",
+		"SublimeSBT",
+		"Theme - Soda",
+		"Theme - Spacegray",
+		"Tomorrow Color Schemes"
+	]
+}
