@@ -23,6 +23,7 @@
 		"Solarized Toggle",
 		"sublimelint",
 		"SublimeLinter",
+		"SublimeLinter-jshint",
 		"SublimeLinter-ruby",
 		"SublimeREPL",
 		"SublimeSBT",
