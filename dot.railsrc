@@ -1,2 +1,2 @@
 --skip-bundle
---skip-test-unit
+--skip-turbolinks
