@@ -93,7 +93,9 @@ rspec() {
   "$cmd" $args
 }
 
-alias bil="bundle install --local || bundle install"
+alias be="bundle exec"
+alias bi="bundle install"
+#alias bil=bi
 
 # disk usage with human sizes and minimal depth
 alias du1='du -h --max-depth=1'
