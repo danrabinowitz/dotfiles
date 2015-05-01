@@ -118,6 +118,15 @@ function set_return_value_to_display_in_prompt {
     fi
 }
 
+function git_stash_size {
+ lines=$(git stash list -n 100 2> /dev/null) || return
+ if [ "${#lines}" -gt 0 ]
+ then
+   count=$(echo "$lines" | wc -l | sed 's/^[ \t]*//') # strip tabs
+   echo " ["${count#} "stash] "
+ fi
+}
+
 # NOTE: This is a nice repo. I could probably clean up my .bashrc and structure it into multiple files
 #   https://github.com/jimeh/git-aware-prompt
 
@@ -128,7 +137,7 @@ txtrst='\e[0m'    # Text Reset
 # Check if __git_ps1 is defined
 declare -f __git_ps1 >& /dev/null
 if [[ $? -eq 0 ]]; then
-    prompt_main1=${prompt_user}'@'${prompt_host}':\w$(__git_ps1 " (%s)")'"\[$txtylw\]\$git_dirty\[$txtrst\]"' \$ '
+    prompt_main1=${prompt_user}'@'${prompt_host}':\w$(__git_ps1 " (%s)")'"\[$txtylw\]\$git_dirty\[$txtrst\]"'$(git_stash_size) \$ '
 else
     prompt_main1=${prompt_user}'@'${prompt_host}':\w'"\[$txtylw\]\$git_dirty\[$txtrst\]"' \$ '
 fi
