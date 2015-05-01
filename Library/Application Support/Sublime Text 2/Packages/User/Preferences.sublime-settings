@@ -7,15 +7,15 @@
 	"highlight_line": true,
 	"ignored_packages":
 	[
-		"SublimeSBT",
 		"Theme - Spacegray",
-		"Color Highlighter",
-		"Vintage",
-		"GitGutter",
 		"Theme - Soda",
-		"TrailingSpaces",
 		"Markdown Preview",
-		"Solarized Color Scheme"
+		"GitGutter",
+		"Vintage",
+		"Solarized Color Scheme",
+		"Color Highlighter",
+		"SublimeSBT",
+		"TrailingSpaces"
 	],
 	"line_padding_bottom": 1,
 	"line_padding_top": 1,
