@@ -127,6 +127,10 @@ function git_stash_size {
  fi
 }
 
+function set_iterm_title {
+  echo -ne "\033]0;${PWD##*/}\007"
+}
+
 # NOTE: This is a nice repo. I could probably clean up my .bashrc and structure it into multiple files
 #   https://github.com/jimeh/git-aware-prompt
 
@@ -144,18 +148,18 @@ fi
 
 unset prompt_user
 
-PROMPT_COMMAND="set_return_value_to_display_in_prompt; set_git_dirty; history -a; history -n; $PROMPT_COMMAND"
+PROMPT_COMMAND="set_return_value_to_display_in_prompt; set_git_dirty; set_iterm_title; history -a; history -n; $PROMPT_COMMAND"
 export PS1="\$return_value_to_display_in_prompt"'${debian_chroot_string}'"$prompt_main1"
 unset prompt_main1
 
 # If this is an xterm set the title to user@host:dir
-case "$TERM" in
-xterm*|rxvt*)
-    PS1="\[\e]0;${debian_chroot_string}\u@\h: \w\a\]$PS1"
-    ;;
-*)
-    ;;
-esac
+#case "$TERM" in
+#xterm*|rxvt*)
+#    PS1="\[\e]0;${debian_chroot_string}\u@\h: \w\a\]$PS1"
+#    ;;
+#*)
+#    ;;
+#esac
 
 unset force_color_prompt debian_chroot_string debian_chroot
 
