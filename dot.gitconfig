@@ -61,7 +61,12 @@
   prunepr = "!git for-each-ref refs/heads/pr-* --format='%(refname:short)' | while read ref ; do git branch -D $ref ; done"
 
 # From David Dreggors: Show the info about the last commit on each local branch
-  bb = !git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'
+# Not using. The one from ultrasaurus below is much better
+#  bb = !git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'
+
+# From: https://twitter.com/ultrasaurus/status/635132951752126464
+  branches = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
+
 
 
 # I do not use these aliases, but others with whom I pair might use them.
