@@ -1,5 +1,5 @@
 --- 
-install: --no-rdoc --no-ri
+install: --no-rdoc --no-ri -P MediumSecurity --verify
 :bulk_threshold: 1000
 update: --no-rdoc --no-ri
 :update_sources: true
