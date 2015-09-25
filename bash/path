@@ -61,7 +61,10 @@ if [ -d "$HOME/bin" ] ; then
 #    PATH="$HOME/bin:$PATH"
 fi
 
-
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/rootdir/usr/local/bin" ] ; then
+    pathprepend "$HOME/rootdir/usr/local/bin"
+fi
 
 # I was using this. I think I may not need it, so I'm commenting it out on 12/15/12.
 # PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
