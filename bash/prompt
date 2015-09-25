@@ -72,7 +72,7 @@ if [ "$color_prompt" = yes ]; then
       prompt_user='\[\e[37;41m\]\u\[\e[0m\]'
    elif [ $USER == 'danrabinowitz' ] || [ $USER == 'djr' ]; then
       # no color
-      prompt_user='\u'
+      prompt_user=''
    else
       # DIFFERENT COLOR
       prompt_user='\[\e[37;41m\]\u\[\e[0m\]'
@@ -82,17 +82,34 @@ else
    prompt_user='\u'
 fi
 
+if [ -n "$SSH_CLIENT" ] || [ -n "$SSH_TTY" ]; then
+  REMOTE_SHELL=1
+fi
+
 prompt_host='\H'
 if [ "$color_prompt" = yes ]; then
-  if [ `hostname` == 'VHGDB-Testing' ];then
-    COLOR="${BLUE}"
-    prompt_host=${COLOR}'\H'${PS_CLEAR}
-  elif [ `hostname` == 'vhgdb' ]; then
-    COLOR="${GREEN_FG_RED_BG}"
-    prompt_host=${COLOR}'\H'${PS_CLEAR}
+  if [ -n "$REMOTE_SHELL" ]; then
+    if [ `hostname` == 'VHGDB-Testing' ];then
+      COLOR="${BLUE}"
+      prompt_host=${COLOR}'\H'${PS_CLEAR}
+    elif [ `hostname` == 'vhgdb' ]; then
+      COLOR="${GREEN_FG_RED_BG}"
+      prompt_host=${COLOR}'\H'${PS_CLEAR}
+    fi
+  else
+    prompt_host=''
   fi
 fi
 
+if [ -n "$prompt_user" ] && [ -n "$prompt_host" ]; then
+  prompt_user_host=${prompt_user}'@'${prompt_host}
+else
+  prompt_user_host=${prompt_user}${prompt_host}
+fi
+
+if [ -n "$prompt_user_host" ] ; then
+  prompt_user_host=${prompt_user_host}':'
+fi
 
 function set_git_dirty {
     st=$(git status 2>/dev/null | tail -n 1)
@@ -138,15 +155,18 @@ function set_iterm_title {
 txtylw='\e[0;33m' # Yellow
 txtrst='\e[0m'    # Text Reset
 
+
+
 # Check if __git_ps1 is defined
 declare -f __git_ps1 >& /dev/null
 if [[ $? -eq 0 ]]; then
-    prompt_main1=${prompt_user}'@'${prompt_host}':\w$(__git_ps1 " (%s)")'"\[$txtylw\]\$git_dirty\[$txtrst\]"'$(git_stash_size) \$ '
+    prompt_main1=${prompt_user_host}'\w$(__git_ps1 " (%s)")'"\[$txtylw\]\$git_dirty\[$txtrst\]"'$(git_stash_size) \$ '
 else
-    prompt_main1=${prompt_user}'@'${prompt_host}':\w'"\[$txtylw\]\$git_dirty\[$txtrst\]"' \$ '
+    prompt_main1=${prompt_user_host}'\w'"\[$txtylw\]\$git_dirty\[$txtrst\]"' \$ '
 fi
 
 unset prompt_user
+unset prompt_user_host
 
 PROMPT_COMMAND="set_return_value_to_display_in_prompt; set_git_dirty; set_iterm_title; history -a; history -n; $PROMPT_COMMAND"
 export PS1="\$return_value_to_display_in_prompt"'${debian_chroot_string}'"$prompt_main1"
