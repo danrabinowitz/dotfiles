@@ -135,12 +135,11 @@ function set_return_value_to_display_in_prompt {
     fi
 }
 
-`which change-tab-color-pwd`
-if [ $? -eq 0 ] ; then
+if [ `which change-tab-color-pwd`"" != "" ] ; then
   CHANGE_TAB_COLOR_PWD_EXISTS=1
 fi
 function tab_color_precmd {
-  if [ -z "$CHANGE_TAB_COLOR_PWD_EXISTS" ]; then
+  if [ -n "$CHANGE_TAB_COLOR_PWD_EXISTS" ]; then
     change-tab-color-pwd 0.5 0.5
   else
     echo "Unable to find change-tab-color-pwd"
