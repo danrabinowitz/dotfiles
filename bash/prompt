@@ -135,6 +135,18 @@ function set_return_value_to_display_in_prompt {
     fi
 }
 
+`which change-tab-color-pwd`
+if [ $? -eq 0 ] ; then
+  CHANGE_TAB_COLOR_PWD_EXISTS=1
+fi
+function tab_color_precmd {
+  if [ -z "$CHANGE_TAB_COLOR_PWD_EXISTS" ]; then
+    change-tab-color-pwd 0.5 0.5
+  else
+    echo "Unable to find change-tab-color-pwd"
+  fi
+}
+
 function git_stash_size {
  lines=$(git stash list -n 100 2> /dev/null) || return
  if [ "${#lines}" -gt 0 ]
@@ -168,7 +180,7 @@ fi
 unset prompt_user
 unset prompt_user_host
 
-PROMPT_COMMAND="set_return_value_to_display_in_prompt; set_git_dirty; set_iterm_title; history -a; history -n; $PROMPT_COMMAND"
+PROMPT_COMMAND="set_return_value_to_display_in_prompt; tab_color_precmd; set_git_dirty; set_iterm_title; history -a; history -n; $PROMPT_COMMAND"
 export PS1="\$return_value_to_display_in_prompt"'${debian_chroot_string}'"$prompt_main1"
 unset prompt_main1
 
