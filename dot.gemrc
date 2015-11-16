@@ -1,5 +1,4 @@
---- 
-install: --no-rdoc --no-ri -P MediumSecurity --verify
+install: --no-rdoc
 :bulk_threshold: 1000
 update: --no-rdoc --no-ri
 :update_sources: true
@@ -7,5 +6,5 @@ update: --no-rdoc --no-ri
 :verbose: true
 :sources: 
 - https://rubygems.org/
-gem: --no-rdoc --no-ri
+gem: --no-rdoc
 :benchmark: false
