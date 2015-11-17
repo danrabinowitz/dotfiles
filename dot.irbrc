@@ -137,6 +137,18 @@ if rails_env
       ActiveRecord::Base.clear_active_connections!
       ActiveRecord::Base.logger = Logger.new(STDOUT)
     end
+
+    # From Tom Copeland
+    def nologs
+      ActiveRecord::Base.logger.level = 4
+    end
+
+    # From Chris Morris
+    def toggle_ar_logging
+      ActiveRecord::Base.logger = log_dev.filename == '/dev/null' ? Logger.new(STDOUT) : Logger.new('/dev/null')
+      log_dev.filename || log_dev.dev
+    end
+
   end
 end
 #############################################################################
