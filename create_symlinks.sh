@@ -3,10 +3,10 @@
 
 #############################################################################
 create_symlink_for_dotfiles_git() {
-  echo "Check if $@ exists"
+  # echo "Check if $@ exists"
   if [ -f "${HOME}/.$@" -o -d "${HOME}/.$@" -o -L "${HOME}/.$@" ] ; then
     if [ -L "${HOME}/.$@" ] ; then
-      echo "It is a link"
+      # echo "It is a link"
       rm -f "${HOME}/.$@"
     else
       echo "$@ already exists, so it is being moved to $@_orig"
