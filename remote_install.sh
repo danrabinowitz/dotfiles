@@ -34,7 +34,7 @@ function use_git_repo() {
     # Directory exists
     if [ directory_is_a_git_repo ] ; then
       echo "Directory exists. Updating it."
-      # (cd "$DOTFILES_DIR"; git pull)
+      (cd "$DOTFILES_DIR"; git pull)
     else
       echo "Directory exists, but is not a git repo. Removing and cloning."
       # Remove it, and then git clone
