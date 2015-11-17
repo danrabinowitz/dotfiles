@@ -73,8 +73,7 @@ complete -F _complete_ssh_hosts sshrc
 
 #complete -W "$(echo `cat ~/.ssh/known_hosts | cut -f 1 -d ' ' | sed -e s/,.*//g | uniq | grep -v "\["`;)" ssh
 
-
-
+complete -o bashdefault -f -C 'ruby --disable-gems $(gem which minitest/complete)' minitest
 
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:

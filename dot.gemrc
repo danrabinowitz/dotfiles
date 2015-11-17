@@ -1,4 +1,4 @@
-install: --no-rdoc
+install: --no-rdoc --no-ri -P LowSecurity --verify
 :bulk_threshold: 1000
 update: --no-rdoc --no-ri
 :update_sources: true
