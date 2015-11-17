@@ -38,7 +38,7 @@
 # : ${INPUTRC:=~/.inputrc}
 
 if test -n "$SSHHOME" ; then
-  echo "You are using sshrc ( https://github.com/Russell91/sshrc ). This message comes from .bashrc which is symlinked to by .sshrc"
+  echo "You are using sshrc ( https://github.com/Russell91/sshrc ). This message comes from .bashrc."
 fi
 
 
