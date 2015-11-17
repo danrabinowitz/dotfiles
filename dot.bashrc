@@ -16,6 +16,11 @@
 # Create a temp file at the start of .bashrc, and delete it at the end.
 # Check if it exists on starting .bashrc, and if it does then exit, assuming that there's a problem with .bashrc
 
+# Not sure why yet, but this seems needed for app-shell01
+# Source global definitions
+if [ -f /etc/bashrc ]; then
+    . /etc/bashrc
+fi
 
 # If not running interactively, don't do anything
 # This "interactive" quality is distinct from the login/non-login shell (vis a vis .profile / .bashrc). It simply ensures that nothing is output for non-interactive shells.
