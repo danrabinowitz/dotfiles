@@ -1,1 +1,29 @@
-dot.bashrc
+# ~/.sshrc
+# https://github.com/Russell91/sshrc
+
+
+# IMPORTANT: This file MUST be clean with NO OUTPUT
+# TODO: Add reference as to why this is
+
+
+# If not running interactively, don't do anything
+# This "interactive" quality is distinct from the login/non-login shell (vis a vis .profile / .bashrc). It simply ensures that nothing is output for non-interactive shells.
+# TODO: We need to be able to log something if DEBUG is set, even if non-interactive
+[ -z "$PS1" ] && return
+
+echo "Start of .sshrc"
+
+: ${HOME:=~}                 # The home directory of the logged-in user
+
+REMOTE_INSTALL_SCRIPT="$SSHHOME/.sshrc.d/remote_install.sh"
+if [ -f "$REMOTE_INSTALL_SCRIPT" ]; then
+    echo "Loading remote install script"
+    . "$REMOTE_INSTALL_SCRIPT"
+else
+    echo "ERROR: Unable to find remote install script"
+fi
+
+# The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
+# Local Variables:
+# mode: sh
+# End:

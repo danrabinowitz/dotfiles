@@ -3,18 +3,19 @@
 
 #############################################################################
 create_symlink_for_dotfiles_git() {
-if [ -f ".$@" -o -d ".$@" ] ; then
-  if [ -L ".$@" ] ; then
-    rm ".$@"
-  else
-    echo "$@ already exists, so it is being moved to $@_orig"
-    mv ".$@" ".$@_orig"
+  echo "Check if $@ exists"
+  if [ -f "${HOME}/.$@" -o -d "${HOME}/.$@" -o -L "${HOME}/.$@" ] ; then
+    if [ -L "${HOME}/.$@" ] ; then
+      echo "It is a link"
+      rm -f "${HOME}/.$@"
+    else
+      echo "$@ already exists, so it is being moved to $@_orig"
+      mv "${HOME}/.$@" "${HOME}/.$@_orig"
+    fi
   fi
-fi
-ln -s .dotfiles.git/dot."$@" ".$@"
+  ln -s "${DOTFILES_DIR}"/dot."$@" "${HOME}/.$@"
 }
 #############################################################################
-cd
 create_symlink_for_dotfiles_git 'bash_profile'
 create_symlink_for_dotfiles_git 'bashrc'
 create_symlink_for_dotfiles_git 'dircolors'
