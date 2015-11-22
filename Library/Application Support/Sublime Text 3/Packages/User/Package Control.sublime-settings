@@ -1,5 +1,6 @@
 {
 	"auto_upgrade_last_run": null,
+	"bootstrapped": true,
 	"in_process_packages":
 	[
 	],
@@ -11,6 +12,7 @@
 		"Color Highlighter",
 		"Color Scheme - RSE",
 		"ColorPicker",
+		"Emacs-like Modelines",
 		"GitGutter",
 		"LESS",
 		"Markdown Preview",
