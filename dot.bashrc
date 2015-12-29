@@ -22,6 +22,11 @@ if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
+if [ -f ~/.bashrc_local_non_interactive ]; then
+    . ~/.bashrc_local_non_interactive
+fi
+
+
 # If not running interactively, don't do anything
 # This "interactive" quality is distinct from the login/non-login shell (vis a vis .profile / .bashrc). It simply ensures that nothing is output for non-interactive shells.
 # TODO: We need to be able to log something if DEBUG is set, even if non-interactive
