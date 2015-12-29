@@ -29,6 +29,7 @@
 		"sublimelint",
 		"SublimeLinter",
 		"SublimeLinter-jshint",
+		"SublimeLinter-rubocop",
 		"SublimeLinter-ruby",
 		"SublimeREPL",
 		"SublimeSBT",
