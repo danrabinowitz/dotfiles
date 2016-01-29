@@ -179,7 +179,7 @@ fi
 unset prompt_user
 unset prompt_user_host
 
-PROMPT_COMMAND="set_return_value_to_display_in_prompt; tab_color_precmd; set_git_dirty; set_iterm_title; history -a; history -n; $PROMPT_COMMAND"
+PROMPT_COMMAND="set_return_value_to_display_in_prompt; tab_color_precmd; set_git_dirty; set_iterm_title; history -a; $PROMPT_COMMAND"
 export PS1="\$return_value_to_display_in_prompt"'${debian_chroot_string}'"$prompt_main1"
 unset prompt_main1
 
