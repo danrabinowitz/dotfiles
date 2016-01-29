@@ -104,14 +104,22 @@ esac
 export LANG LANGUAGE LC_CTYPE LC_ALL
 
 
-# TODO: DJR 12/22/10: Look into this.  Do I need/want it?
-# don't put duplicate lines in the history. See bash(1) for more options
-#export HISTCONTROL=$HISTCONTROL${HISTCONTROL+,}ignoredups
-# ... or force ignoredups and ignorespace
-# don't overwrite GNU Midnight Commander's setting of `ignorespace'.
-export HISTCONTROL=ignoreboth
-export HISTFILESIZE=10000
-
+# http://stackoverflow.com/a/19533853 aka http://stackoverflow.com/questions/9457233/unlimited-bash-history/19533853#19533853
+#
+# Eternal bash history.
+# ---------------------
+# Undocumented feature which sets the size to "unlimited".
+# http://stackoverflow.com/questions/9457233/unlimited-bash-history
+export HISTFILESIZE=
+export HISTSIZE=
+export HISTTIMEFORMAT="[%F %T] "
+export HISTTIMEFORMAT="%m/%d/%y %T "
+# Change the file location because certain bash sessions truncate .bash_history file upon close.
+# http://superuser.com/questions/575479/bash-history-truncated-to-500-lines-on-each-login
+export HISTFILE=~/.bash_eternal_history
+# Force prompt to write history after every command.
+# http://superuser.com/questions/20900/bash-history-loss
+# PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 
 # For security purposes, do not record history for root
 if [ $EUID -eq 0 ] ; then
