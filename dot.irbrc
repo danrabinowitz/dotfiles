@@ -150,6 +150,41 @@ if rails_env
     end
 
   end
+
+  # Copied from https://github.com/rails/rails/blob/2db347bebc9d3f39b3c5e274b7c9beecfce73913/railties/lib/rails/application/bootstrap.rb#L32-L54
+  def set_rails_logger_to_path(path)
+    unless File.exist? File.dirname path
+      FileUtils.mkdir_p File.dirname path
+    end
+
+    f = File.open path, 'a'
+    f.binmode
+    f.sync = Rails.application.config.autoflush_log # if true make sure every write flushes
+
+    logger = ActiveSupport::Logger.new f
+    logger.formatter = Rails.application.config.log_formatter
+    Rails.logger.warn "Setting Rails.logger to log to #{path}"
+    Rails.logger = ActiveSupport::TaggedLogging.new(logger)
+  rescue StandardError
+    logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new(STDERR))
+    logger.level = ActiveSupport::Logger::WARN
+    logger.warn(
+      "Rails Error: Unable to access log file. Please ensure that #{path} exists and is writable " +
+      "(ie, make it writable for user and group: chmod 0664 #{path}). " +
+      "The log level has been raised to WARN and the output directed to STDERR until the problem is fixed." +
+      "This message is from .irbc where it is copied from Rails."
+    )
+    Rails.logger = logger
+  end
+
+  rails_logfile_path = Rails.application.config.paths["log"].first
+  if !File.writable?(rails_logfile_path)
+    Rails.logger.warn "The logfile ( #{rails_logfile_path} ) is not writable. Rails should now be logging to STDERR."
+
+    alternate_logfile = File.join(Rails.root, 'log', 'users', Etc.getlogin, File.basename(rails_logfile_path))
+    set_rails_logger_to_path(alternate_logfile)
+    Rails.logger.info "Now logging to #{alternate_logfile}"
+  end
 end
 #############################################################################
 Kernel::at_exit do
