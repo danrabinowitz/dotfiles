@@ -12,6 +12,11 @@
                 "args": [],
                 "excludes": []
             },
+            "rubocop": {
+                "@disable": false,
+                "args": [],
+                "excludes": []
+            },
             "ruby": {
                 "@disable": false,
                 "args": [],
