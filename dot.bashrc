@@ -229,6 +229,13 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 export RUBYGEMS_GEMDEPS="-"
 
 
+#if [ "$UNAME" = Darwin ]; then
+#  LUNCHY_DIR=$(dirname `gem which lunchy`)/../extras
+#  if [ -f $LUNCHY_DIR/lunchy-completion.bash ]; then
+#    . $LUNCHY_DIR/lunchy-completion.bash
+#  fi
+#fi
+
 # Load aliases. Depends on PAGER being set
 . ~/Config/bash/aliases
 
