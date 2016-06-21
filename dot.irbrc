@@ -195,7 +195,8 @@ end
 
 history_filename = "~/.irb-history#{'-' + rails_appname if rails_appname}.rb"
 IRB.conf[:HISTORY_FILE] = File.expand_path(history_filename)
-IRB.conf[:SAVE_HISTORY] = 10000
+# Commenting out the next line because of an error about "warning: already initialized constant Readline::HISTORY" when I try to start irb or rails console
+#IRB.conf[:SAVE_HISTORY] = 10000
 
 if defined?(BigDecimal)
   class BigDecimal

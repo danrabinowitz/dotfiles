@@ -28,6 +28,7 @@
   editor = emacs
   excludesfile = /Users/danrabinowitz/.gitignore_global
   whitespace = trailing-space,space-before-tab
+	pager = diff-so-fancy | less --tabs=4 -RFX
 #  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
 #  pager = less -FRSX
 [apply]
@@ -100,5 +101,6 @@
 	ff = false
 [diff]
 	algorithm = patience
+#	compactionHeuristic = true
 [credential]
 	helper = osxkeychain
