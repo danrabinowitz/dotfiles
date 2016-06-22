@@ -166,7 +166,10 @@ function set_iterm_title {
 txtylw='\e[0;33m' # Yellow
 txtrst='\e[0m'    # Text Reset
 
-
+if [ "$UNAME" = Darwin ]; then
+  # This is Mac OS X specific
+  source `brew --prefix git`/etc/bash_completion.d/git-prompt.sh
+fi
 
 # Check if __git_ps1 is defined
 declare -f __git_ps1 >& /dev/null
