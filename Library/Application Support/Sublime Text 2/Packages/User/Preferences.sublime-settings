@@ -8,6 +8,7 @@
 	"icon_file_type_enable": true,
 	"ignored_packages":
 	[
+		"CoffeeScript",
 		"Color Highlighter",
 		"GitGutter",
 		"Markdown Preview",
