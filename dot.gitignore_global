@@ -17,3 +17,5 @@
 *.sublime-workspace
 
 /.byebug_history
+
+/.personal-notes.txt
