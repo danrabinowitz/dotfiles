@@ -44,10 +44,18 @@
   autocrlf = false
   editor = emacs
   excludesfile = /Users/danrabinowitz/.gitignore_global
-  whitespace = trailing-space,space-before-tab
-	pager = diff-so-fancy | less --tabs=4 -RFX
+  # whitespace issues which are enabled by default: blank-at-eol,blank-at-eof,space-before-tab
+  whitespace = fix,indent-with-non-tab,cr-at-eol
 #  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
+#  whitespace = space-before-tab,-indent-with-non-tab,trailing-space
+
+	pager = diff-so-fancy | less --tabs=4 -RFX
 #  pager = less -FRSX
+
+  # Make `git rebase` safer on OS X
+  # More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
+  trustctime = false
+
 [apply]
   whitespace = fix
 [alias]
@@ -76,6 +84,8 @@
   ss = "!git show $(git stash list | cut -d":" -f 1)"     # show stash
 
   edjr = "!git config user.email djr@danielrabinowitz.com; git commit --amend --reset-author"
+
+  contributors = shortlog --summary --numbered
 
 # From Greg Vaughn: Now you can "git copr #{pr_number}" (check out pr is the mnemonic) and it will
 # pull down the PR in a local branch of pr-#{pr_number} and check it out for you.
@@ -127,8 +137,11 @@
 	ff = false
 [diff]
 	algorithm = patience
+  renames = copies
 #	compactionHeuristic = true
 [credential]
 	helper = osxkeychain
 [pretty]
 	oneline2 = format:"%C(auto)%h%d %s %C(cyan)(%ci)%Creset %C(yellow)<%an%GS>%Creset"
+#[commit]
+#  gpgsign = true
