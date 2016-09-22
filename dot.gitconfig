@@ -2,22 +2,39 @@
   name = Dan Rabinowitz
 #  email = djr@danielrabinowitz.com
 [color]
-  ui = true
+#  ui = true
+  ui = auto
 [color "branch"]
   current = yellow reverse
   local = yellow
   remote = green
+  upstream = bold blue
+  plain = normal
 [color "diff"]
+  plain = normal
   meta = yellow bold
   frag = magenta bold
   old = red bold
   new = green bold
+  commit = yellow
+  whitespace = normal red
 [color "status"]
+    header = normal
     added = green
+    updated = green
     changed = yellow
     untracked = red
+    nobranch = red reverse
+[color "grep"]
+       match = normal
+[color "interactive"]
+       prompt = normal
+       header = normal
+       help = normal
+       error = normal
+# Colors: http://shallowsky.com/blog/programming/gitcolors.html
 [format]
-  pretty = format:%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ci) %C(bold blue)<%an>%Creset
+  pretty = oneline2
 #  pretty = format:%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%ci) %C(bold blue)<%an>%Creset - %Cred%G?%Creset
 #  pretty = format:%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset
 #  pretty = format:%C(blue)%ad%Creset %C(yellow)%h%C(green)%d%Creset %C(blue)%s %C(magenta) [%an <%ae>]%Creset
@@ -45,7 +62,13 @@
   alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
   staged = diff --cached
   l = log --graph
+#  log1 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
   log1 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+
+  log10 = log --pretty=oneline --abbrev-commit --graph --decorate
+  log11 = log --pretty=oneline2 --abbrev-commit --graph --decorate
+  # --date={relative,local,default,iso,rfc}
+#  log12 = log --pretty=oneline2 --abbrev-commit --graph --decorate --date=local
 
 # Next line is from: http://stackoverflow.com/questions/15316601/is-git-pull-the-least-problematic-way-of-updating-a-git-repository/15316602#15316602
   up-all = "!git remote update -p; git merge --ff-only @{u}" # This version updates ALL Remotes
@@ -88,6 +111,7 @@
   log2=log --pretty
   log3=log --pretty=oneline --abbrev-commit --graph --decorate
   log4=log --pretty --graph --decorate
+  log5=log --pretty=oneline -n 20 --graph --abbrev-commit
 
 
 #[push]
@@ -106,3 +130,5 @@
 #	compactionHeuristic = true
 [credential]
 	helper = osxkeychain
+[pretty]
+	oneline2 = format:"%C(auto)%h%d %s %C(cyan)(%ci)%Creset %C(yellow)<%an%GS>%Creset"
