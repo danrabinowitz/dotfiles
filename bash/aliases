@@ -175,6 +175,10 @@ fi
 
 alias fs="foreman start"
 
+# Awesome tip for Mac OS X, thanks to Eric Harrison.
+# Fix for camera not found
+alias fix_cam='sudo killall VDCAssistant'
+
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
 # mode: sh
