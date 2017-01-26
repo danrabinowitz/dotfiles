@@ -246,6 +246,10 @@ fi
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
 
+# direnv must be near the very end.
+# "Make sure it appears even after rvm, git-prompt and other shell extensions that manipulate the prompt."
+eval "$(direnv hook bash)"
+
 # TODO: Output to a log that .bashrc was run. Include the date, the PID, the PPID, etc.
 
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
