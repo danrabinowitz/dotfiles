@@ -205,11 +205,11 @@ alias l.="ls -d .*"
 # MOTD / FORTUNE
 # -------------------------------------------------------------------
 
-test -n "$INTERACTIVE" -a -n "$LOGIN" && {
-    echo "FYI: .bashrc is reporting that this is an INTERACTIVE and LOGIN shell "
-    uname -npsr
-    uptime
-}
+#test -n "$INTERACTIVE" -a -n "$LOGIN" && {
+#    echo "FYI: .bashrc is reporting that this is an INTERACTIVE and LOGIN shell "
+#    uname -npsr
+#    uptime
+#}
 
 
 ### End block

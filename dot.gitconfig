@@ -123,6 +123,8 @@
   log4=log --pretty --graph --decorate
   log5=log --pretty=oneline -n 20 --graph --abbrev-commit
 
+  prune = fetch --prune
+
 
 #[push]
 #  default = current
@@ -145,3 +147,15 @@
 	oneline2 = format:"%C(auto)%h%d %s %C(cyan)(%ci)%Creset %C(yellow)<%an%GS>%Creset"
 #[commit]
 #  gpgsign = true
+
+; include for all repositories inside ~/code/danrabinowitz/
+[includeIf "gitdir:~/code/danrabinowitz/"]
+  path = ~/code/danrabinowitz/.gitconfig.inc
+[includeIf "gitdir:~/code/USM-Portal/"]
+  path = ~/code/danrabinowitz/.gitconfig.inc
+[includeIf "gitdir:~/code/VIC/"]
+  path = ~/code/danrabinowitz/.gitconfig.inc
+
+; include for all repositories inside ~/code/DigitalOcean/
+[includeIf "gitdir:~/code/DigitalOcean/"]
+  path = ~/code/DigitalOcean/.gitconfig.inc
