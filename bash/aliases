@@ -179,6 +179,8 @@ alias fs="foreman start"
 # Fix for camera not found
 alias fix_cam='sudo killall VDCAssistant'
 
+alias ssh="sshrc"
+
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
 # mode: sh
