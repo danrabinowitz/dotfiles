@@ -32,13 +32,19 @@ logged_in_as_self () {
   return $?
 }
 
-if [ logged_in_as_self ] ; then
-  echo "Logged in as Dan. OK to install personal config files"
+logged_in_as_self
+if [ $? -eq 0 ] ; then
+  echo "Logged in as Dan. Installing personal config files..."
+  REMOTE_INSTALL_SCRIPT="$SSHHOME/.sshrc.d/remote_install.sh"
+  if [ -f "$REMOTE_INSTALL_SCRIPT" ]; then
+    echo "Loading remote install script"
+    . "$REMOTE_INSTALL_SCRIPT"
+  else
+    echo "ERROR: Unable to find remote install script"
+  fi
 else
-  echo "Not logged in as Dan. Do NOT install personal config files"
+  echo "Not logged in as Dan. NOT installing personal config files."
 fi
-
-
 
 : ${HOME:=~}                 # The home directory of the logged-in user
 
