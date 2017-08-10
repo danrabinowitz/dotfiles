@@ -13,17 +13,46 @@
 
 echo "Start of .sshrc"
 
-: ${HOME:=~}                 # The home directory of the logged-in user
+array_contains () { 
+    local array="$1[@]"
+    local seeking=$2
+    local in=1
+    for element in "${!array}"; do
+        if [[ $element == $seeking ]]; then
+            in=0
+            break
+        fi
+    done
+    return $in
+}
 
-REMOTE_INSTALL_SCRIPT="$SSHHOME/.sshrc.d/remote_install.sh"
-if [ -f "$REMOTE_INSTALL_SCRIPT" ]; then
-    echo "Loading remote install script"
-    . "$REMOTE_INSTALL_SCRIPT"
+logged_in_as_self () {
+  local self_usernames=(djr drabinowitz danrabinowitz)
+  array_contains self_usernames `whoami`
+  return $?
+}
+
+if [ logged_in_as_self ] ; then
+  echo "Logged in as Dan. OK to install personal config files"
 else
-    echo "ERROR: Unable to find remote install script"
+  echo "Not logged in as Dan. Do NOT install personal config files"
 fi
 
+
+
+: ${HOME:=~}                 # The home directory of the logged-in user
+
+#REMOTE_INSTALL_SCRIPT="$SSHHOME/.sshrc.d/remote_install.sh"
+#if [ -f "$REMOTE_INSTALL_SCRIPT" ]; then
+#    echo "Loading remote install script"
+#    . "$REMOTE_INSTALL_SCRIPT"
+#else
+#    echo "ERROR: Unable to find remote install script"
+#fi
+
+echo "End of .sshrc"
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
 # mode: sh
 # End:
+
