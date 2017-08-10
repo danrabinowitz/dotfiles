@@ -6,7 +6,7 @@
 
 # TODO:
 
-echo "Start of ~/.profile"
+#echo "Start of ~/.profile"
 
 ################################################################################
 # Below here is for stuff which is "run time modifying" stuff
