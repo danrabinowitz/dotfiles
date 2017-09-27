@@ -49,7 +49,7 @@
 #  whitespace = fix,-indent-with-non-tab,trailing-space,cr-at-eol
 #  whitespace = space-before-tab,-indent-with-non-tab,trailing-space
 
-	pager = diff-so-fancy | less --tabs=4 -RFX
+  pager = diff-so-fancy | less --tabs=4 -RFX
 #  pager = less -FRSX
 
   # Make `git rebase` safer on OS X
@@ -72,6 +72,7 @@
   l = log --graph
 #  log1 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
   log1 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
+  fastlog = log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
 
   log10 = log --pretty=oneline --abbrev-commit --graph --decorate
   log11 = log --pretty=oneline2 --abbrev-commit --graph --decorate
@@ -159,3 +160,9 @@
 ; include for all repositories inside ~/code/DigitalOcean/
 [includeIf "gitdir:~/code/DigitalOcean/"]
   path = ~/code/DigitalOcean/.gitconfig.inc
+
+; Disable log --graph in large repos
+[includeIf "gitdir:~/code/DigitalOcean/chef/"]
+  path = ~/.gitconfig.no-graph.inc
+[includeIf "gitdir:~/code/DigitalOcean/cthulhu/"]
+  path = ~/.gitconfig.no-graph.inc
