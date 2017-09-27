@@ -1,5 +1,6 @@
 [user]
   name = Dan Rabinowitz
+	useConfigOnly = true
 #  email = djr@danielrabinowitz.com
 [color]
 #  ui = true
@@ -100,7 +101,9 @@
 #  bb = !git for-each-ref --sort='-authordate' --format='%(authordate)%09%(objectname:short)%09%(refname)' refs/heads | sed -e 's-refs/heads/--'
 
 # From: https://twitter.com/ultrasaurus/status/635132951752126464
-  branches = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
+#  branches = for-each-ref --sort='-authordate:iso8601' --format=' %(authordate:relative)%09%(refname:short)' refs/heads
+# Tweaking the one fro ultasaurus to include stuff from @vgough
+  branches = for-each-ref --sort='-authordate:iso8601' --format='%(HEAD) %(color:green)%(authordate:relative)%09%(color:yellow)%(refname:short)%(color:reset) - %(contents:subject)' refs/heads
 
   cleanbranches = !~/bin/gitcleanbranches.sh
 
@@ -111,9 +114,14 @@
   di = diff
   co = checkout
   ci = commit
-  br = branch
+#  br = branch
   cp = cherry-pick
   rb = rebase
+  # From @vgough
+  br = for-each-ref --sort=-committerdate refs/heads/ --format='%(HEAD) %(color:yellow)%(refname:short)%(color:reset) - %(color:red)%(objectname:short)%(color:reset) - %(contents:subject) - %(authorname) (%(color:green)%(committerdate:relative)%(color:reset))'
+
+
+
 
 # More I do not generally use
   ap=add -p
