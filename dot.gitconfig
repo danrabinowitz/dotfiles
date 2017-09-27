@@ -145,9 +145,9 @@
 [credential]
 	helper = osxkeychain
 [pretty]
-	oneline2 = format:"%C(auto)%h%d %s %C(cyan)(%ci)%Creset %C(yellow)<%an%GS>%Creset"
-#[commit]
-#  gpgsign = true
+	oneline2 = format:"%C(auto)%h%d %G? %s %C(cyan)(%ci)%Creset %C(yellow)<%an%GS>%Creset"
+[commit]
+  gpgsign = false
 
 ; include for all repositories inside ~/code/danrabinowitz/
 [includeIf "gitdir:~/code/danrabinowitz/"]
