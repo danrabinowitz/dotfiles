@@ -145,7 +145,7 @@
 [credential]
 	helper = osxkeychain
 [pretty]
-	oneline2 = format:"%C(auto)%h%d %G? %s %C(cyan)(%ci)%Creset %C(yellow)<%an%GS>%Creset"
+	oneline2 = format:"%C(auto)%h%d %s %C(cyan)(%ci)%Creset %C(yellow)<%an%GS>%Creset"
 [commit]
   gpgsign = false
 
