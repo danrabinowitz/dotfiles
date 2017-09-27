@@ -43,7 +43,18 @@ if [ $? -eq 0 ] ; then
     echo "ERROR: Unable to find remote install script"
   fi
 else
-  echo "Not logged in as Dan. NOT installing personal config files."
+  if [ -f ${HOME}/.danrabinowitz_install_config_files ] ; then
+    echo "NOT logged in as Dan, but .danrabinowitz_install_config_files found so... Installing personal config files..."
+    REMOTE_INSTALL_SCRIPT="$SSHHOME/.sshrc.d/remote_install.sh"
+    if [ -f "$REMOTE_INSTALL_SCRIPT" ]; then
+      echo "Loading remote install script"
+      . "$REMOTE_INSTALL_SCRIPT"
+    else
+      echo "ERROR: Unable to find remote install script"
+    fi
+  else
+    echo "Not logged in as Dan. NOT installing personal config files."
+  fi
 fi
 
 : ${HOME:=~}                 # The home directory of the logged-in user
