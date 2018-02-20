@@ -181,6 +181,26 @@ alias fix_cam='sudo killall VDCAssistant'
 
 alias ssh="sshrc"
 
+# From Sam Phippen: https://github.com/samphippen/dotfiles/blob/7ef2087e76d951b86623b5f7c13f00d77ab05931/bash/bash_profile.symlink#L179-L202
+projswitch() {
+    BASE=$2
+    if [ -z "$3" ]
+    then
+        clear
+        builtin cd $BASE && builtin cd $(find . -type d -maxdepth $1 | grep -v "\.git" | selecta)
+        cd .
+        clear
+        clear
+        ls
+    else
+        builtin cd $BASE/$3
+    fi
+}
+
+dop() {
+    projswitch 2 "$HOME/code/DigitalOcean/" $1
+}
+
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
 # mode: sh
