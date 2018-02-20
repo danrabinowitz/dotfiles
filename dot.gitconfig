@@ -174,3 +174,5 @@
   path = ~/.gitconfig.no-graph.inc
 [includeIf "gitdir:~/code/DigitalOcean/cthulhu/"]
   path = ~/.gitconfig.no-graph.inc
+[interactive]
+	singlekey = true
