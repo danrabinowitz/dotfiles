@@ -158,21 +158,26 @@
   gpgsign = false
 
 ; include for all repositories inside ~/code/danrabinowitz/
-[includeIf "gitdir:~/code/danrabinowitz/"]
-  path = ~/code/danrabinowitz/.gitconfig.inc
-[includeIf "gitdir:~/code/USM-Portal/"]
-  path = ~/code/danrabinowitz/.gitconfig.inc
-[includeIf "gitdir:~/code/VIC/"]
-  path = ~/code/danrabinowitz/.gitconfig.inc
+[includeIf "gitdir:~/code/src/danrabinowitz/"]
+  path = ~/code/src/danrabinowitz/.gitconfig.inc
+[includeIf "gitdir:~/code/src/github.com/"]
+  path = ~/code/src/danrabinowitz/.gitconfig.inc
+[includeIf "gitdir:~/code/src/USM-Portal/"]
+  path = ~/code/src/danrabinowitz/.gitconfig.inc
+[includeIf "gitdir:~/code/src/VIC/"]
+  path = ~/code/src/danrabinowitz/.gitconfig.inc
 
 ; include for all repositories inside ~/code/DigitalOcean/
-[includeIf "gitdir:~/code/DigitalOcean/"]
-  path = ~/code/DigitalOcean/.gitconfig.inc
+[includeIf "gitdir:~/code/src/DigitalOcean/"]
+  path = ~/code/src/DigitalOcean/.gitconfig.inc
 
 ; Disable log --graph in large repos
-[includeIf "gitdir:~/code/DigitalOcean/chef/"]
-  path = ~/.gitconfig.no-graph.inc
-[includeIf "gitdir:~/code/DigitalOcean/cthulhu/"]
-  path = ~/.gitconfig.no-graph.inc
+;[includeIf "gitdir:~/code/src/DigitalOcean/chef/"]
+;  path = ~/.gitconfig.no-graph.inc
+;[includeIf "gitdir:~/code/src/DigitalOcean/cthulhu/"]
+;  path = ~/.gitconfig.no-graph.inc
+;[includeIf "gitdir:~/code/src/DigitalOcean/atlantis/"]
+;  path = ~/.gitconfig.no-graph.inc
 [interactive]
 	singlekey = true
+

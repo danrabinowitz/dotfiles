@@ -1,81 +1,96 @@
-# These functions are from: http://www.linuxfromscratch.org/blfs/view/cvs/postlfs/profile.html
+# declare -r SCRIPT_NAME=$(readlink -f ${BASH_SOURCE[0]})
 
-# Functions to help us manage paths.  Second argument is the name of the
-# path variable to be modified (default: PATH)
-pathremove () {
+if [ -n "$LOG_DOTFILE_TIMES" ]; then
+  log "Start of DJR_DOTFILES_DIR:bash/path"
+fi
+
+if [ -r ~/.dotfiles/preprocess/processed/path ]; then
+    if [ -n "$LOG_DOTFILE_TIMES" ]; then
+        log "Sourcing the preprocessed path file"
+    fi
+    source ~/.dotfiles/preprocess/processed/path
+else
+    # These functions are from: http://www.linuxfromscratch.org/blfs/view/cvs/postlfs/profile.html
+
+    # Functions to help us manage paths.  Second argument is the name of the
+    # path variable to be modified (default: PATH)
+    function pathremove () {
         local IFS=':'
         local NEWPATH
         local DIR
         local PATHVARIABLE=${2:-PATH}
         for DIR in ${!PATHVARIABLE} ; do
-                if [ "$DIR" != "$1" ] ; then
-                  NEWPATH=${NEWPATH:+$NEWPATH:}$DIR
-                fi
-        done
-        export $PATHVARIABLE="$NEWPATH"
-}
+            if [ "$DIR" != "$1" ] ; then
+              NEWPATH=${NEWPATH:+$NEWPATH:}$DIR
+          fi
+      done
+      export $PATHVARIABLE="$NEWPATH"
+    }
 
-pathprepend () {
-        pathremove $1 $2
-        local PATHVARIABLE=${2:-PATH}
-        export $PATHVARIABLE="$1${!PATHVARIABLE:+:${!PATHVARIABLE}}"
-}
+    function pathprepend () {
+            pathremove $1 $2
+            local PATHVARIABLE=${2:-PATH}
+            export $PATHVARIABLE="$1${!PATHVARIABLE:+:${!PATHVARIABLE}}"
+    }
 
-pathappend () {
+    function pathappend () {
         pathremove $1 $2
         local PATHVARIABLE=${2:-PATH}
         export $PATHVARIABLE="${!PATHVARIABLE:+${!PATHVARIABLE}:}$1"
-}
+    }
 
-# Usage: puniq [<path>]
-# Remove duplicate entries from a PATH style value while retaining
-# the original order. Use PATH if no <path> is given.
-#
-# Example:
-#   $ puniq /usr/bin:/usr/local/bin:/usr/bin
-#   /usr/bin:/usr/local/bin
-puniq () {
-    echo "$1" |tr : '\n' |nl |sort -u -k 2,2 |sort -n |
-    cut -f 2- |tr '\n' : |sed -e 's/:$//' -e 's/^://'
-}
+    # Usage: puniq [<path>]
+    # Remove duplicate entries from a PATH style value while retaining
+    # the original order. Use PATH if no <path> is given.
+    #
+    # Example:
+    #   $ puniq /usr/bin:/usr/local/bin:/usr/bin
+    #   /usr/bin:/usr/local/bin
+    function puniq () {
+        echo "$1" |tr : '\n' |nl |sort -u -k 2,2 |sort -n |
+        cut -f 2- |tr '\n' : |sed -e 's/:$//' -e 's/^://'
+    }
 
-# Set the initial path
-export PATH=/bin:/usr/bin
+    # Set the initial path
+    export PATH=/bin:/usr/bin
 
-pathprepend /usr/local/bin
-pathappend /usr/local/sbin:/usr/sbin:/sbin
+    pathprepend /usr/local/bin
+    pathappend /usr/local/sbin:/usr/sbin:/sbin
 
-# Added on Oct 16, 2013 for node npm
-if [ -d "/usr/local/share/npm/bin" ] ; then
-    pathappend /usr/local/share/npm/bin
+    # Added on Oct 16, 2013 for node npm
+    if [ -d "/usr/local/share/npm/bin" ] ; then
+        pathappend /usr/local/share/npm/bin
+    fi
+
+    # With XQuartz (needed for Selenium testing)
+    if [ -d "/opt/X11/bin" ] ; then
+        pathappend /opt/X11/bin
+    fi
+
+    # set PATH so it includes user's private bin if it exists
+    if [ -d "$HOME/bin" ] ; then
+        pathprepend "$HOME/bin"
+    fi
+    if [ -d "$HOME/code/bin" ] ; then
+        pathprepend "$HOME/code/bin"
+    fi
+
+    # set PATH so it includes user's private bin if it exists
+    if [ -d "$HOME/rootdir/usr/local/bin" ] ; then
+        pathprepend "$HOME/rootdir/usr/local/bin"
+    fi
+
+    # I was using this. I think I may not need it, so I'm commenting it out on 12/15/12.
+    # PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+    # Now to clean up
+    unset pathremove pathprepend pathappend
+
+    PATH=$(puniq $PATH)
 fi
-
-# With XQuartz (needed for Selenium testing)
-if [ -d "/opt/X11/bin" ] ; then
-    pathappend /opt/X11/bin
-fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    pathprepend "$HOME/bin"
-#    PATH="$HOME/bin:$PATH"
-fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/rootdir/usr/local/bin" ] ; then
-    pathprepend "$HOME/rootdir/usr/local/bin"
-fi
-
-# I was using this. I think I may not need it, so I'm commenting it out on 12/15/12.
-# PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
-# Now to clean up
-unset pathremove pathprepend pathappend
-
-PATH=$(puniq $PATH)
 
 # Set CDPATH for bash completion
-CDPATH=".:~/Code:~/code:~/code/LS"
+# CDPATH=".:~/Code:~/code:~/code/LS"
 
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:

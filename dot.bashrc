@@ -22,9 +22,9 @@ if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
-if [ -f ~/.bashrc_local_non_interactive ]; then
-    . ~/.bashrc_local_non_interactive
-fi
+# if [ -f ~/.bashrc_local_non_interactive ]; then
+#     . ~/.bashrc_local_non_interactive
+# fi
 
 
 # If not running interactively, don't do anything

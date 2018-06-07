@@ -3,6 +3,11 @@
 # Prompt before removing a file
 alias rm="rm -i"
 
+# -G enables colorized output and -F adds / after dirs and * after executables, etc.
+alias ls='ls -GF' # Mac OSX specific
+# alias sq='git rebase -i $(git merge-base $(git rev-parse --abbrev-ref HEAD) master)'
+
+
 if [ -f /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl ]; then
 #  alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
   SUBLIME_TEXT_BIN="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
@@ -11,14 +16,14 @@ elif [ -f /Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl ]; 
   SUBLIME_TEXT_BIN="/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl"
 fi
 
-subl() {
+function subl() {
   args="${@}"
 #  if [ ! -z "$args" -a "$args"!="." ]; then
   if [ ! -z "$args" -a "${args}" != "." ]; then
     echo "We have an argument:${args}: - 1"
     eval $SUBLIME_TEXT_BIN "$args"
   else
-    if [ "${args}" == "." ]; then
+    if [ "${args}" = "." ]; then
       echo "We have an argument:${args}: - 2c"
       echo "The argument is '.' which is rarely desired. Just call with no argument."
     else
@@ -42,7 +47,6 @@ subl() {
 
 
 # git aliases
-alias git-email-ls="git config user.email dan.rabinowitz@livingsocial.com && git commit --amend --reset-author"
 alias gca='GIT_COMMITTER_DATE="`date`" git commit --amend --date="$(date)" -C HEAD'
 alias gl='git l'
 alias gs='git s'
@@ -62,36 +66,36 @@ alias man='man -P less'
 #}
 #alias r=rails
 
-rails() {
-  args="$@"
-  real_rails=`which rails`
-  cmd=$real_rails
-  if [ -e "bin/rails" ]; then
-    cmd="bin/rails"
-  fi
-  "$cmd" $args
-}
-alias rc='rails c'
+# rails() {
+#   args="$@"
+#   real_rails=`which rails`
+#   cmd=$real_rails
+#   if [ -e "bin/rails" ]; then
+#     cmd="bin/rails"
+#   fi
+#   "$cmd" $args
+# }
+# alias rc='rails c'
 
-rake() {
-  args="$@"
-  real_rake=`which rake`
-  cmd=$real_rake
-  if [ -e "bin/rake" ]; then
-    cmd="bin/rake"
-  fi
-  "$cmd" $args
-}
+# rake() {
+#   args="$@"
+#   real_rake=`which rake`
+#   cmd=$real_rake
+#   if [ -e "bin/rake" ]; then
+#     cmd="bin/rake"
+#   fi
+#   "$cmd" $args
+# }
 
-rspec() {
-  args="$@"
-  real_rspec=`which rspec`
-  cmd=$real_rspec
-  if [ -e "bin/rspec" ]; then
-    cmd="bin/rspec"
-  fi
-  "$cmd" $args
-}
+# rspec() {
+#   args="$@"
+#   real_rspec=`which rspec`
+#   cmd=$real_rspec
+#   if [ -e "bin/rspec" ]; then
+#     cmd="bin/rspec"
+#   fi
+#   "$cmd" $args
+# }
 
 alias be="bundle exec"
 alias bi="bundle install"
@@ -103,36 +107,6 @@ alias du1='du -h --max-depth=1'
 # Usage: pls [<var>]
 # List path entries of PATH or environment variable <var>.
 pls () { eval echo \$${1:-PATH} |tr : '\n'; }
-
-# I don't think I'm using this. Comment out on 12/15/12, and delete after Jan 1 2014 if unused.
-# use gem-man(1) if available:
-#man () {
-#    gem man -s "$@" 2>/dev/null ||
-#    command man "$@"
-#}
-
-# SSH key management
-# TODO: DRY this up. Or delete.
-# push SSH public key to another box
-push_VHG_ssh_cert() {
-    local _host
-    key_pub='/Volumes/VHG-Dan/dot/ssh/id_dsa.pub'
-    for _host in "$@";
-    do
-        echo $_host
-        ssh $_host 'mkdir -p .ssh;cat >> ~/.ssh/authorized_keys' < $key_pub
-    done
-}
-
-push_USM_ssh_cert() {
-    local _host
-    key_pub='/Volumes/USM-Dan/dot/ssh/id_dsa.pub'
-    for _host in "$@";
-    do
-        echo $_host
-        ssh $_host 'mkdir -p .ssh;cat >> ~/.ssh/authorized_keys' < $key_pub
-    done
-}
 
 # This is crap. Delete it.
 set_iterm_bgcolor () {
@@ -164,16 +138,10 @@ alias reinstallnokogiri='gem install nokogiri -- --with-xml2-dir=/usr --with-xsl
 # From: https://twitter.com/kntreadway/status/390531943260909568
 function conflicts { subl -n `git diff --name-only --diff-filter=U | tr "\\n" " "`; }
 
-# Disabled aliases
-# alias fn='find . -name'
-# alias hi='history | tail -20'
-
 if [ $(uname) = "Darwin" ]; then
 #  alias dns="sudo /usr/bin/killall -HUP mDNSResponder"
   alias dns="sudo discoveryutil mdnsflushcache;sudo discoveryutil udnsflushcaches"
 fi
-
-alias fs="foreman start"
 
 # Awesome tip for Mac OS X, thanks to Eric Harrison.
 # Fix for camera not found
@@ -198,7 +166,17 @@ projswitch() {
 }
 
 dop() {
-    projswitch 2 "$HOME/code/DigitalOcean/" $1
+    projswitch 2 "${HOME}/code/src/DigitalOcean/" $1
+}
+
+ctp() {
+    projswitch 10 "${HOME}/code/src/DigitalOcean/cthulhu" $1
+}
+
+# From https://twitter.com/elithrar/status/971314557372239872
+# Used for certain "public" WiFi networks, such as on airplanes
+function get_new_mac_address {
+  sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && sudo ifconfig en0 ether a0$(openssl rand -hex 5 | sed 's/\(..\)/:\1/g') && networksetup -detectnewhardware
 }
 
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
