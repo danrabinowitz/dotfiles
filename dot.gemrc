@@ -1,10 +1,12 @@
-install: --no-rdoc --no-ri
-:bulk_threshold: 1000
-update: --no-rdoc --no-ri
-:update_sources: true
+---
 :backtrace: false
-:verbose: true
-:sources: 
+:bulk_threshold: 1000
+:sources:
 - https://rubygems.org/
-gem: --no-rdoc
-:benchmark: false
+- http://drabinowitz:PD6LELechBde;qrW@prod-geminabox01.nyc2.internal.digitalocean.com/
+:update_sources: true
+:verbose: true
+install: "--no-rdoc --no-ri"
+update: "--no-rdoc --no-ri"
+gem: "--no-rdoc"
+benchmark: false
