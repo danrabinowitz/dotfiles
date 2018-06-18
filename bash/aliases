@@ -179,6 +179,10 @@ function get_new_mac_address {
   sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && sudo ifconfig en0 ether a0$(openssl rand -hex 5 | sed 's/\(..\)/:\1/g') && networksetup -detectnewhardware
 }
 
+function get_new_mac_address_display_eth {
+  sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && sudo ifconfig en7 ether a0$(openssl rand -hex 5 | sed 's/\(..\)/:\1/g') && networksetup -detectnewhardware
+}
+
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
 # mode: sh
