@@ -1,5 +1,7 @@
 # Must be loaded after $PAGER is set
 
+alias cat=bat
+
 # Prompt before removing a file
 alias rm="rm -i"
 
@@ -51,6 +53,7 @@ alias gca='GIT_COMMITTER_DATE="`date`" git commit --amend --date="$(date)" -C HE
 alias gl='git l'
 alias gs='git s'
 alias ga='git a'
+alias gcm='git checkout master'
 
 alias man='man -P less'
 
@@ -148,6 +151,10 @@ fi
 alias fix_cam='sudo killall VDCAssistant'
 
 alias ssh="sshrc"
+
+alias typeless='history 1 | tail -n 20000 | sed "s/.*  //" | sort | uniq -c | sort -g | tail -n 100'
+
+
 
 # From Sam Phippen: https://github.com/samphippen/dotfiles/blob/7ef2087e76d951b86623b5f7c13f00d77ab05931/bash/bash_profile.symlink#L179-L202
 projswitch() {

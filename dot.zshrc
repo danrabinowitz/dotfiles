@@ -204,6 +204,9 @@ source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 # https://github.com/gsamokovarov/jump
 eval "$(jump shell)"
 
+# tab completion for sshrc
+compdef sshrc=ssh
+
 # brew install direnv
 # https://github.com/direnv/direnv
 eval "$(direnv hook zsh)"
