@@ -2,11 +2,41 @@
 # For notes about this file, and what goes in ~/.bash_profile versus ~/.profile versus ~/.bashrc see Bash_Dotfiles.txt
 
 #############################################################################
-# This file is designed to work on OS X and Debian
+# This file should work on OS X and Linux (Debian, Ubuntu)
+# This file should work with bash as well as from zsh via `emulate sh -c 'source ~/.profile'`
 
-# TODO:
+################################################################################
+# FUNCTION_DEFINITIONS: Utility
+################################################################################
+function is_macos {
+  [ "$(uname -s)" == "Darwin" ]
+}
+IS_MACOS=is_macos
 
-echo "Start of ~/.profile"
+default_log_filename="${HOME}/.profile.log"
+LOG_FILENAME=${LOG_FILENAME:-$default_log_filename}
+LOG_TO_STDOUT=true
+function log {
+  if [ IS_MACOS ]; then
+    local msg="[$(gdate +%s.%N)]: $*"
+  else
+    local msg="[$(date --rfc-3339=seconds)]: $*"
+  fi
+  echo "${msg}" >> "${LOG_FILENAME}"
+  if [ "${LOG_TO_STDOUT}" = "true" ]; then
+    echo "${msg}"
+  fi
+}
+
+if [ -n "$LOG_DOTFILE_TIMES" ]; then
+  log "-----: Start of ~/.profile"
+fi
+
+[ -r ~/.profile_local ] && source ~/.profile_local
+
+default_dotfiles_dir="${HOME}/.dotfiles"
+DJR_DOTFILES_DIR=${DJR_DOTFILES_DIR:-$default_dotfiles_dir}
+#echo "DJR_DOTFILES_DIR=$DJR_DOTFILES_DIR"
 
 ################################################################################
 # Below here is for stuff which is "run time modifying" stuff
@@ -20,36 +50,20 @@ umask 0022
 # disable core dumps
 ulimit -S -c 0
 
-# PATH STUFF
-. ~/Config/bash/path
-
-
-
+# Set PATH
+source "${DJR_DOTFILES_DIR}/bash/path"
 
 ################################################################################
 # Stuff that is not bash-specific and not specific to interactive use, but which is NOT "run time modifying" stuff
-# This environment variable is NOT bash-specific and not specific to interactive use. So I am trying to put it in .profile
-git_config_global_username=`git config --global --get user.name`
-#echo "git_config_global_username = ${git_config_global_username}"
-if [ -z "$git_config_global_username" ]; then
-  export GIT_AUTHOR_NAME="Dan Rabinowitz"
-fi
-
 # Shell options which could be useful in a non-interactive session
-shopt -s extglob >/dev/null 2>&1
 
-
-
-
-
-if [ -f ~/.profile_local ]; then
-    . ~/.profile_local
-fi
-
-export CLICOLOR=1
+# This next line seems to work on bash, but not zsh
+# shopt -s extglob >/dev/null 2>&1
 
 # TODO: Output to a log that .profile was run. Include the date, the PID, the PPID, etc.
-
+if [ -n "$LOG_DOTFILE_TIMES" ]; then
+  log "End of ~/.profile"
+fi
 
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:

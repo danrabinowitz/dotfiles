@@ -1,0 +1,13 @@
+#!/bin/bash
+
+function log {
+  echo -n
+}
+
+SCRIPT_DIR="$( cd "$(dirname "$0")" ; pwd -P )"
+
+source "${SCRIPT_DIR}/../../bash/path"
+
+cat <<EOF > "${SCRIPT_DIR}/../processed/path"
+export PATH=${PATH}
+EOF

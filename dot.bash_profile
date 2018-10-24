@@ -2,7 +2,7 @@
 # This file is designed to work on OS X and Debian
 
 ###############################################################################
-echo "Start of .bash_profile"
+#echo "Start of .bash_profile"
 
 if [ -f "$HOME/.profile" ]; then
     . "$HOME/.profile"
@@ -22,3 +22,9 @@ fi
 # Local Variables:
 # mode: sh
 # End:
+
+# The next line updates PATH for the Google Cloud SDK.
+if [ -f '/Users/danrabinowitz/google-cloud-sdk/path.bash.inc' ]; then source '/Users/danrabinowitz/google-cloud-sdk/path.bash.inc'; fi
+
+# The next line enables shell command completion for gcloud.
+if [ -f '/Users/danrabinowitz/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/danrabinowitz/google-cloud-sdk/completion.bash.inc'; fi

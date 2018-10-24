@@ -115,9 +115,9 @@ function set_git_dirty {
     st=$(git status 2>/dev/null | tail -n 1)
     if [[ $st == "" ]]; then
         git_dirty=''
-    elif [[ $st == "nothing to commit (working directory clean)" ]]; then
+    elif [[ $st == "nothing to commit (working tree clean)" ]]; then
         git_dirty=''
-    elif [[ $st == "nothing to commit, working directory clean" ]]; then
+    elif [[ $st == "nothing to commit, working tree clean" ]]; then
         git_dirty=''
     else
         git_dirty='*'
@@ -135,15 +135,16 @@ function set_return_value_to_display_in_prompt {
     fi
 }
 
-if [ `which change-tab-color-pwd`"" != "" ] ; then
-  CHANGE_TAB_COLOR_PWD_EXISTS=1
-fi
+#if [ `which change-tab-color-pwd`"" != "" ] ; then
+#  CHANGE_TAB_COLOR_PWD_EXISTS=1
+#fi
 function tab_color_precmd {
-  if [ -n "$CHANGE_TAB_COLOR_PWD_EXISTS" ]; then
-    change-tab-color-pwd 0.5 0.5
-  else
-    echo "Unable to find change-tab-color-pwd"
-  fi
+  CHANGE_TAB_COLOR_PWD_EXISTS=DISABLED
+#  if [ -n "$CHANGE_TAB_COLOR_PWD_EXISTS" ]; then
+#    change-tab-color-pwd 0.5 0.5
+#  else
+#    echo "Unable to find change-tab-color-pwd"
+#  fi
 }
 
 function git_stash_size {

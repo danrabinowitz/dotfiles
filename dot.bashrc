@@ -22,9 +22,9 @@ if [ -f /etc/bashrc ]; then
     . /etc/bashrc
 fi
 
-if [ -f ~/.bashrc_local_non_interactive ]; then
-    . ~/.bashrc_local_non_interactive
-fi
+# if [ -f ~/.bashrc_local_non_interactive ]; then
+#     . ~/.bashrc_local_non_interactive
+# fi
 
 
 # If not running interactively, don't do anything
@@ -172,6 +172,10 @@ alias less="$PAGER"
 #LS_COMMON="-hBFG"
 LS_COMMON="-hF"
 
+#LS_COLORS="di=36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
+# https://geoff.greer.fm/lscolors/
+export LSCOLORS=Exfxcxdxbxegedabagacad
+
 LS_COLOR=''
 
 # if the dircolors utility is available, set that up to
@@ -205,11 +209,11 @@ alias l.="ls -d .*"
 # MOTD / FORTUNE
 # -------------------------------------------------------------------
 
-test -n "$INTERACTIVE" -a -n "$LOGIN" && {
-    echo "FYI: .bashrc is reporting that this is an INTERACTIVE and LOGIN shell "
-    uname -npsr
-    uptime
-}
+#test -n "$INTERACTIVE" -a -n "$LOGIN" && {
+#    echo "FYI: .bashrc is reporting that this is an INTERACTIVE and LOGIN shell "
+#    uname -npsr
+#    uptime
+#}
 
 
 ### End block
@@ -245,6 +249,10 @@ fi
 
 ### Added by the Heroku Toolbelt
 export PATH="/usr/local/heroku/bin:$PATH"
+
+# direnv must be near the very end.
+# "Make sure it appears even after rvm, git-prompt and other shell extensions that manipulate the prompt."
+eval "$(direnv hook bash)"
 
 # TODO: Output to a log that .bashrc was run. Include the date, the PID, the PPID, etc.
 
