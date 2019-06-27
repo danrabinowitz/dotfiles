@@ -27,7 +27,7 @@ array_contains () {
 }
 
 logged_in_as_self () {
-  local self_usernames=(djr drabinowitz danrabinowitz)
+  local self_usernames=(djr drabinowitz danrabinowitz djradmin)
   array_contains self_usernames `whoami`
   return $?
 }

@@ -16,6 +16,9 @@
 *.sublime-project
 *.sublime-workspace
 
+# VSCode
+.vscode
+
 /.byebug_history
 
 /.personal-notes.txt

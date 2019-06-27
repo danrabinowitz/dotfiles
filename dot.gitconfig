@@ -70,7 +70,13 @@
 
   alias = !git config --list | grep 'alias\\.' | sed 's/alias\\.\\([^=]*\\)=\\(.*\\)/\\1\\\t => \\2/' | sort
   staged = diff --cached
-  l = log --graph
+  l = log --pretty=oneline4 --abbrev-commit --graph --decorate
+
+  # This is slow
+  # log3b=log --abbrev-commit --graph --decorate
+  # This is fast
+  # log3b=log --pretty=oneline --abbrev-commit --graph --decorate
+
 #  log1 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
   log1 = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
   fastlog = log --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset'
@@ -154,6 +160,8 @@
 	helper = osxkeychain
 [pretty]
 	oneline2 = format:"%C(auto)%h%d %s %C(cyan)(%ci)%Creset %C(yellow)<%an%GS>%Creset"
+  oneline3 = format:"%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset"
+  oneline4 = format:"%C(auto)%h%Creset%C(auto)%d%Creset %s %C(cyan)(%ai) %C(yellow)<%an>%Creset"
 [commit]
   gpgsign = false
 
