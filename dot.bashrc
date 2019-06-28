@@ -243,13 +243,6 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 # Load aliases. Depends on PAGER being set
 . ~/Config/bash/aliases
 
-
-function tmux_attach_or_new() {
-    local session_name=$1
-    tmux attach-session -t "$session_name" || tmux new-session -s "$session_name"
-}
-
-
 if [ -f ~/.bashrc_local ]; then
     . ~/.bashrc_local
 fi
