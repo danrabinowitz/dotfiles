@@ -292,7 +292,20 @@ unbind C-b
 set -g prefix 'C-\'
 bind 'C-\' send-prefix
 
+# ' This line is to help with syntax highlighting only
+
 # move status line to top
 #set -g status-position top
+
+
+# window navigation
+unbind C-h
+unbind C-l
+bind -r p previous-window # select previous window
+bind -r n next-window     # select next window
+# bind Tab last-window        # move to last active window
+
+
+
 
 if '[ -f ~/.tmux.conf.local.local ]' 'source ~/.tmux.conf.local.local'
