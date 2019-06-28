@@ -165,46 +165,6 @@ alias less="$PAGER"
 
 . ~/Config/bash/prompt
 
-# ----------------------------------------------------------------------
-# LS AND DIRCOLORS
-# ----------------------------------------------------------------------
-# we always pass these to ls(1)
-#LS_COMMON="-hBFG"
-LS_COMMON="-hF"
-
-#LS_COLORS="di=36:ln=35:so=32:pi=33:ex=31:bd=34;46:cd=34;43:su=30;41:sg=30;46:tw=30;42:ow=30;43"
-# https://geoff.greer.fm/lscolors/
-export LSCOLORS=Exfxcxdxbxegedabagacad
-
-LS_COLOR=''
-
-# if the dircolors utility is available, set that up to
-dircolors="$(type -P gdircolors dircolors | head -1)"
-test -n "$dircolors" && {
-    COLORS=/etc/DIR_COLORS
-    test -e "/etc/DIR_COLORS.$TERM"   && COLORS="/etc/DIR_COLORS.$TERM"
-    test -e "$HOME/.dircolors"        && COLORS="$HOME/.dircolors"
-    test ! -e "$COLORS"               && COLORS=
-    eval `$dircolors --sh $COLORS`
-#    LS_COLOR=' --color=auto'
-    LS_COLOR='-G'
-}
-unset dircolors
-
-# enable color support of ls and also add handy aliases
-if [ -x /usr/bin/dircolors ]; then
-    LS_COLOR=' --color=auto'
-    eval "`dircolors -b`"
-    alias ls='ls --color=auto'
-fi
-
-# setup the main ls alias
-alias ls="command ls $LS_COMMON $LS_COLOR"
-
-# these use the ls aliases above
-alias ll="ls -l"
-alias l.="ls -d .*"
-
 # -------------------------------------------------------------------
 # MOTD / FORTUNE
 # -------------------------------------------------------------------

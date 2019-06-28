@@ -8,16 +8,18 @@
 ################################################################################
 # FUNCTION_DEFINITIONS: Utility
 ################################################################################
-function is_macos {
-  [ "$(uname -s)" == "Darwin" ]
+function set_is_macos {
+  if [ "$(uname -s)" = "Darwin" ]; then
+    IS_MACOS=1
+  fi
 }
-IS_MACOS=is_macos
+set_is_macos
 
 default_log_filename="${HOME}/.profile.log"
 LOG_FILENAME=${LOG_FILENAME:-$default_log_filename}
 LOG_TO_STDOUT=true
 function log {
-  if [ IS_MACOS ]; then
+  if [ -n "$IS_MACOS" ]; then
     local msg="[$(gdate +%s.%N)]: $*"
   else
     local msg="[$(date --rfc-3339=seconds)]: $*"
