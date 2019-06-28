@@ -23,7 +23,7 @@ ls_common="-hbF"
 # Check which version of ls we are using
 if [ -n "$(${ls_cmd} --version 2>/dev/null)" ]; then
   # GNU ls
-  echo "GNU ls"
+  # echo "GNU ls"
   # https://geoff.greer.fm/lscolors/
   # LS_COLORS is used by GNU/Linux ls
   export LS_COLORS="di=32:ln=1;31:so=37:pi=1;33:ex=35:bd=37:cd=37:su=37:sg=37:tw=32:ow=32"
