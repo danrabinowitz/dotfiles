@@ -22,33 +22,35 @@
 (setq backup-directory-alist
       (list (cons "." (expand-file-name "backup" user-emacs-directory))))
 
-(add-hook 'djr-code-modes-hook
-          (lambda () (linum-mode 1)))
+;;(add-hook 'djr-code-modes-hook
+;;          (lambda () (linum-mode 1)))
 
-(add-hook 'ruby-mode-hook
-          (lambda () (run-hooks 'djr-code-modes-hook)))
+;;(add-hook 'ruby-mode-hook
+;;          (lambda () (run-hooks 'djr-code-modes-hook)))
 
 ;; http://trey-jackson.blogspot.com/2007/12/emacs-tip-5-hippie-expand.html
-(global-set-key (kbd "M-/") 'hippie-expand)
+;;(global-set-key (kbd "M-/") 'hippie-expand)
 
 ;; This directory has emacs lisp files. As opposed to vendor which has directories of emacs lisp files. Should I keep them separate?
-(add-to-list 'load-path "~/.emacs.d/lisp/")
+;;(add-to-list 'load-path "~/.emacs.d/lisp/")
 
 ;; Load code related to editing ruby files
-(load "~/.emacs.d/ruby.el")
+;;(load "~/.emacs.d/ruby.el")
 
 ;; Load nav
-(load "~/.emacs.d/nav.el")
+;;(load "~/.emacs.d/nav.el")
 
 ;; Load mouse code
-(load "~/.emacs.d/mouse.el")
+;;(load "~/.emacs.d/mouse.el")
 
 ;; Load markdown code
-(load "~/.emacs.d/markdown.el")
+;;(load "~/.emacs.d/markdown.el")
 
 ;; Load javascript code
-(load "~/.emacs.d/javascript.el")
+;;(load "~/.emacs.d/javascript.el")
 
 ;; Load coffeescript mode
-(add-to-list 'load-path "~/.emacs.d/vendor/coffee-mode")
-(require 'coffee-mode)
+;;(add-to-list 'load-path "~/.emacs.d/vendor/coffee-mode")
+;;(require 'coffee-mode)
+
+(global-auto-revert-mode t)
