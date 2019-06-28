@@ -12,8 +12,6 @@ source ~/.dotfiles/bash/aliases
 #    EXPORT
 # =============
 export EDITOR="vim"
-export LSCOLORS=cxBxhxDxfxhxhxhxhxcxcx
-export CLICOLOR=1
 
 # support colors in less
 export LESS_TERMCAP_mb=$'\E[01;31m'

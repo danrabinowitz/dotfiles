@@ -26,6 +26,9 @@ fi
 #     . ~/.bashrc_local_non_interactive
 # fi
 
+if [ -f ~/.profile ]; then
+  source ~/.profile
+fi
 
 # If not running interactively, don't do anything
 # This "interactive" quality is distinct from the login/non-login shell (vis a vis .profile / .bashrc). It simply ensures that nothing is output for non-interactive shells.
@@ -201,7 +204,8 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 #fi
 
 # Load aliases. Depends on PAGER being set
-. ~/Config/bash/aliases
+# . ~/Config/bash/aliases
+source ~/.profile_interactive
 
 if [ -f ~/.bashrc_local ]; then
     . ~/.bashrc_local

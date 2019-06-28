@@ -32,7 +32,8 @@ else
   echo "WARNING: 'ls' is not GNU ls. This case is not tested."
   # https://geoff.greer.fm/lscolors/
   # LSCOLORS is used by BSD "ls" which is the default on MacOS
-  export LSCOLORS=Exfxcxdxbxegedabagacad
+  # export LSCOLORS=Exfxcxdxbxegedabagacad
+  export LSCOLORS=cxBxhxDxfxhxhxhxhxcxcx
   ls_color='-G'
 fi
 
@@ -41,32 +42,6 @@ unset ls_cmd
 unset ls_common
 unset ls_color
 
-
-
-# LS_COLOR=''
-
-# # if the dircolors utility is available, set that up to
-# dircolors="$(type -P gdircolors dircolors | head -1)"
-# test -n "$dircolors" && {
-#     COLORS=/etc/DIR_COLORS
-#     test -e "/etc/DIR_COLORS.$TERM"   && COLORS="/etc/DIR_COLORS.$TERM"
-#     test -e "$HOME/.dircolors"        && COLORS="$HOME/.dircolors"
-#     test ! -e "$COLORS"               && COLORS=
-#     eval `$dircolors --sh $COLORS`
-# #    LS_COLOR=' --color=auto'
-#     LS_COLOR='-G'
-# }
-# unset dircolors
-
-# enable color support of ls and also add handy aliases
-# if [ -x /usr/bin/dircolors ]; then
-#     LS_COLOR=' --color=auto'
-#     eval "`dircolors -b`"
-#     alias ls='ls --color=auto'
-# fi
-
-# setup the main ls alias
-# alias ls="command ls $LS_COMMON $LS_COLOR"
 
 # these use the ls alias above
 alias ll="ls -l"
