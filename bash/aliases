@@ -1,6 +1,6 @@
 # Must be loaded after $PAGER is set
 
-alias cat=bat
+#alias cat=bat
 
 # Prompt before removing a file
 alias rm="rm -i"
