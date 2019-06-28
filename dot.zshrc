@@ -197,6 +197,18 @@ source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 #bindkey '^[c' autosuggest-clear
 #bindkey '^ ' autosuggest-accept
 
+
+# When we use CTRL-d to exit a terminal, do it by calling exit()
+# This lets us call exit() hooks, which is useful for tmux detach logic.
+ctrl-d-exit() {
+  exit
+}
+setopt ignore_eof
+zle -N ctrl-d-exit
+bindkey '^D' ctrl-d-exit
+
+
+
 # ===================
 #    THIRD PARTY
 # ===================
