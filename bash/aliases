@@ -200,17 +200,22 @@ function get_new_mac_address_display_eth {
 #    TMUX EXIT: DETACH ON EXIT
 # ===================
 exit() {
+  echo "exit 1"
   if [[ -z $TMUX ]]; then
+    echo "exit 2"
     builtin exit
     return
   fi
 
   panes=$(tmux list-panes | wc -l)
-  wins=$(tmux list-windows | wc -l) 
+  wins=$(tmux list-windows | wc -l)
   count=$(($panes + $wins - 1))
+  echo "exit 3: $count"
   if [ $count -eq 1 ]; then
+    echo "exit 4"
     tmux detach
   else
+    echo "exit 5"
     builtin exit
   fi
 }
