@@ -196,10 +196,26 @@ function get_new_mac_address_display_eth {
   sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && sudo ifconfig en7 ether a0$(openssl rand -hex 5 | sed 's/\(..\)/:\1/g') && networksetup -detectnewhardware
 }
 
-function tmux_attach_or_new() {
-    local session_name=$1
-    tmux attach-session -t "$session_name" || tmux new-session -s "$session_name"
+# ===================
+#    TMUX EXIT: DETACH ON EXIT
+# ===================
+exit() {
+  if [[ -z $TMUX ]]; then
+    builtin exit
+    return
+  fi
+
+  panes=$(tmux list-panes | wc -l)
+  wins=$(tmux list-windows | wc -l) 
+  count=$(($panes + $wins - 1))
+  if [ $count -eq 1 ]; then
+    tmux detach
+  else
+    builtin exit
+  fi
 }
+# ===================
+# ===================
 
 alias netcheck1="date; sudo mtr -rw 8.8.8.8"
 
