@@ -28,3 +28,8 @@ if [ -f '/Users/danrabinowitz/google-cloud-sdk/path.bash.inc' ]; then source '/U
 
 # The next line enables shell command completion for gcloud.
 if [ -f '/Users/danrabinowitz/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/danrabinowitz/google-cloud-sdk/completion.bash.inc'; fi
+
+function tmux_attach_or_new() {
+    local session_name=$1
+    tmux attach-session -t "$session_name" || tmux new-session -s "$session_name"
+}
