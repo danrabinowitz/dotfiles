@@ -263,8 +263,18 @@ exit() {
 
 alias netcheck1="date; sudo mtr -rw 8.8.8.8"
 
-alias edit=vscodium
-alias e=vscodium
+VSCODIUM_EXE='vscodium'
+function vscodium_wrapper {
+  local args="${@}"
+  if [ ! -z "$args" -a "${args}" != "." ]; then
+    eval $VSCODIUM_EXE "$args"
+  else
+    eval $VSCODIUM_EXE .
+  fi
+}
+
+alias edit=vscodium_wrapper
+alias e=vscodium_wrapper
 
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
