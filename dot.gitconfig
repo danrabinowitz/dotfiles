@@ -189,3 +189,6 @@
 
 [include]
 	path = ~/.gitconfig_local
+[transfer]
+	fsckobjects = true
+
