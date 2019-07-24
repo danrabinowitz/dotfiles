@@ -276,6 +276,9 @@ function vscodium_wrapper {
 alias edit=vscodium_wrapper
 alias e=vscodium_wrapper
 
+
+alias beep="echo -ne '\007'"
+
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
 # mode: sh
