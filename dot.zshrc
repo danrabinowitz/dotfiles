@@ -38,9 +38,55 @@ setopt share_history
 autoload -U colors && colors
 setopt promptsubst
 
+
+# START OF prompt_user_host CODE
+function get_prompt_user_host() {
+  local h99=`hostname`
+  local prompt_host='%m'
+  if [ "$h99" = 'Dans-MBP.local' ]; then
+    prompt_host='%m'
+  elif [ "$h99" = 'devenv-blue' ]; then
+    local COLOR="%{$fg_bold[blue]%}"
+    prompt_host=${COLOR}'%m'%{$reset_color%}
+  # elif [ "$h99" = 'x' ]; then
+  #   local COLOR="%{$fg_bold[green]$bg_bold[red]%}"
+  #   prompt_host=${COLOR}'%m'%{$reset_color%}
+  else
+    local COLOR="%{$fg_bold[green]$bg_bold[red]%}"
+    prompt_host=${COLOR}'%m'%{$reset_color%}
+  fi
+
+  local prompt_user=""
+  if [ $USER = 'root' ];then
+    # red
+    prompt_user='%{$fg_bold[red]%}%n%{$reset_color%}'
+  elif [ $USER = 'djradmin' ]; then
+    prompt_user='%{$fg_bold[magenta]%}%n%{$reset_color%}'
+  elif [ $USER = 'danrabinowitz' ] || [ $USER = 'djr' ]; then
+    # no color
+    prompt_user=''
+  else
+    # DIFFERENT COLOR
+    prompt_user='%{$fg_bold[yellow]%}%n%{$reset_color%}'
+  fi
+
+  local prompt_user_host=""
+  if [ -n "$prompt_user" ] && [ -n "$prompt_host" ]; then
+    prompt_user_host=${prompt_user}'@'${prompt_host}
+  else
+    prompt_user_host=${prompt_user}${prompt_host}
+  fi
+  if [ -n "$prompt_user_host" ] ; then
+    prompt_user_host=${prompt_user_host}':'
+  fi
+  echo "$prompt_user_host"
+}
+prompt_user_host=$(get_prompt_user_host)
+# END OF prompt_user_host CODE
+
 local ret_status="%(?:%{$fg_bold[green]%}$:%{$fg_bold[green]%}$)"
 # PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)'
-PROMPT='${ret_status} %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)'
+PROMPT='${prompt_user_host}${ret_status} %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)'
 
 ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}git:(%{$fg[red]%}"
 ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
