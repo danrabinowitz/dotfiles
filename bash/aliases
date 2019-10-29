@@ -200,7 +200,7 @@ fi
 # Fix for camera not found
 alias fix_cam='sudo killall VDCAssistant'
 
-alias ssh="sshrc"
+#alias ssh="sshrc"
 
 alias typeless='history 1 | tail -n 20000 | sed "s/.*  //" | sort | uniq -c | sort -g | tail -n 100'
 
@@ -278,6 +278,13 @@ alias e=vscodium_wrapper
 
 
 alias beep="echo -ne '\007'"
+
+function cover {
+    local t=$(mktemp -t cover)
+    go test $COVERFLAGS -coverprofile=$t $@ \
+        && go tool cover -func=$t \
+        && unlink $t
+}
 
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
