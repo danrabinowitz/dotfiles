@@ -47,7 +47,8 @@ DJR_DOTFILES_DIR=${DJR_DOTFILES_DIR:-$default_dotfiles_dir}
 # On debian, for setting the umask for ssh logins, install and configure the libpam-umask package.
 # TODO: Can we check if debian and if libpam-umask is installed and warn if not?
 # default umask
-umask 0022
+# Let's default to "0077" and then we can override that in .profile_local as needed.
+umask 0077
 
 # disable core dumps
 ulimit -S -c 0
