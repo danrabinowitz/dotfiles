@@ -6,7 +6,7 @@ fi
 # Aliases
 ##########
 
-source ~/.dotfiles/bash/aliases
+source ~/.dotfiles/lib/bash/aliases
 
 # =============
 #    EXPORT

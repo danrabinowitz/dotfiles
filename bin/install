@@ -1,0 +1,56 @@
+#!/bin/bash
+
+# Exit immediately if any command fails.
+set -e
+
+# Print a message to stderr when attempting to expand a variable that is not set. Also, immediately exit.
+set -u
+
+# Cause pipelines to fail on the first command which fails instead of dying later on down the pipeline.
+set -o pipefail
+
+################################################################################
+function main {
+  init
+  create_symlinks
+}
+
+function init {
+  local script_dir=$( cd $(dirname ${BASH_SOURCE[0]}) ; pwd -P )
+  repo_dir=$( cd "${script_dir}/.." ; pwd -P )
+}
+
+function create_symlinks {
+  local files="$repo_dir"/dotfiles/.*
+
+  for f in $files; do
+    f2=$(basename "$f")
+    if [ "$f2" = "." -o "$f2" = ".." ]; then
+      continue
+    fi
+    create_symlink "$f2"
+  done
+}
+
+function create_symlink {
+  local f="$1"
+  local dest="${HOME}/$f"
+  local src="${repo_dir}/dotfiles/$f"
+
+  echo "Checking if ${dest} exists already..."
+
+  if [ -f "${dest}" -o -d "${dest}" -o -L "${dest}" ] ; then
+    if [ -L "${dest}" ] ; then
+      # echo "It is a link"
+      rm -f "${dest}"
+    else
+      echo "$f already exists, so it is being moved to ${f}_orig"
+      mv "${dest}" "${dest}_orig"
+    fi
+  fi
+  ln -s "$src" "$dest"
+}
+
+################################################################################
+main
+

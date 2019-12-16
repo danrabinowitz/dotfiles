@@ -54,7 +54,7 @@ umask 0077
 ulimit -S -c 0
 
 # Set PATH
-source "${DJR_DOTFILES_DIR}/bash/path"
+source "${DJR_DOTFILES_DIR}/lib/bash/path"
 
 ################################################################################
 # Stuff that is not bash-specific and not specific to interactive use, but which is NOT "run time modifying" stuff

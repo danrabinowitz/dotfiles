@@ -1,5 +1,0 @@
-#!/bin/bash
-pwd=`pwd`
-echo "This is post-merge with 0=$0 and pwd=$pwd"
-
-. $pwd'meta/post-merge'
