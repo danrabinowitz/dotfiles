@@ -55,7 +55,7 @@ ulimit -S -c 0
 
 # Set PATH
 echo "DEBUG: $0"
-if [ "$0" != "-zsh" -a "$0" != "zsh" ]; then
+if [ "$0" != "-zsh" -a "$0" != "zsh" -a "$0" != "/usr/bin/zsh" ]; then
   source "${DJR_DOTFILES_DIR}/lib/bash/path"
 fi
 
