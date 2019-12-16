@@ -36,7 +36,7 @@ fi
 
 # Detect shell
 function detect_shell {
-  echo "\$SHELL=$SHELL"
+  # echo "\$SHELL=$SHELL"
   local shell_basename=$(basename "$SHELL")
   if [ "$shell_basename" = "zsh" ]; then
     SHELL_NAME="zsh"
@@ -46,7 +46,7 @@ function detect_shell {
     echo "WARNING: Unknown shell name!"
     echo "--------------------------------------------------------------------------------"
   fi
-  echo "SHELL_NAME=$SHELL_NAME"
+  # echo "SHELL_NAME=$SHELL_NAME"
 }
 detect_shell
 
