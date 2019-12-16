@@ -54,7 +54,7 @@ umask 0077
 ulimit -S -c 0
 
 # Set PATH
-if [ "$0" != "-zsh" ]; then
+if [ "$0" != "-zsh" -a "$0" != "zsh" ]; then
   source "${DJR_DOTFILES_DIR}/lib/bash/path"
 fi
 
