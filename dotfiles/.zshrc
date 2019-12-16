@@ -57,12 +57,12 @@ function get_prompt_user_host() {
   fi
 
   local prompt_user=""
-  if [ $USER = 'root' ];then
+  if [ "$USER" = 'root' ];then
     # red
     prompt_user='%{$fg_bold[red]%}%n%{$reset_color%}'
-  elif [ $USER = 'djradmin' ]; then
+  elif [ "$USER" = 'djradmin' ]; then
     prompt_user='%{$fg_bold[magenta]%}%n%{$reset_color%}'
-  elif [ $USER = 'danrabinowitz' ] || [ $USER = 'djr' ]; then
+  elif [ "$USER" = 'danrabinowitz' ] || [ "$USER" = 'djr' ]; then
     # no color
     prompt_user=''
   else
