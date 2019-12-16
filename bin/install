@@ -21,16 +21,6 @@ function init {
 }
 
 function create_symlinks {
-  local files="$repo_dir"/dotfiles/.*
-
-  for f in $files; do
-    f2=$(basename "$f")
-    if [ "$f2" = "." -o "$f2" = ".." ]; then
-      continue
-    fi
-    create_symlink "$f2"
-  done
-
   # Ensure we have a ~/.dotfiles symlink or dir
   local dest=".dotfiles"
   local src="$repo_dir"
@@ -41,12 +31,21 @@ function create_symlinks {
     mv "$dest" "${dest}_orig"
   fi
   ln -s "$src" "$dest"
+
+  local files="$repo_dir"/dotfiles/.*
+  for f in $files; do
+    f2=$(basename "$f")
+    if [ "$f2" = "." -o "$f2" = ".." ]; then
+      continue
+    fi
+    create_symlink "$f2"
+  done
 }
 
 function create_symlink {
   local f="$1"
   local dest="${HOME}/$f"
-  local src="${repo_dir}/dotfiles/$f"
+  local src="${HOME}/.dotfiles/dotfiles/$f"
 
   echo "Checking if ${dest} exists already..."
 
