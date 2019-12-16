@@ -12,7 +12,7 @@
 ;; I've done most of this that's relevant: http://www.ysiad.com/2011/emacs-setup-for-ruby-on-rails/
 ;; TODO: Anything to do with this? http://www.emacswiki.org/emacs/CategoryDotEmacs
 
-(load "~/.emacs.d/main.el")
+;;(load "~/.emacs.d/main.el")
 
 ;; TODO: In this essay, JWZ suggests creating a function called on save which ensures there are no tabs saved. I should do this, for ruby at least.
 ;; http://www.jwz.org/doc/tabs-vs-spaces.html
