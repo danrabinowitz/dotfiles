@@ -34,6 +34,22 @@ if [ -n "$LOG_DOTFILE_TIMES" ]; then
   log "-----: Start of ~/.profile"
 fi
 
+# Detect shell
+function detect_shell {
+  echo "\$SHELL=$SHELL"
+  local shell_basename=$(basename "$SHELL")
+  if [ "$shell_basename" = "zsh" ]; then
+    SHELL_NAME="zsh"
+  else
+    SHELL_NAME="unknown"
+    echo "--------------------------------------------------------------------------------"
+    echo "WARNING: Unknown shell name!"
+    echo "--------------------------------------------------------------------------------"
+  fi
+  echo "SHELL_NAME=$SHELL_NAME"
+}
+detect_shell
+
 [ -r ~/.profile_local ] && source ~/.profile_local
 
 default_dotfiles_dir="${HOME}/.dotfiles"
@@ -54,7 +70,7 @@ umask 0077
 ulimit -S -c 0
 
 # Set PATH
-if [ "$0" != "-zsh" -a "$0" != "zsh" -a "$0" != "/usr/bin/zsh" ]; then
+if [ "$SHELL_NAME" != "zsh" ]; then
   source "${DJR_DOTFILES_DIR}/lib/bash/path"
 fi
 

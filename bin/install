@@ -30,6 +30,17 @@ function create_symlinks {
     fi
     create_symlink "$f2"
   done
+
+  # Ensure we have a ~/.dotfiles symlink or dir
+  local dest=".dotfiles"
+  local src="$repo_dir"
+  if [ -L "$dest" ]; then
+    rm -f "$dest"
+  elif [ -f "$dest" ]; then
+    echo "${dest} already exists, so it is being moved to ${dest}_orig"
+    mv "$dest" "${dest}_orig"
+  fi
+  ln -s "$src" "$dest"
 }
 
 function create_symlink {
