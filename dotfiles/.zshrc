@@ -45,9 +45,13 @@ function get_prompt_user_host() {
   local prompt_host='%m'
   if [ "$h99" = 'Dans-MBP.local' ]; then
     prompt_host='%m'
-  elif [ "$h99" = 'devenv-blue' -o "$h99" = "devenv-container" ]; then
+  elif [ "$h99" = 'devenv-blue' ]; then
     local COLOR="%{$fg_bold[blue]%}"
     prompt_host=${COLOR}'%m'%{$reset_color%}
+  elif [ "$h99" = "devenv-container" ]; then
+    local COLOR="%{$fg_bold[blue]%}"
+    local HOST_HOST_COLOR="%{$fg_bold[green]%}"
+    prompt_host=${COLOR}'%m'%{$reset_color%}${HOST_HOST_COLOR}"($host_hostname)"%{$reset_color%}
   # elif [ "$h99" = 'x' ]; then
   #   local COLOR="%{$fg_bold[green]$bg_bold[red]%}"
   #   prompt_host=${COLOR}'%m'%{$reset_color%}
