@@ -235,10 +235,18 @@ typeset -U path PATH cdpath CDPATH fpath FPATH manpath MANPATH
 # ===================
 
 # brew install zsh-syntax-highlighting
-source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+if [ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
+  source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh]; then
+  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+fi
 
 # brew install zsh-autosuggestions
-source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+if [ -f /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
+  source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+elif [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh]; then
+  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+fi
 
 #bindkey '^[c' autosuggest-clear
 #bindkey '^ ' autosuggest-accept
