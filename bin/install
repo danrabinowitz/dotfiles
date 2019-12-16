@@ -58,7 +58,7 @@ function create_symlink {
       mv "${dest}" "${dest}_orig"
     fi
   fi
-  ln -s "$src" "$dest"
+  cd $HOME && ln -s ".dotfiles/dotfiles/$f" "$f"
 }
 
 ################################################################################
