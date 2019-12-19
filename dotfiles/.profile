@@ -70,9 +70,7 @@ umask 0077
 ulimit -S -c 0
 
 # Set PATH
-if [ "$SHELL_NAME" != "zsh" ]; then
-  source "${DJR_DOTFILES_DIR}/lib/bash/path"
-fi
+[ -r "${DJR_DOTFILES_DIR}/lib/bash/path" ] && emulate sh -c "source ${DJR_DOTFILES_DIR}/lib/bash/path"
 
 ################################################################################
 # Stuff that is not bash-specific and not specific to interactive use, but which is NOT "run time modifying" stuff
