@@ -34,22 +34,6 @@ if [ -n "$LOG_DOTFILE_TIMES" ]; then
   log "-----: Start of ~/.profile"
 fi
 
-# Detect shell
-function detect_shell {
-  # echo "\$SHELL=$SHELL"
-  local shell_basename=$(basename "$SHELL")
-  if [ "$shell_basename" = "zsh" ]; then
-    SHELL_NAME="zsh"
-  else
-    SHELL_NAME="unknown"
-    echo "--------------------------------------------------------------------------------"
-    echo "WARNING: Unknown shell name!"
-    echo "--------------------------------------------------------------------------------"
-  fi
-  # echo "SHELL_NAME=$SHELL_NAME"
-}
-detect_shell
-
 [ -r ~/.profile_local ] && source ~/.profile_local
 
 default_dotfiles_dir="${HOME}/.dotfiles"
@@ -77,6 +61,7 @@ ulimit -S -c 0
 # Shell options which could be useful in a non-interactive session
 
 # This next line seems to work on bash, but not zsh
+# TODO: Switch based on zsh version
 # shopt -s extglob >/dev/null 2>&1
 
 # TODO: Output to a log that .profile was run. Include the date, the PID, the PPID, etc.
