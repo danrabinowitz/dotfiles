@@ -43,7 +43,7 @@ setopt promptsubst
 function get_prompt_user_host() {
   local h99=`hostname`
   local prompt_host='%m'
-  if [ "$h99" = 'Dans-MBP.local' ]; then
+  if [[ "$h99" == Dans-MBP* ]]; then
     prompt_host='%m'
   elif [ "$h99" = 'devenv-blue' ]; then
     local COLOR="%{$fg_bold[blue]%}"
