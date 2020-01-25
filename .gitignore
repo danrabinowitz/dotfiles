@@ -1,0 +1,9 @@
+.cask
+*.elc
+tsserver/.log*
+dist
+todo
+example
+.dir-locals.el
+*~
+sandbox
