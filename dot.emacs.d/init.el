@@ -11,6 +11,7 @@
 (load "~/.emacs.d/lib/typescript/typescript-mode.el")
 (load "~/.emacs.d/lib/dash/dash.el")
 (load "~/.emacs.d/lib/s/s.el")
+(load "~/.emacs.d/lib/flycheck/flycheck.el")
+
+(add-to-list 'load-path (concat user-emacs-directory "lib/tide"))
 (load "~/.emacs.d/lib/tide/tide.el")
-
-
