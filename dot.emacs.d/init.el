@@ -14,6 +14,7 @@
 (load "~/.emacs.d/lib/flycheck/flycheck.el")
 (add-to-list 'load-path (concat user-emacs-directory "lib/company"))
 (load "~/.emacs.d/lib/company/company.el")
+(load "~/.emacs.d/lib/go-mode.el/go-mode.el")
 
 (add-to-list 'load-path (concat user-emacs-directory "lib/tide"))
 (load "~/.emacs.d/lib/tide/tide.el")
@@ -54,3 +55,7 @@
 
 (setq flycheck-eslintrc "~/.eslintrc.json")
 ;(setq flycheck-javascript-eslint-executable "/usr/local/bin/eslint")
+
+(autoload 'go-mode "go-mode" nil t)
+(add-to-list 'auto-mode-alist '("\\.go\\'" . go-mode))
+(add-hook 'go-mode-hook 'lsp-deferred)
