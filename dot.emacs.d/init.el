@@ -18,7 +18,7 @@
 (add-to-list 'load-path (concat user-emacs-directory "lib/tide"))
 (load "~/.emacs.d/lib/tide/tide.el")
 
-
+(load "~/.emacs.d/lib/exec-path-from-shell/exec-path-from-shell.el")
 
 ;; From https://github.com/ananthakumaran/tide
 (defun setup-tide-mode ()
@@ -50,3 +50,7 @@
 ;; use eslint with web-mode for jsx files
 (flycheck-add-mode 'javascript-eslint 'typescript-mode)
 
+
+
+(setq flycheck-eslintrc "~/.eslintrc.json")
+;(setq flycheck-javascript-eslint-executable "/usr/local/bin/eslint")
