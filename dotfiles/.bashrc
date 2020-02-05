@@ -212,7 +212,7 @@ if [ -f ~/.bashrc_local ]; then
 fi
 
 ### Added by the Heroku Toolbelt
-export PATH="/usr/local/heroku/bin:$PATH"
+# export PATH="/usr/local/heroku/bin:$PATH"
 
 # direnv must be near the very end.
 # "Make sure it appears even after rvm, git-prompt and other shell extensions that manipulate the prompt."

@@ -71,6 +71,10 @@ if [ -d "$HOME/code/bin" ] ; then
     pathprepend "$HOME/code/bin"
 fi
 
+if [ -d "/usr/local/go/bin" ] ; then
+    pathappend /usr/local/go/bin
+fi
+
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/rootdir/usr/local/bin" ] ; then
     pathprepend "$HOME/rootdir/usr/local/bin"
