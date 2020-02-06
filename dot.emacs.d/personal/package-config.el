@@ -14,6 +14,15 @@
 (package-initialize)
 (setq use-package-always-ensure nil)
 
+(unless (require 'use-package nil t)
+  (if (not (yes-or-no-p (concat "Refresh packages, install use-package and"
+                                " other packages used by init file? ")))
+      (error "you need to install use-package first")
+    (package-refresh-contents)
+    (package-install 'use-package)
+    (require 'use-package)
+    (setq use-package-always-ensure t)))
+
 
 (load "~/.emacs.d/lib/better-defaults/better-defaults.el")
 (load "~/.emacs.d/lib/typescript/typescript-mode.el")
