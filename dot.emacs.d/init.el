@@ -10,21 +10,6 @@
 (package-initialize)
 
 
-
-(load "~/.emacs.d/lib/better-defaults/better-defaults.el")
-(load "~/.emacs.d/lib/typescript/typescript-mode.el")
-(load "~/.emacs.d/lib/dash/dash.el")
-(load "~/.emacs.d/lib/s/s.el")
-(load "~/.emacs.d/lib/flycheck/flycheck.el")
-(add-to-list 'load-path (concat user-emacs-directory "lib/company"))
-(load "~/.emacs.d/lib/company/company.el")
-(load "~/.emacs.d/lib/go-mode.el/go-mode.el")
-
-(add-to-list 'load-path (concat user-emacs-directory "lib/tide"))
-(load "~/.emacs.d/lib/tide/tide.el")
-
-(load "~/.emacs.d/lib/exec-path-from-shell/exec-path-from-shell.el")
-
 ;; From https://github.com/ananthakumaran/tide
 (defun setup-tide-mode ()
   (interactive)
