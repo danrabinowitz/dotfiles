@@ -17,3 +17,11 @@ There are two things you can do about this warning:
     ;; For important compatibility libraries like cl-lib
     (add-to-list 'package-archives (cons "gnu" (concat proto "://elpa.gnu.org/packages/")))))
 (package-initialize)
+
+(add-to-list 'load-path (concat user-emacs-directory "lib/use-package"))
+(require 'use-package)
+
+(with-eval-after-load 'info
+  (info-initialize)
+  (add-to-list 'Info-directory-list
+               (concat user-emacs-directory "lib/use-package")))

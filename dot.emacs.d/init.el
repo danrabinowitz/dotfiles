@@ -3,14 +3,6 @@
 (add-to-list 'load-path (concat user-emacs-directory "personal"))
 (load "package-config")
 
-(add-to-list 'load-path "~/.emacs.d/lib/use-package")
-(require 'use-package)
-
-(with-eval-after-load 'info
-  (info-initialize)
-  (add-to-list 'Info-directory-list
-               "~/.emacs.d/lib/use-package/"))
-
 
 
 ;; Added by Package.el.  This must come before configurations of
