@@ -43,7 +43,7 @@
 
 [core]
   autocrlf = false
-  editor = vim
+  editor = emacs
   excludesfile = ~/.gitignore_global
   # whitespace issues which are enabled by default: blank-at-eol,blank-at-eof,space-before-tab
   whitespace = fix,-indent-with-non-tab,cr-at-eol

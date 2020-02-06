@@ -266,6 +266,7 @@ alias netcheck1="date; sudo mtr -rw 8.8.8.8"
 VSCODIUM_EXE='vscodium'
 function vscodium_wrapper {
   local args="${@}"
+  echo "WARNING: Running vscode instead of ${EDITOR}"
   if [ ! -z "$args" -a "${args}" != "." ]; then
     eval $VSCODIUM_EXE "$args"
   else
@@ -273,8 +274,9 @@ function vscodium_wrapper {
   fi
 }
 
-alias edit=vscodium_wrapper
-alias e=vscodium_wrapper
+alias vsc=vscodium_wrapper
+alias edit=emacs
+alias e=emacs
 
 
 alias beep="echo -ne '\007'"
