@@ -4,6 +4,8 @@
 (load "package-config")
 (package-initialize)
 
+
+(load "general-config")
 (load "typescript-config")
 (load "golang-config")
 (load "nav-and-search-config")
