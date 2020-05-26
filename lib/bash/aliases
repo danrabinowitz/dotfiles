@@ -288,6 +288,8 @@ function cover {
         && unlink $t
 }
 
+alias dovpn="ssh nas1 -- /usr/local/sbin/run_vpn"
+
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
 # mode: sh
