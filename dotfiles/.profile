@@ -41,6 +41,23 @@ DJR_DOTFILES_DIR=${DJR_DOTFILES_DIR:-$default_dotfiles_dir}
 #echo "DJR_DOTFILES_DIR=$DJR_DOTFILES_DIR"
 
 ################################################################################
+# Config check
+################################################################################
+function check_config {
+  check_config_called=1
+  local cache_dir="${HOME}/tmp/cache"
+  # 1) Abort if we checked recently
+  echo "TODO: check_config"
+
+  # 2) Check the config
+  if [ ! -r ~/.gitignore_global ]; then
+    echo "WARNING: ~/.gitignore_global is not present"
+  fi
+  # 3) Track that we just checked
+  
+}
+#check_config
+################################################################################
 # Below here is for stuff which is "run time modifying" stuff
 
 # The default umask is set in /etc/profile

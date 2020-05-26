@@ -1,3 +1,4 @@
+#LOG_DOTFILE_TIMES=1
 # Initially copied from @fatih
 # =============
 #    NON-INTERACTIVE
@@ -7,7 +8,15 @@
 # =============
 #    INTERACTIVE
 # =============
-source ~/.profile_interactive
+# TODO: Move this out of the $HOME dir
+[ -r ~/.profile_interactive ] && source ~/.profile_interactive
+
+# =============
+#    CONFIG CHECK
+# =============
+#if [ -z "$check_config_called" ]; then
+#  echo "WARNING: Config check not detected"
+#fi
 
 # =============
 #    HISTORY
@@ -258,17 +267,48 @@ fi
 # ===================
 #    THIRD PARTY
 # ===================
-# brew install jump
-# https://github.com/gsamokovarov/jump
-eval "$(jump shell)"
+# jump
+if ! type "jump" > /dev/null; then
+  echo "WARNING: jump is not installed"
+  echo "  source: https://github.com/gsamokovarov/jump"
+  case "$OSTYPE" in
+    darwin*)
+      echo '  Run `brew install jump` to install'
+    ;;
+    linux*)
+      echo "  Run... TODO"
+    ;;
+    *)
+      echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
+    ;;
+  esac
+else
+  eval "$(jump shell)"
+fi
 
 # tab completion for sshrc
 compdef sshrc=ssh
 
-# brew install direnv
-# https://github.com/direnv/direnv
-eval "$(direnv hook zsh)"
+# direnv
+if ! type "direnv" > /dev/null; then
+  echo "WARNING: direnv is not installed"
+  echo "  source: https://github.com/direnv/direnv"
+  case "$OSTYPE" in
+    darwin*)
+      echo '  Run `brew install direnv` to install'
+    ;;
+    linux*)
+      echo "  Run... TODO"
+    ;;
+    *)
+      echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
+    ;;
+  esac
+else
+  eval "$(direnv hook zsh)"
+fi
 
 if [ -n "$LOG_DOTFILE_TIMES" ]; then
   log "end of .zshrc"
 fi
+

@@ -11,7 +11,11 @@ alias rm="rm -i"
 # LS AND DIRCOLORS
 # ----------------------------------------------------------------------
 # To keep things simple, try to always use GNU ls
-if [ -n "$IS_MACOS" ]; then
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  if ! type "gls" > /dev/null; then
+    echo "WARNING: gls is not installed"
+    echo '  Run `brew install coreutils`'
+  fi
   ls_cmd=gls
 else
   ls_cmd=ls
@@ -46,7 +50,6 @@ unset ls_color
 # these use the ls alias above
 alias ll="ls -l"
 alias l.="ls -d .*"
-
 # ----------------------------------------------------------------------
 # ----------------------------------------------------------------------
 
