@@ -92,6 +92,10 @@ fi
 # Set CDPATH for bash completion
 # CDPATH=".:~/Code:~/code:~/code/LS"
 
+[ -r /usr/local/share/chruby/chruby.sh ] && source /usr/local/share/chruby/chruby.sh && \
+  chruby 2 && \
+  [ -r /usr/local/share/chruby/auto.sh ] && source /usr/local/share/chruby/auto.sh
+
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
 # mode: sh

@@ -53,7 +53,9 @@ function get_prompt_user_host() {
   local h99=`hostname`
   local prompt_host='%m'
   if [[ "$h99" == Dans-MBP* ]]; then
-    prompt_host='%m'
+    # prompt_host='%m'
+    local h98=$(hostname -s | sed -E 's/-{0,1}[0-9]+$//' | sed -E 's/^Dans-/Dan'"'"'s-/')
+    prompt_host="$h98"
   elif [ "$h99" = 'devenv-blue' ]; then
     local COLOR="%{$fg_bold[blue]%}"
     prompt_host=${COLOR}'%m'%{$reset_color%}
