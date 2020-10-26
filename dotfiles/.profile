@@ -57,6 +57,12 @@ function check_config {
   
 }
 #check_config
+
+################################################################################
+# DigitalOcean
+GOPRIVATE="*.internal.digitalocean.com,github.com/digitalocean"
+################################################################################
+
 ################################################################################
 # Below here is for stuff which is "run time modifying" stuff
 

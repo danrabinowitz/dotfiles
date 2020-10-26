@@ -310,6 +310,9 @@ else
   eval "$(direnv hook zsh)"
 fi
 
+# NOTE: Set this in interactive shells only
+HOMEBREW_BUNDLE_FILE="~/.Brewfile"
+
 if [ -n "$LOG_DOTFILE_TIMES" ]; then
   log "end of .zshrc"
 fi

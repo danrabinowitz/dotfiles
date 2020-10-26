@@ -1,11 +1,16 @@
 # These two lines allow searching at the bash command line
-"\e[A": history-search-backward
-"\e[B": history-search-forward
+"\E[A": history-search-backward
+"\E[B": history-search-forward
 
 # These two are good for irb
-"\eOd": backward-word
-"\eOc": forward-word
+"\EOd": backward-word
+"\EOc": forward-word
 
 set show-all-if-ambiguous on
 set completion-ignore-case on
 set mark-symlinked-directories On
+
+set colored-stats On
+set visible-stats On
+
+set expand-tilde On

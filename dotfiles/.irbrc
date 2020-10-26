@@ -188,18 +188,19 @@ if rails_env
 end
 #############################################################################
 Kernel::at_exit do
+  IRB.conf[:SAVE_HISTORY] = 20000
+
   histfile = File::expand_path(".irb-history", ENV["HOME"])
   puts "TODO: Ensure that #{histfile} is a symlink to /dev/null"
   puts " This ensures that history does not get written to .irb-history and ONLY goes to the real history."
 end
 
+IRB.conf[:SAVE_HISTORY] = 20000
+# set_save_history = true
+
 history_filename = "~/.irb-history#{'-' + rails_appname if rails_appname}.rb"
 IRB.conf[:HISTORY_FILE] = File.expand_path(history_filename)
 
-set_save_history = true
-if set_save_history
-  IRB.conf[:SAVE_HISTORY] = 10000
-end
 
 if defined?(BigDecimal)
   class BigDecimal
@@ -209,8 +210,8 @@ if defined?(BigDecimal)
   end
 end
 
-if File.exist?(".irbrc_local")
-  load '.irbrc_local'
+if File.exist?(File.expand_path("~/.irbrc_local"))
+  load File.expand_path('~/.irbrc_local')
 end
 
 if defined?(PryByebug)
@@ -219,6 +220,8 @@ if defined?(PryByebug)
   Pry.commands.alias_command 'n', 'next'
   Pry.commands.alias_command 'f', 'finish'
 end
+
+puts "End of .irbrc"
 
 # Local Variables:
 # mode: ruby
