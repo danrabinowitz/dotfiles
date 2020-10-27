@@ -1,0 +1,50 @@
+#!/bin/bash
+
+# Exit immediately if any command fails.
+set -e
+
+# Print a message to stderr when attempting to expand a variable that is not set. Also, immediately exit.
+set -u
+
+# Cause pipelines to fail on the first command which fails instead of dying later on down the pipeline.
+set -o pipefail
+
+################################################################################
+
+src_dir="$1"
+dst_dir="$2"
+
+################################################################################
+function validate {
+  # echo "Checking src_dir=${src_dir}"
+  if [[ ! -d "$src_dir" ]]; then
+    echo "${src_dir} must be a directory"
+    exit 1
+  fi
+
+  # echo "Checking dst_dir=$dst_dir"
+  if [[ ! -d "$dst_dir" ]]; then
+    echo "${dst_dir} must be a directory"
+    exit 1
+  fi
+}
+
+function process {
+  echo "Processing files in ${src_dir}"
+
+  for f in $src_dir/*; do
+    echo "Processing file ${f}..."
+    if [[ ! -f "$f" ]]; then
+      echo "Skipping ${f} because it is not a file."
+      continue
+    fi
+
+  done
+}
+################################################################################
+function main {
+  validate
+  process
+}
+################################################################################
+main

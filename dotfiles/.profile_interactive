@@ -3,6 +3,25 @@ if [ -n "$LOG_DOTFILE_TIMES" ]; then
 fi
 
 ##########
+# Requirements
+##########
+# We need a way to alert
+function alert {
+  local msg="$1"
+  osascript -e 'display notification "'"$msg"'"'
+}
+# alert "hi 123 456"
+
+# Require fzf
+if [[ "$OSTYPE" == "darwin"* ]]; then
+  if ! type "fzf" > /dev/null; then
+    echo "WARNING: fzf is not installed"
+    echo '  Run `brew install fzf`'
+  fi
+fi
+
+
+##########
 # Aliases
 ##########
 
