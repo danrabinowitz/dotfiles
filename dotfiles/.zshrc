@@ -1,3 +1,6 @@
+# # When the next line is enabled and zprof is on the last line of .zshrc, provides profile information.
+# zmodload zsh/zprof
+
 #LOG_DOTFILE_TIMES=1
 # Initially copied from @fatih
 # =============
@@ -41,116 +44,11 @@ setopt inc_append_history
 # share command history data
 setopt share_history 
 
-# =============
-#    PROMPT
-# =============
-autoload -U colors && colors
-setopt promptsubst
-
-
-# START OF prompt_user_host CODE
-function get_prompt_user_host() {
-  local h99=`hostname`
-  local prompt_host='%m'
-  if [[ "$h99" == Dans-MBP* ]]; then
-    # prompt_host='%m'
-    local h98=$(hostname -s | sed -E 's/-{0,1}[0-9]+$//' | sed -E 's/^Dans-/Dan'"'"'s-/')
-    prompt_host="$h98"
-  elif [ "$h99" = 'devenv-blue' ]; then
-    local COLOR="%{$fg_bold[blue]%}"
-    prompt_host=${COLOR}'%m'%{$reset_color%}
-  elif [ "$h99" = "devenv-container" ]; then
-    local COLOR="%{$fg_bold[blue]%}"
-    local HOST_HOST_COLOR="%{$fg_bold[green]%}"
-    prompt_host=${COLOR}'%m'%{$reset_color%}${HOST_HOST_COLOR}"($host_hostname)"%{$reset_color%}
-  # elif [ "$h99" = 'x' ]; then
-  #   local COLOR="%{$fg_bold[green]$bg_bold[red]%}"
-  #   prompt_host=${COLOR}'%m'%{$reset_color%}
-  else
-    local COLOR="%{$fg_bold[green]$bg_bold[red]%}"
-    prompt_host=${COLOR}'%m'%{$reset_color%}
-  fi
-
-  local prompt_user=""
-  if [ "$USER" = 'root' ];then
-    # red
-    prompt_user='%{$fg_bold[red]%}%n%{$reset_color%}'
-  elif [ "$USER" = 'djradmin' ]; then
-    prompt_user='%{$fg_bold[magenta]%}%n%{$reset_color%}'
-  elif [ "$USER" = 'danrabinowitz' ] || [ "$USER" = 'djr' ]; then
-    # no color
-    prompt_user=''
-  else
-    # DIFFERENT COLOR
-    prompt_user='%{$fg_bold[yellow]%}%n%{$reset_color%}'
-  fi
-
-  local prompt_user_host=""
-  if [ -n "$prompt_user" ] && [ -n "$prompt_host" ]; then
-    prompt_user_host=${prompt_user}'@'${prompt_host}
-  else
-    prompt_user_host=${prompt_user}${prompt_host}
-  fi
-  if [ -n "$prompt_user_host" ] ; then
-    prompt_user_host=${prompt_user_host}':'
-  fi
-  echo "$prompt_user_host"
-}
-prompt_user_host=$(get_prompt_user_host)
-# END OF prompt_user_host CODE
-
-local ret_status="%(?:%{$fg_bold[green]%}$:%{$fg_bold[green]%}$)"
-# PROMPT='${ret_status} %{$fg[cyan]%}%c%{$reset_color%} $(git_prompt_info)'
-PROMPT='${prompt_user_host}${ret_status} %{$fg[cyan]%}%~%{$reset_color%} $(git_prompt_info)'
-
-ZSH_THEME_GIT_PROMPT_PREFIX="%{$fg_bold[blue]%}git:(%{$fg[red]%}"
-ZSH_THEME_GIT_PROMPT_SUFFIX="%{$reset_color%} "
-ZSH_THEME_GIT_PROMPT_DIRTY="%{$fg[blue]%}) %{$fg[yellow]%}✗"
-ZSH_THEME_GIT_PROMPT_CLEAN="%{$fg[blue]%})"
-
-function git_stash_size() {
- lines=$(git stash list -n 100 2> /dev/null) || return
- if [ "${#lines}" -gt 0 ]
- then
-   count=$(echo "$lines" | wc -l | sed 's/^[ \t]*//') # strip tabs
-   echo " ["${count#} "stash] "
- fi
-}
-
-# Outputs current branch info in prompt format
-function git_prompt_info() {
-  local ref
-  if [[ "$(command git config --get customzsh.hide-status 2>/dev/null)" != "1" ]]; then
-    ref=$(command git symbolic-ref HEAD 2> /dev/null) || \
-    ref=$(command git rev-parse --short HEAD 2> /dev/null) || return 0
-    echo "$ZSH_THEME_GIT_PROMPT_PREFIX${ref#refs/heads/}$(parse_git_dirty)$(git_stash_size)$ZSH_THEME_GIT_PROMPT_SUFFIX"
-  fi
-}
-
-# Checks if working tree is dirty
-function parse_git_dirty() {
-  local STATUS=''
-  local FLAGS
-  FLAGS=('--porcelain')
-
-  if [[ "$(command git config --get customzsh.hide-dirty)" != "1" ]]; then
-    FLAGS+='--ignore-submodules=dirty'
-    STATUS=$(command git status ${FLAGS} 2> /dev/null | tail -n1)
-  fi
-
-  if [[ -n $STATUS ]]; then
-    echo "$ZSH_THEME_GIT_PROMPT_DIRTY"
-  else
-    echo "$ZSH_THEME_GIT_PROMPT_CLEAN"
-  fi
-}
-
 # ===================
 #    AUTOCOMPLETION
 # ===================
 # enable completion
-autoload -Uz compinit
-compinit
+autoload -Uz compinit && compinit
 
 zmodload -i zsh/complist
 
@@ -289,7 +187,7 @@ else
 fi
 
 # tab completion for sshrc
-compdef sshrc=ssh
+# compdef sshrc=ssh
 
 # direnv
 if ! type "direnv" > /dev/null; then
@@ -317,3 +215,46 @@ if [ -n "$LOG_DOTFILE_TIMES" ]; then
   log "end of .zshrc"
 fi
 
+[ -f "/Users/djr/.ghcup/env" ] && source "/Users/djr/.ghcup/env" # ghcup-env
+
+if [ -r /usr/local/lib/node_modules/pure-prompt ]; then
+  # Pure adds only a few ms
+  # https://github.com/sindresorhus/pure
+  autoload -U promptinit; promptinit
+  prompt pure
+
+  zstyle :prompt:pure:git:stash show yes
+  zstyle :prompt:pure:path color cyan
+  zstyle :prompt:pure:prompt:success color green
+else
+  # starship adds 60 ms in a ruby directory, and 10 or 20 ms in other directories
+  # https://starship.rs/
+  if command -v starship &> /dev/null; then
+    eval "$(starship init zsh)"
+  fi
+fi
+
+# Enabling this adds 10 ms to prompt times per zsh-prompt-benchmark
+if [[ -r "/usr/local/opt/mcfly/mcfly.zsh" ]]; then
+  export MCFLY_FUZZY=true
+  source "/usr/local/opt/mcfly/mcfly.zsh"
+else
+  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+fi
+
+# # Enabling this changes the results of zsh-prompt-benchmark from 40ms to 170ms
+# if command -v change-tab-color-pwd &> /dev/null; then
+#   function tab_color_precmd {
+#     change-tab-color-pwd 0.5 0.5
+#   }
+#   autoload -U add-zsh-hook
+#   add-zsh-hook precmd tab_color_precmd
+# fi
+
+# NOTE: Using https://github.com/romkatv/zsh-prompt-benchmark I have the prompt benchmarked to 30ms.
+
+# # When the next line is enabled and zmodload zsh/zprof is on the first line of .zshrc, provides profile information.
+# zprof
+
+# # Enabling the next line allows us to run zsh-prompt-benchmark
+# source ~/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
