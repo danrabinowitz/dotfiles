@@ -1,6 +1,10 @@
 # # When the next line is enabled and zprof is on the last line of .zshrc, provides profile information.
 # zmodload zsh/zprof
 
+# Nice post on zsh optimization
+# https://htr3n.github.io/2018/07/faster-zsh/
+# and another: https://joshghent.com/zsh-speed/
+
 #LOG_DOTFILE_TIMES=1
 # Initially copied from @fatih
 # =============
@@ -235,12 +239,18 @@ else
 fi
 
 # Enabling this adds 10 ms to prompt times per zsh-prompt-benchmark
-if [[ -r "/usr/local/opt/mcfly/mcfly.zsh" ]]; then
-  export MCFLY_FUZZY=true
-  source "/usr/local/opt/mcfly/mcfly.zsh"
-else
+# if [[ -r "/usr/local/opt/mcfly/mcfly.zsh" ]]; then
+#   export MCFLY_FUZZY=true
+#   source "/usr/local/opt/mcfly/mcfly.zsh"
+# else
   [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
-fi
+# fi
+
+###
+# docc completion seems to require vpn and hangs with no vpn. Test this.
+#if command -v docc &> /dev/null; then
+#  source <(SYSLOG_OFF=true docc completion zsh)
+#fi
 
 # # Enabling this changes the results of zsh-prompt-benchmark from 40ms to 170ms
 # if command -v change-tab-color-pwd &> /dev/null; then
