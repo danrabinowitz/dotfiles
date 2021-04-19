@@ -63,16 +63,20 @@ if [ -d "/opt/X11/bin" ] ; then
     pathappend /opt/X11/bin
 fi
 
+if [ -d "/usr/local/go/bin" ] ; then
+    pathappend /usr/local/go/bin
+fi
+
+if [ -d "/opt/homebrew/bin" ] ; then
+    pathprepend "/opt/homebrew/bin"
+fi
+
 # set PATH so it includes user's private bin if it exists
 if [ -d "$HOME/bin" ] ; then
     pathprepend "$HOME/bin"
 fi
 if [ -d "$HOME/code/bin" ] ; then
     pathprepend "$HOME/code/bin"
-fi
-
-if [ -d "/usr/local/go/bin" ] ; then
-    pathappend /usr/local/go/bin
 fi
 
 # set PATH so it includes user's private bin if it exists

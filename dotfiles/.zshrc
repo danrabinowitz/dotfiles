@@ -221,7 +221,49 @@ fi
 
 [ -f "/Users/djr/.ghcup/env" ] && source "/Users/djr/.ghcup/env" # ghcup-env
 
-if [ -r /usr/local/lib/node_modules/pure-prompt ]; then
+# PURE!
+
+
+if ! type "jump" > /dev/null; then
+  echo "WARNING: jump is not installed"
+  echo "  source: https://github.com/gsamokovarov/jump"
+  case "$OSTYPE" in
+    darwin*)
+      echo '  Run `brew install jump` to install'
+    ;;
+    linux*)
+      echo "  Run... TODO"
+    ;;
+    *)
+      echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
+    ;;
+  esac
+else
+  eval "$(jump shell)"
+fi
+
+if ! type "diff-so-fancy" > /dev/null; then
+  echo "WARNING: diff-so-fancy is not installed"
+  echo "  source: https://github.com/so-fancy/diff-so-fancy"
+  case "$OSTYPE" in
+    darwin*)
+      echo '  Run `brew install diff-so-fancy` to install'
+    ;;
+    linux*)
+      echo "  Run... TODO"
+    ;;
+    *)
+      echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
+    ;;
+  esac
+fi
+
+
+
+if [ -r /usr/local/lib/node_modules/pure-prompt ] || [ -r "$HOME/.zsh/pure" ] ; then
+  if [ ! -r /usr/local/lib/node_modules/pure-prompt ]; then
+    fpath+=$HOME/.zsh/pure
+  fi
   # Pure adds only a few ms
   # https://github.com/sindresorhus/pure
   autoload -U promptinit; promptinit
@@ -231,10 +273,18 @@ if [ -r /usr/local/lib/node_modules/pure-prompt ]; then
   zstyle :prompt:pure:path color cyan
   zstyle :prompt:pure:prompt:success color green
 else
+
+
+  echo "WARNING: pure is not installed"
+  echo "  source: https://github.com/sindresorhus/pure"
+  echo '  Run `npm install --global pure-prompt` to install'
+
   # starship adds 60 ms in a ruby directory, and 10 or 20 ms in other directories
   # https://starship.rs/
   if command -v starship &> /dev/null; then
     eval "$(starship init zsh)"
+  else
+    echo "WARNING: neither pure nor starship is installed"
   fi
 fi
 
@@ -243,7 +293,40 @@ fi
 #   export MCFLY_FUZZY=true
 #   source "/usr/local/opt/mcfly/mcfly.zsh"
 # else
-  [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+if ! type "fzf" > /dev/null; then
+  echo "WARNING: fzf is not installed"
+  echo "  source: https://github.com/junegunn/fzf"
+  case "$OSTYPE" in
+    darwin*)
+      echo '  Run `brew install fzf && $(brew --prefix)/opt/fzf/install` to install'
+    ;;
+    linux*)
+      echo "  Run... TODO"
+    ;;
+    *)
+      echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
+    ;;
+  esac
+else
+  if [ ! -r ~/.fzf.zsh ]; then
+    echo "WARNING: ~/.fzf.zsh is not readable"
+    case "$OSTYPE" in
+      darwin*)
+        echo '  Run `$(brew --prefix)/opt/fzf/install` to install'
+      ;;
+      linux*)
+        echo "  Run... TODO"
+      ;;
+      *)
+        echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
+      ;;
+    esac
+  else
+    source ~/.fzf.zsh
+  fi
+fi
+
 # fi
 
 ###
