@@ -270,8 +270,8 @@ if [ -r /usr/local/lib/node_modules/pure-prompt ] || [ -r "$HOME/.zsh/pure" ] ; 
   zstyle :prompt:pure:git:stash show yes
   zstyle :prompt:pure:path color cyan
   zstyle :prompt:pure:prompt:success color green
-  zstyle :prompt:pure:prompt:host color red
-  zstyle :prompt:pure:prompt:user color magenta
+  zstyle :prompt:pure:host color red
+  zstyle :prompt:pure:user color magenta
 
   prompt pure
 
