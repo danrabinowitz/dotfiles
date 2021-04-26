@@ -93,24 +93,24 @@ zstyle ':completion:*' rehash true
 zstyle ':completion:*' list-dirs-first true
 
 # zsh-histdb
-zsh_plugins_dir="$HOME/.zsh-plugins"
-zsh_histdb_dir="$HOME/.zsh-plugins/zsh-histdb"
-if [ -d "${zsh_plugins_dir}/zsh-histdb" ]; then
-  if [[ "$OSTYPE" == "darwin"* ]]; then
-    HISTDB_TABULATE_CMD=(sed -e $'s/\x1f/\t/g')
-  fi
+# zsh_plugins_dir="$HOME/.zsh-plugins"
+# zsh_histdb_dir="$HOME/.zsh-plugins/zsh-histdb"
+# if [ -d "${zsh_plugins_dir}/zsh-histdb" ]; then
+#   if [[ "$OSTYPE" == "darwin"* ]]; then
+#     HISTDB_TABULATE_CMD=(sed -e $'s/\x1f/\t/g')
+#   fi
 
-  HISTDB_FILE="$HOME/.dev-files/histdb/zsh-history.db"
-  source ${zsh_plugins_dir}/zsh-histdb/sqlite-history.zsh
-  autoload -Uz add-zsh-hook
-  source ${zsh_plugins_dir}/zsh-histdb/histdb-interactive.zsh
+#   HISTDB_FILE="$HOME/.dev-files/histdb/zsh-history.db"
+#   source ${zsh_plugins_dir}/zsh-histdb/sqlite-history.zsh
+#   autoload -Uz add-zsh-hook
+#   source ${zsh_plugins_dir}/zsh-histdb/histdb-interactive.zsh
 
 
 
-else
-  echo "WARNING: zsh-histdb is not installed. To install run:"
-  echo "mkdir -p ${zsh_plugins_dir} && git clone https://github.com/larkery/zsh-histdb ${zsh_plugins_dir}/zsh-histdb"
-fi
+# else
+#   echo "WARNING: zsh-histdb is not installed. To install run:"
+#   echo "mkdir -p ${zsh_plugins_dir} && git clone https://github.com/larkery/zsh-histdb ${zsh_plugins_dir}/zsh-histdb"
+# fi
 
 # ===================
 #    KEY BINDINGS
