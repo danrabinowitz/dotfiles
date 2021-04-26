@@ -120,7 +120,7 @@ bindkey -e
 
 # [Ctrl-r] - Search backward incrementally for a specified string. The string
 # may begin with ^ to anchor the search to the beginning of the line.
-if [ -z "$HISTDB_FILE" ]; then
+if [ -n "$HISTDB_FILE" ]; then
   bindkey '^r' _histdb-isearch
 else
   bindkey '^r' history-incremental-search-backward
