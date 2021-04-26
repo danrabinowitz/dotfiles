@@ -92,6 +92,26 @@ zstyle ':completion:*' rehash true
 # Keep directories and files separated
 zstyle ':completion:*' list-dirs-first true
 
+# zsh-histdb
+zsh_plugins_dir="$HOME/.zsh-plugins"
+zsh_histdb_dir="$HOME/.zsh-plugins/zsh-histdb"
+if [ -d "${zsh_plugins_dir}/zsh-histdb" ]; then
+  if [[ "$OSTYPE" == "darwin"* ]]; then
+    HISTDB_TABULATE_CMD=(sed -e $'s/\x1f/\t/g')
+  fi
+
+  HISTDB_FILE="$HOME/.dev-files/histdb/zsh-history.db"
+  source ${zsh_plugins_dir}/zsh-histdb/sqlite-history.zsh
+  autoload -Uz add-zsh-hook
+  source ${zsh_plugins_dir}/zsh-histdb/histdb-interactive.zsh
+
+
+
+else
+  echo "WARNING: zsh-histdb is not installed. To install run:"
+  echo "mkdir -p ${zsh_plugins_dir} && git clone https://github.com/larkery/zsh-histdb ${zsh_plugins_dir}/zsh-histdb"
+fi
+
 # ===================
 #    KEY BINDINGS
 # ===================
@@ -100,7 +120,11 @@ bindkey -e
 
 # [Ctrl-r] - Search backward incrementally for a specified string. The string
 # may begin with ^ to anchor the search to the beginning of the line.
-bindkey '^r' history-incremental-search-backward      
+if [ -z "$HISTDB_FILE" ]; then
+  bindkey '^r' _histdb-isearch
+else
+  bindkey '^r' history-incremental-search-backward
+fi
 
 if [[ "${terminfo[kpp]}" != "" ]]; then
   bindkey "${terminfo[kpp]}" up-line-or-history       # [PageUp] - Up a line of history
@@ -353,4 +377,4 @@ fi
 # zprof
 
 # # Enabling the next line allows us to run zsh-prompt-benchmark
-# source ~/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
+# source ~/code/src/github.com/romkatv/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
