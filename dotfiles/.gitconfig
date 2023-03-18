@@ -60,6 +60,7 @@
 
   pager = delta
 #  pager = less -FRSX
+  # pager = diff-so-fancy | less --tabs=4 -RFX
 
   # Make `git rebase` safer on OS X
   # More info: <http://www.git-tower.com/blog/make-git-rebase-safe-on-osx/>
@@ -155,7 +156,6 @@
 #[github]
 #  user = danrabinowitz
 [push]
-	default = simple
 	default = current
 	autoSetupRemote = true
 [pull]

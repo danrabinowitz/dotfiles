@@ -266,7 +266,7 @@ exit() {
 
 alias netcheck1="date; sudo mtr -rw 8.8.8.8"
 
-VSCODIUM_EXE='vscodium'
+VSCODIUM_EXE='codium'
 function vscodium_wrapper {
   local args="${@}"
 #  echo "WARNING: Running vscode instead of ${EDITOR}"
