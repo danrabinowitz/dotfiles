@@ -52,7 +52,7 @@ setopt share_history
 #    AUTOCOMPLETION
 # ===================
 # enable completion
-#autoload -Uz compinit && compinit -u
+autoload -Uz compinit && compinit -u
 
 zmodload -i zsh/complist
 
