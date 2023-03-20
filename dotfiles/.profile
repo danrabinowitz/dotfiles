@@ -82,6 +82,7 @@ ulimit -S -c 0
 ################################################################################
 # Stuff that is not bash-specific and not specific to interactive use, but which is NOT "run time modifying" stuff
 # Shell options which could be useful in a non-interactive session
+if [ -e /Users/djr/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/djr/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
 # This next line seems to work on bash, but not zsh
 # TODO: Switch based on zsh version

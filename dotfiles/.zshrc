@@ -382,6 +382,11 @@ fi
 
 # fi
 
+if ! type "nix-env" > /dev/null; then
+  echo "WARNING: nix is not installed"
+  echo "  source: https://nixos.org/manual/nix/stable/#chap-installation"
+fi
+
 ###
 # docc completion seems to require vpn and hangs with no vpn. Test this.
 #if command -v docc &> /dev/null; then
@@ -396,6 +401,9 @@ fi
 #   autoload -U add-zsh-hook
 #   add-zsh-hook precmd tab_color_precmd
 # fi
+
+# if [ -e /Users/djr/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/djr/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
+
 
 # NOTE: Using https://github.com/romkatv/zsh-prompt-benchmark I have the prompt benchmarked to 30ms.
 
