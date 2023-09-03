@@ -273,13 +273,12 @@ fi
 
 # PURE!
 
-
-if ! type "jump" > /dev/null; then
-  echo "WARNING: jump is not installed"
-  echo "  source: https://github.com/gsamokovarov/jump"
+if ! type "git-delta" > /dev/null; then
+  echo "WARNING: git-delta is not installed"
+  echo "  source: https://dandavison.github.io/delta/installation.html or https://github.com/dandavison/delta"
   case "$OSTYPE" in
     darwin*)
-      echo '  Run `brew install jump` to install'
+      echo '  Run `brew install git-delta` to install'
     ;;
     linux*)
       echo "  Run... TODO"
@@ -288,8 +287,6 @@ if ! type "jump" > /dev/null; then
       echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
     ;;
   esac
-else
-  eval "$(jump shell)"
 fi
 
 if ! type "diff-so-fancy" > /dev/null; then
@@ -307,7 +304,6 @@ if ! type "diff-so-fancy" > /dev/null; then
     ;;
   esac
 fi
-
 
 
 if [ -r /usr/local/lib/node_modules/pure-prompt ] || [ -r "$HOME/.zsh/pure" ] ; then
