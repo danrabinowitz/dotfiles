@@ -48,7 +48,12 @@ function puniq () {
 }
 
 # Set the initial path
-export PATH=/bin:/usr/bin
+# export PATH=/bin:/usr/bin
+if [ -z "$PATH" ] ; then
+    export PATH=""
+fi
+
+pathappend /bin:/usr/bin
 
 pathprepend /usr/local/bin
 pathappend /usr/local/sbin:/usr/sbin:/sbin

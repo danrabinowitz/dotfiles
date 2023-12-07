@@ -380,7 +380,7 @@ fi
 
 if ! type "nix-env" > /dev/null; then
   echo "WARNING: nix is not installed"
-  echo "  source: https://nixos.org/manual/nix/stable/#chap-installation"
+  echo "  source: https://zero-to-nix.com/start/install"
 fi
 
 ###
