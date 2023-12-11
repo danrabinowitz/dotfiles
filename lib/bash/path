@@ -92,6 +92,11 @@ fi
 # I was using this. I think I may not need it, so I'm commenting it out on 12/15/12.
 # PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
+if [ -d "$HOME/.nix-flake/bin" ]; then
+  pathprepend "$HOME/.nix-flake/bin"
+fi
+
+
 # Now to clean up
 unset pathremove pathprepend pathappend
 

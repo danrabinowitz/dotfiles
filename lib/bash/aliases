@@ -10,16 +10,8 @@ alias rm="rm -i"
 # ----------------------------------------------------------------------
 # LS AND DIRCOLORS
 # ----------------------------------------------------------------------
-# To keep things simple, try to always use GNU ls
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  if ! type "gls" > /dev/null; then
-    echo "WARNING: gls is not installed"
-    echo '  Run `brew install coreutils`'
-  fi
-  ls_cmd=gls
-else
-  ls_cmd=ls
-fi
+# With my nix setup, the ls command should always just be 'ls'.
+ls_cmd=ls
 
 # we always pass these to ls(1)
 ls_common="-hbF"
@@ -291,7 +283,8 @@ function cover {
         && unlink $t
 }
 
-alias dovpn="ssh nas1 -- /usr/local/sbin/run_vpn"
+alias edit_nix_packages="vim ~/code/src/danrabinowitz/nixpkgs/flakes/common-cli-tools/flake.nix && nix-symlink"
+
 
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:

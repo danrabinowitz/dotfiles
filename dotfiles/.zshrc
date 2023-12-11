@@ -48,6 +48,8 @@ setopt inc_append_history
 # share command history data
 setopt share_history 
 
+setopt HIST_IGNORE_SPACE
+
 # ===================
 #    AUTOCOMPLETION
 # ===================
@@ -273,7 +275,7 @@ fi
 
 # PURE!
 
-if ! type "git-delta" > /dev/null; then
+if ! type "delta" > /dev/null; then
   echo "WARNING: git-delta is not installed"
   echo "  source: https://dandavison.github.io/delta/installation.html or https://github.com/dandavison/delta"
   case "$OSTYPE" in
@@ -289,27 +291,29 @@ if ! type "git-delta" > /dev/null; then
   esac
 fi
 
-if ! type "diff-so-fancy" > /dev/null; then
-  echo "WARNING: diff-so-fancy is not installed"
-  echo "  source: https://github.com/so-fancy/diff-so-fancy"
-  case "$OSTYPE" in
-    darwin*)
-      echo '  Run `brew install diff-so-fancy` to install'
-    ;;
-    linux*)
-      echo "  Run... TODO"
-    ;;
-    *)
-      echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
-    ;;
-  esac
-fi
+#if ! type "diff-so-fancy" > /dev/null; then
+#  echo "WARNING: diff-so-fancy is not installed"
+#  echo "  source: https://github.com/so-fancy/diff-so-fancy"
+#  case "$OSTYPE" in
+#    darwin*)
+#      echo '  Run `brew install diff-so-fancy` to install'
+#    ;;
+#    linux*)
+#      echo "  Run... TODO"
+#    ;;
+#    *)
+#      echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
+#    ;;
+#  esac
+#fi
 
-
-if [ -r /usr/local/lib/node_modules/pure-prompt ] || [ -r "$HOME/.zsh/pure" ] ; then
-  if [ ! -r /usr/local/lib/node_modules/pure-prompt ]; then
+if [ -r "$HOME/.nix-flake/share/zsh/site-functions/prompt_pure_setup" ] || [ -r "/usr/local/lib/node_modules/pure-prompt" ] || [ -r "$HOME/.zsh/pure" ]; then
+  if [ -r "$HOME/.nix-flake/share/zsh/site-functions/prompt_pure_setup" ]; then
+    fpath+="$HOME/.nix-flake/share/zsh/site-functions"
+  elif [ -r "$HOME/.zsh/pure" ]; then
     fpath+=$HOME/.zsh/pure
   fi
+
   # Pure adds only a few ms
   # https://github.com/sindresorhus/pure
   autoload -U promptinit; promptinit
@@ -318,6 +322,7 @@ if [ -r /usr/local/lib/node_modules/pure-prompt ] || [ -r "$HOME/.zsh/pure" ] ; 
   zstyle :prompt:pure:prompt:success color green
   zstyle :prompt:pure:host color red
   zstyle :prompt:pure:user color magenta
+  zstyle :prompt:pure:environment:nix-shell show no
 
   prompt pure
 
