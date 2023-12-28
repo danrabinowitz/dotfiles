@@ -318,6 +318,12 @@ if [ -r "$HOME/.nix-flake/share/zsh/site-functions/prompt_pure_setup" ] || [ -r 
     fpath+=$HOME/.zsh/pure
   fi
 
+  if echo "$PATH" | grep -qc '/nix/store'; then
+    export IN_NIX_SHELL="yes"
+  else
+    unset IN_NIX_SHELL
+  fi
+
   # Pure adds only a few ms
   # https://github.com/sindresorhus/pure
   autoload -U promptinit; promptinit
@@ -326,7 +332,7 @@ if [ -r "$HOME/.nix-flake/share/zsh/site-functions/prompt_pure_setup" ] || [ -r 
   zstyle :prompt:pure:prompt:success color green
   zstyle :prompt:pure:host color red
   zstyle :prompt:pure:user color magenta
-  zstyle :prompt:pure:environment:nix-shell show no
+  # zstyle :prompt:pure:environment:nix-shell show no
 
   prompt pure
 
@@ -357,10 +363,10 @@ if ! type "fzf" > /dev/null; then
   echo "  source: https://github.com/junegunn/fzf"
   case "$OSTYPE" in
     darwin*)
-      echo '  Run `brew install fzf && $(brew --prefix)/opt/fzf/install` to install'
+      echo '  Run `git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install` to install.'
     ;;
     linux*)
-      echo "  Run... TODO"
+      echo '  Run `git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install` to install.'
     ;;
     *)
       echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
@@ -371,10 +377,10 @@ else
     echo "WARNING: ~/.fzf.zsh is not readable"
     case "$OSTYPE" in
       darwin*)
-        echo '  Run `$(brew --prefix)/opt/fzf/install` to install'
+        echo '  Run `git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install` to install.'
       ;;
       linux*)
-        echo "  Run... TODO"
+        echo '  Run `git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install` to install.'
       ;;
       *)
         echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
