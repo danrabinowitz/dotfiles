@@ -49,49 +49,6 @@ alias l.="ls -d .*"
 # alias sq='git rebase -i $(git merge-base $(git rev-parse --abbrev-ref HEAD) master)'
 
 
-if [ -f /Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl ]; then
-#  alias subl="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
-  SUBLIME_TEXT_BIN="/Applications/Sublime\ Text.app/Contents/SharedSupport/bin/subl"
-elif [ -f /Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl ]; then
-#  alias subl="/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl"
-  SUBLIME_TEXT_BIN="/Applications/Sublime\ Text\ 2.app/Contents/SharedSupport/bin/subl"
-fi
-
-function subl() {
-  echo "subl is deprecated in favor of e (or edit)"
-  return
-
-  args="${@}"
-  if [ ! -z "$args" -a "${args}" != "." ]; then
-    echo "We have an argument:${args}: - 1"
-    eval $SUBLIME_TEXT_BIN "$args"
-  else
-    if [ "${args}" = "." ]; then
-      echo "We have an argument:${args}: - 2c"
-      echo "The argument is '.' which is rarely desired. Just call with no argument."
-    else
-      echo "No argument supplied"
-    fi
-    if [ -n "$ZSH_VERSION" ]; then
-      SUBLIME_PROJECT_FILES=$(echo *.sublime-project(N))
-    else
-      SUBLIME_PROJECT_FILES=$(ls -1 *.sublime-project 2> /dev/null)
-    fi
-
-    if [ "$SUBLIME_PROJECT_FILES" ]; then  # At least one project exists in current folder, open them all
-      for SUBLIME_PROJECT_FILE in "$SUBLIME_PROJECT_FILES"; do
-        echo "Using project file: ${SUBLIME_PROJECT_FILE}"
-        eval $SUBLIME_TEXT_BIN --project "$SUBLIME_PROJECT_FILE"
-      done
-    else  # no file specified and no projects available so open current directory
-      echo "No project file found. Opening current directory."
-      eval $SUBLIME_TEXT_BIN .
-    fi
-  fi
-}
-
-
-
 
 # git aliases
 alias gca='GIT_COMMITTER_DATE="`date`" git commit --amend --date="$(date)" -C HEAD'
