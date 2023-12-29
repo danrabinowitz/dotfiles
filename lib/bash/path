@@ -100,7 +100,7 @@ fi
 # Now to clean up
 unset pathremove pathprepend pathappend
 
-    PATH=$(puniq $PATH)
+    PATH=$(puniq "$PATH")
 fi
 
 # Set CDPATH for bash completion
