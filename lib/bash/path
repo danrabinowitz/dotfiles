@@ -93,7 +93,7 @@ else
     # PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 
     if [ -d "$HOME/.nix-flake/bin" ]; then
-    pathprepend "$HOME/.nix-flake/bin"
+        pathprepend "$HOME/.nix-flake/bin"
     fi
 
 
