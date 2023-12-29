@@ -133,6 +133,53 @@ function notify_branches_which_are_behind {
     mdfind -onlyin ~ '(kMDItemFSName = ".git" )'|grep -v -e '/Users/danrabinowitz/.rvm' -e '/Users/danrabinowitz/.Trash' -e '/Users/danrabinowitz/.sbt/staging/' | while read gitdir; do repodir=$(echo $gitdir | sed 's/\/.git$//') && (cd "$repodir" >& /dev/null && git fetch >& /dev/null && (git status 2>/dev/null | grep -c '^# Your branch is behind' >& /dev/null)) && (echo "NOTICE: $repodir is behind" | growlnotify -s) ; done
 }
 
+# From: https://seb.jambor.dev/posts/improving-shell-workflows-with-fzf/
+function delete-branches-simple() {
+  local branches_to_delete
+  branches_to_delete=$(git branch | fzf --multi)
+
+  if [ -n "$branches_to_delete" ]; then 
+    git branch --delete --force "$branches_to_delete"
+  fi
+}
+
+function delete-branches() {
+  git branch |
+    grep --invert-match '\*' |
+    cut -c 3- |
+    fzf --multi --preview="git log {} --" |
+    xargs --no-run-if-empty git branch --delete --force
+}
+
+function pr-checkout() {
+  local jq_template pr_number
+
+  jq_template='"'\
+'#\(.number) - \(.title)'\
+'\t'\
+'Author: \(.user.login)\n'\
+'Created: \(.created_at)\n'\
+'Updated: \(.updated_at)\n\n'\
+'\(.body)'\
+'"'
+
+  pr_number=$(
+    gh api 'repos/:owner/:repo/pulls' |
+    jq ".[] | $jq_template" |
+    sed -e 's/"\(.*\)"/\1/' -e 's/\\t/\t/' |
+    fzf \
+      --with-nth=1 \
+      --delimiter='\t' \
+      --preview='echo -e {2}' \
+      --preview-window=top:wrap |
+    sed 's/^#\([0-9]\+\).*/\1/'
+  )
+
+  if [ -n "$pr_number" ]; then
+    gh pr checkout "$pr_number"
+  fi
+}
+
 alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
 
 alias nomorebundleexec='gem install rubygems-bundler && gem regenerate_binstubs'

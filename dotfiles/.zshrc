@@ -398,6 +398,10 @@ if ! type "nix-env" > /dev/null; then
   echo "  source: https://zero-to-nix.com/start/install"
 fi
 
+if [ -f "$HOME/.zshrc_local" ]; then
+    . "$HOME/.zshrc_local"
+fi
+
 ###
 # docc completion seems to require vpn and hangs with no vpn. Test this.
 #if command -v docc &> /dev/null; then
