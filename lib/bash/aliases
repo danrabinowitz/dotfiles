@@ -180,6 +180,9 @@ function pr-checkout() {
   fi
 }
 
+randpw(){ LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 16; echo }
+randpw2(){ < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-16};echo;}
+
 alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
 
 alias nomorebundleexec='gem install rubygems-bundler && gem regenerate_binstubs'
