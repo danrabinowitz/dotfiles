@@ -20,6 +20,7 @@ LOG_FILENAME=${LOG_FILENAME:-$default_log_filename}
 LOG_TO_STDOUT=true
 function log {
   if [ -n "$IS_MACOS" ]; then
+    echo "TODO: Make sure gdate exists"
     local msg="[$(gdate +%s.%N)]: $*"
   else
     local msg="[$(date --rfc-3339=seconds)]: $*"
@@ -61,6 +62,7 @@ function check_config {
 ################################################################################
 # DigitalOcean
 GOPRIVATE="*.internal.digitalocean.com,github.com/digitalocean"
+echo "TODO: Add logic to GOPRIVATE or move it to _local"
 ################################################################################
 
 ################################################################################

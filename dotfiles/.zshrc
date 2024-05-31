@@ -243,7 +243,7 @@ if ! type "jump" > /dev/null; then
     ;;
   esac
 else
-  eval "$(jump shell)"
+  eval "$(jump shell zsh)"
 fi
 
 # tab completion for sshrc
