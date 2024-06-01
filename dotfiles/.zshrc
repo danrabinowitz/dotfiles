@@ -177,7 +177,9 @@ typeset -U path PATH cdpath CDPATH fpath FPATH manpath MANPATH
 #    PLUGINS
 # ===================
 
-if [ -f "$HOME/.nix-flake/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+if [ -f "$HOME/.nix-profile/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
+  source "$HOME/.nix-profile/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
+elif [ -f "$HOME/.nix-flake/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
   source "$HOME/.nix-flake/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 elif [ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
   source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -199,7 +201,9 @@ else
   esac
 fi
 
-if [ -f "$HOME/.nix-flake/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+if [ -f "$HOME/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
+  source "$HOME/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
+elif [ -f "$HOME/.nix-flake/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
   source "$HOME/.nix-flake/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 elif [ -f /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
   source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
@@ -311,9 +315,9 @@ fi
 #  esac
 #fi
 
-if [ -r "$HOME/.nix-flake/share/zsh/site-functions/prompt_pure_setup" ] || [ -r "/usr/local/lib/node_modules/pure-prompt" ] || [ -r "$HOME/.zsh/pure" ]; then
-  if [ -r "$HOME/.nix-flake/share/zsh/site-functions/prompt_pure_setup" ]; then
-    fpath+="$HOME/.nix-flake/share/zsh/site-functions"
+if [ -r "$HOME/.nix-profile/share/zsh/site-functions/prompt_pure_setup" ] || [ -r "$HOME/.nix-flake/share/zsh/site-functions/prompt_pure_setup" ] || [ -r "/usr/local/lib/node_modules/pure-prompt" ] || [ -r "$HOME/.zsh/pure" ]; then
+  if [ -r "$HOME/.nix-profile/share/zsh/site-functions/prompt_pure_setup" ]; then
+    fpath+="$HOME/.nix-profile/share/zsh/site-functions"
   elif [ -r "$HOME/.zsh/pure" ]; then
     fpath+=$HOME/.zsh/pure
   fi
