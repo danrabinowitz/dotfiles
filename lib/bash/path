@@ -97,6 +97,10 @@ else
     #     pathprepend "$HOME/.nix-flake/bin"
     # fi
 
+    if [ -d "$HOME/.nix-profile/bin" ]; then
+        pathprepend "$HOME/.nix-profile/bin"
+    fi
+
 
     # Now to clean up
     unset pathremove pathprepend pathappend
