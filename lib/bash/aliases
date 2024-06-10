@@ -290,8 +290,7 @@ function cover {
         && unlink $t
 }
 
-alias edit_nix_packages="vim ~/code/src/danrabinowitz/nixpkgs/flakes/common-cli-tools/flake.nix && nix-symlink"
-
+alias edit_nix="vim ~djr/code/src/danrabinowitz/nix/profiles/default/flake.nix && nix-profile-upgrade"
 
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
