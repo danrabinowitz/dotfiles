@@ -122,7 +122,9 @@
 # Tweaking the one fro ultasaurus to include stuff from @vgough
   branches = for-each-ref --sort='-authordate:iso8601' --format='%(HEAD) %(color:green)%(authordate:relative)%09%(color:yellow)%(refname:short)%(color:reset) - %(contents:subject)' refs/heads
 
-  cleanbranches2 = !gitcleanbranches3
+  # No need for a git branches alias. We have a shell script called git-cleanbranches which gets picked up by git as "git cleanbranches"
+
+  #cleanbranches2 = !gitcleanbranches3
   #cleanbranches = !~/bin/gitcleanbranches.sh
   #cleanbranchesnew = !git branch --merged | grep -v '^\*\|main\|develop|master' | xargs git branch -d
   #cleanbranches = !gitcleanbranches3

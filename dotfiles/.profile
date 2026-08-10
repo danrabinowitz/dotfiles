@@ -80,37 +80,6 @@ ulimit -S -c 0
 # Shell options which could be useful in a non-interactive session
 if [ -e /Users/djr/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/djr/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
 
-# Delete local branches already merged into HEAD. If a merged branch is checked
-# out in another worktree, remove that worktree first (refuses if dirty;
-# GITCLEAN_FORCE_WORKTREE=1 forces removal). Skips main/master/develop and HEAD.
-function gitcleanbranches3 {
-  local branch wt
-  git for-each-ref --format='%(refname:short)' refs/heads --merged=HEAD |
-    while IFS= read -r branch; do
-      case "$branch" in
-        main|master|develop) continue ;;
-      esac
-      if [ "$(git symbolic-ref --short HEAD 2>/dev/null)" = "$branch" ]; then
-        continue
-      fi
-      wt=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
-        /^worktree / { path = substr($0, 10) }
-        $0 == "branch " b { print path; exit }
-      ')
-      if [ -n "$wt" ]; then
-        if [ -n "${GITCLEAN_FORCE_WORKTREE:-}" ]; then
-          git worktree remove --force "$wt" || continue
-        else
-          if ! git worktree remove "$wt"; then
-            echo "skip $branch: worktree dirty at $wt (GITCLEAN_FORCE_WORKTREE=1 to force)" >&2
-            continue
-          fi
-        fi
-      fi
-      git branch -d "$branch"
-    done
-}
-
 # This next line seems to work on bash, but not zsh
 # TODO: Switch based on zsh version
 # shopt -s extglob >/dev/null 2>&1
