@@ -10,22 +10,23 @@ alias rm="rm -i"
 # ----------------------------------------------------------------------
 # LS AND DIRCOLORS
 # ----------------------------------------------------------------------
-# With my nix setup, the ls command should always just be 'ls'.
+# Prefer GNU ls when available (Homebrew coreutils ships `gls`; nix/Linux use `ls`).
 ls_cmd=ls
+if command -v gls >/dev/null 2>&1; then
+  ls_cmd=gls
+fi
 
 # we always pass these to ls(1)
 ls_common="-hbF"
 
 # Check which version of ls we are using
-if [ -n "$(${ls_cmd} --version 2>/dev/null)" ]; then
-  # GNU ls
-  # echo "GNU ls"
+if "${ls_cmd}" --version 2>/dev/null | grep -q 'GNU coreutils'; then
   # https://geoff.greer.fm/lscolors/
   # LS_COLORS is used by GNU/Linux ls
   export LS_COLORS="di=32:ln=1;31:so=37:pi=1;33:ex=35:bd=37:cd=37:su=37:sg=37:tw=32:ow=32"
   ls_color=' --color=auto'
 else
-  echo "WARNING: 'ls' is not GNU ls. This case is not tested."
+  # BSD ls (macOS default) — supported fallback
   # https://geoff.greer.fm/lscolors/
   # LSCOLORS is used by BSD "ls" which is the default on MacOS
   # export LSCOLORS=Exfxcxdxbxegedabagacad

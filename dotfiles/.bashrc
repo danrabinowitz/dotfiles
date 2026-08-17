@@ -160,13 +160,14 @@ alias less="$PAGER"
 # ----------------------------------------------------------------------
 # NOTE: I am putting completion BEFORE prompt so that __git_ps1 gets defined before prompt
 
-. ~/Config/bash/completion
+: ${DJR_DOTFILES_DIR:=${HOME}/.dotfiles}
+[ -r "${DJR_DOTFILES_DIR}/lib/bash/completion" ] && . "${DJR_DOTFILES_DIR}/lib/bash/completion"
 
 # ----------------------------------------------------------------------
 # PROMPT
 # ----------------------------------------------------------------------
 
-. ~/Config/bash/prompt
+[ -r "${DJR_DOTFILES_DIR}/lib/bash/prompt" ] && . "${DJR_DOTFILES_DIR}/lib/bash/prompt"
 
 # -------------------------------------------------------------------
 # MOTD / FORTUNE
@@ -201,7 +202,8 @@ export LESS_TERMCAP_us=$'\E[01;32m'
 #fi
 
 # Load aliases. Depends on PAGER being set
-# . ~/Config/bash/aliases
+# (also loaded via ~/.profile_interactive below)
+# [ -r "${DJR_DOTFILES_DIR}/lib/bash/aliases" ] && . "${DJR_DOTFILES_DIR}/lib/bash/aliases"
 source ~/.profile_interactive
 
 if [ -f ~/.bashrc_local ]; then

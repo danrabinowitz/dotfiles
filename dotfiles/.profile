@@ -72,8 +72,8 @@ umask 0077
 # disable core dumps
 ulimit -S -c 0
 
-# Set PATH
-[ -r "${DJR_DOTFILES_DIR}/lib/bash/path" ] && emulate sh -c "source ${DJR_DOTFILES_DIR}/lib/bash/path"
+# Set PATH (plain source: zshrc already wraps ~/.profile in `emulate sh -c`)
+[ -r "${DJR_DOTFILES_DIR}/lib/bash/path" ] && . "${DJR_DOTFILES_DIR}/lib/bash/path"
 
 ################################################################################
 # Stuff that is not bash-specific and not specific to interactive use, but which is NOT "run time modifying" stuff
