@@ -130,6 +130,8 @@ fi
 
 [ -r /usr/local/share/chruby/chruby.sh ] && source /usr/local/share/chruby/chruby.sh && \
   [ -r /usr/local/share/chruby/auto.sh ] && source /usr/local/share/chruby/auto.sh
+[ -r /opt/homebrew/share/chruby/chruby.sh ] && source /opt/homebrew/share/chruby/chruby.sh && \
+  [ -r /opt/homebrew/share/chruby/auto.sh ] && source /opt/homebrew/share/chruby/auto.sh
 
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
