@@ -3,33 +3,92 @@
 # out in another worktree, remove that worktree first (refuses if dirty;
 # GITCLEAN_FORCE_WORKTREE=1 forces removal). Skips main/master/develop and HEAD.
 #
+# Second pass: also delete branches whose commits are all patch-equivalent to
+# the default remote branch (origin/HEAD, else origin/main or origin/master) —
+# i.e. everything "git rebase <default>" would skip as previously applied, such
+# as PRs merged upstream by cherry-pick or rebase. These are deleted with
+# 'git branch -D' since their content provably exists upstream. Disable with
+# GITCLEAN_SKIP_PATCH_CHECK=1.
+#
 # Older variants:
 #   http://kakar.ca/2012/07/18/deleting-merged-branches-with-git.html
 #   https://gist.github.com/jkakar/3139743
 
 set -uo pipefail
 
-git for-each-ref --format='%(refname:short)' refs/heads --merged=HEAD |
-  while IFS= read -r branch; do
-    case "$branch" in
-      main|master|develop) continue ;;
-    esac
-    if [ "$(git symbolic-ref --short HEAD 2>/dev/null)" = "$branch" ]; then
-      continue
-    fi
-    wt=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
-      /^worktree / { path = substr($0, 10) }
-      $0 == "branch " b { print path; exit }
-    ')
-    if [ -n "$wt" ]; then
-      if [ -n "${GITCLEAN_FORCE_WORKTREE:-}" ]; then
-        git worktree remove --force "$wt" || continue
-      else
-        if ! git worktree remove "$wt"; then
-          echo "skip $branch: worktree dirty at $wt (GITCLEAN_FORCE_WORKTREE=1 to force)" >&2
-          continue
-        fi
+protected() {
+  case "$1" in
+    main|master|develop) return 0 ;;
+  esac
+  return 1
+}
+
+current=$(git symbolic-ref --short HEAD 2>/dev/null || true)
+
+delete_branch() {
+  branch=$1
+  mode=$2  # "safe" (-d) or "force" (-D)
+  wt=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
+    /^worktree / { path = substr($0, 10) }
+    $0 == "branch " b { print path; exit }
+  ')
+  if [ -n "$wt" ]; then
+    if [ -n "${GITCLEAN_FORCE_WORKTREE:-}" ]; then
+      git worktree remove --force "$wt" || return 0
+    else
+      if ! git worktree remove "$wt"; then
+        echo "skip $branch: worktree dirty at $wt (GITCLEAN_FORCE_WORKTREE=1 to force)" >&2
+        return 0
       fi
     fi
-    git branch -d "$branch" || continue
+  fi
+  if [ "$mode" = force ]; then
+    git branch -D "$branch"
+  else
+    git branch -d "$branch" || true
+  fi
+}
+
+# Pass 1: branches merged into HEAD.
+git for-each-ref --format='%(refname:short)' refs/heads --merged=HEAD |
+  while IFS= read -r branch; do
+    protected "$branch" && continue
+    if [ "$current" = "$branch" ]; then
+      continue
+    fi
+    delete_branch "$branch" safe
   done
+
+# Pass 2: branches whose remaining commits are all patch-equivalent to the
+# default remote branch (e.g. merged upstream via cherry-pick/rebase).
+if [ -z "${GITCLEAN_SKIP_PATCH_CHECK:-}" ]; then
+  base=$(git symbolic-ref --quiet --short refs/remotes/origin/HEAD 2>/dev/null)
+  if [ -z "$base" ]; then
+    for candidate in origin/main origin/master; do
+      if git show-ref --verify --quiet "refs/remotes/$candidate"; then
+        base=$candidate
+        break
+      fi
+    done
+  fi
+  if [ -n "$base" ]; then
+    git for-each-ref --format='%(refname:short)' refs/heads |
+      while IFS= read -r branch; do
+        protected "$branch" && continue
+        if [ "$current" = "$branch" ]; then
+          continue
+        fi
+        # Already an ancestor of HEAD: handled (or already deleted) by pass 1.
+        if git merge-base --is-ancestor "$branch" HEAD 2>/dev/null; then
+          continue
+        fi
+        # git cherry marks commits with no patch-equivalent upstream as '+'.
+        # No '+' lines means rebasing onto $base would empty the branch.
+        if git cherry "$base" "$branch" | grep -q '^+'; then
+          continue
+        fi
+        echo "$branch: all commits already in $base by patch; force-deleting" >&2
+        delete_branch "$branch" force
+      done
+  fi
+fi
