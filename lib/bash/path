@@ -105,7 +105,17 @@ else
     # Now to clean up
     unset pathremove pathprepend pathappend
 
-    PATH=$(puniq "$PATH")
+    # puniq forks tr/nl/sort/cut/sed. zsh can drop duplicate PATH entries
+    # in-process; ZSH_VERSION stays set when this file is sourced with
+    # `emulate sh`. Strip one leading and one trailing empty component so
+    # the result matches puniq.
+    if [ -n "$ZSH_VERSION" ]; then
+        typeset -U path
+        PATH=${PATH#:}
+        PATH=${PATH%:}
+    else
+        PATH=$(puniq "$PATH")
+    fi
 fi
 
 # Set CDPATH for bash completion
