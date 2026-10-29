@@ -11,16 +11,22 @@ alias rm="rm -i"
 # LS AND DIRCOLORS
 # ----------------------------------------------------------------------
 # Prefer GNU ls when available (Homebrew coreutils ships `gls`; nix/Linux use `ls`).
+# `gls` is GNU. Linux `ls` is GNU. macOS `ls` is BSD. Do not run
+# `ls --version | grep` here; that forks on every shell start.
 ls_cmd=ls
+gnu_ls=
+case "$OSTYPE" in
+  linux*) gnu_ls=1 ;;
+esac
 if command -v gls >/dev/null 2>&1; then
   ls_cmd=gls
+  gnu_ls=1
 fi
 
 # we always pass these to ls(1)
 ls_common="-hbF"
 
-# Check which version of ls we are using
-if "${ls_cmd}" --version 2>/dev/null | grep -q 'GNU coreutils'; then
+if [ -n "$gnu_ls" ]; then
   # https://geoff.greer.fm/lscolors/
   # LS_COLORS is used by GNU/Linux ls
   export LS_COLORS="di=32:ln=1;31:so=37:pi=1;33:ex=35:bd=37:cd=37:su=37:sg=37:tw=32:ow=32"
@@ -38,6 +44,7 @@ alias ls="${ls_cmd} ${ls_common} ${ls_color}"
 unset ls_cmd
 unset ls_common
 unset ls_color
+unset gnu_ls
 
 
 # these use the ls alias above
