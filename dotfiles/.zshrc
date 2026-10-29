@@ -331,7 +331,8 @@ if [ -r "$HOME/.nix-profile/share/zsh/site-functions/prompt_pure_setup" ] || [ -
     fpath+=$HOME/.zsh/pure
   fi
 
-  if echo "$PATH" | grep -qc '/nix/store'; then
+  # Substring check. `echo | grep` forked on every interactive start.
+  if [[ $PATH == */nix/store* ]]; then
     export IN_NIX_SHELL="yes"
   else
     unset IN_NIX_SHELL
