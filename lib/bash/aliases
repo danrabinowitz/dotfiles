@@ -201,10 +201,12 @@ alias reinstallnokogiri='gem install nokogiri -- --with-xml2-dir=/usr --with-xsl
 # From: https://twitter.com/kntreadway/status/390531943260909568
 function conflicts { subl -n `git diff --name-only --diff-filter=U | tr "\\n" " "`; }
 
-if [ $(uname) = "Darwin" ]; then
+case "$OSTYPE" in
+  darwin*)
 #  alias dns="sudo /usr/bin/killall -HUP mDNSResponder"
-  alias dns="sudo discoveryutil mdnsflushcache;sudo discoveryutil udnsflushcaches"
-fi
+    alias dns="sudo discoveryutil mdnsflushcache;sudo discoveryutil udnsflushcaches"
+    ;;
+esac
 
 # Awesome tip for Mac OS X, thanks to Eric Harrison.
 # Fix for camera not found

@@ -10,7 +10,12 @@
 # =============
 #    NON-INTERACTIVE
 # =============
-[ -r ~/.profile ] && emulate sh -c 'source ~/.profile'
+# Login shells already sourced ~/.profile from ~/.zprofile. Non-login
+# interactive shells still need it. PROFILE_SOURCED is not exported, so a
+# nested zsh sources ~/.profile itself.
+if [ -z "$PROFILE_SOURCED" ]; then
+  [ -r ~/.profile ] && emulate sh -c 'source ~/.profile'
+fi
 
 # =============
 #    INTERACTIVE

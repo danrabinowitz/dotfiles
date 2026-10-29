@@ -72,7 +72,8 @@ umask 0077
 # disable core dumps
 ulimit -S -c 0
 
-# Set PATH (plain source: zshrc already wraps ~/.profile in `emulate sh -c`)
+# Set PATH. Login zsh sources this from ~/.zprofile; other interactive zsh
+# source it from ~/.zshrc under `emulate sh -c`.
 [ -r "${DJR_DOTFILES_DIR}/lib/bash/path" ] && . "${DJR_DOTFILES_DIR}/lib/bash/path"
 
 ################################################################################
@@ -88,6 +89,10 @@ if [ -e /Users/djr/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/djr/.nix-p
 if [ -n "$LOG_DOTFILE_TIMES" ]; then
   log "End of ~/.profile"
 fi
+
+# ~/.zprofile and ~/.zshrc both source this file. ~/.zshrc skips a second
+# run in the same shell. Not exported, so a nested zsh still sources it.
+PROFILE_SOURCED=1
 
 # The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
 # Local Variables:
