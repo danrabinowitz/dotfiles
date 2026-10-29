@@ -278,7 +278,41 @@ if ! type "direnv" > /dev/null; then
     ;;
   esac
 else
-  eval "$(direnv hook zsh)"
+  # `direnv hook` and `direnv export` each start a process. Remember the
+  # binary path once, and run export only when this tree has an .envrc or
+  # direnv has already loaded one (so leaving that directory still unloads).
+  typeset -g _DIRENV_BIN=${commands[direnv]}
+  _direnv_hook() {
+    setopt localoptions localtraps
+    if [[ ! -o interactive || $ZSH_SUBSHELL -ne 0 ]]; then
+      return
+    fi
+    if [[ -z ${DIRENV_DIR:-} ]]; then
+      local dir=$PWD found=
+      while true; do
+        if [[ -f "$dir/.envrc" ]]; then
+          found=1
+          break
+        fi
+        [[ $dir == / ]] && break
+        dir=${dir:h}
+      done
+      [[ -n $found ]] || return
+    fi
+    local vars
+    vars="$("$_DIRENV_BIN" export zsh)"
+    trap -- '' SIGINT
+    eval "$vars"
+    trap - SIGINT
+  }
+  typeset -ag precmd_functions
+  if (( ! ${precmd_functions[(I)_direnv_hook]} )); then
+    precmd_functions=(_direnv_hook $precmd_functions)
+  fi
+  typeset -ag chpwd_functions
+  if (( ! ${chpwd_functions[(I)_direnv_hook]} )); then
+    chpwd_functions=(_direnv_hook $chpwd_functions)
+  fi
 fi
 
 # NOTE: Set this in interactive shells only
