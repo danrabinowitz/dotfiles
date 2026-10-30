@@ -44,8 +44,16 @@ fi
 # : ${VAR:=val} is a shorthand way of setting VAR to val unless VAR is already set
 
 : ${HOME:=~}                 # The home director of the logged-in user
-: ${LOGNAME:=$(id -un)}      # This is the name of the logged-in user
-: ${UNAME:=$(uname)}         # This is the name of the OS. TODO: Do we need this?
+: ${LOGNAME:=${USER:-$(id -un)}}
+# uname(1) prints Darwin/Linux. OSTYPE is already set (darwin*, linux*).
+if [ -z "${UNAME:-}" ]; then
+  case "${OSTYPE:-}" in
+    darwin*) UNAME=Darwin ;;
+    linux*) UNAME=Linux ;;
+    freebsd*) UNAME=FreeBSD ;;
+    *) UNAME=$(uname) ;;
+  esac
+fi
 
 # readline config. This simply sets the default, so there is no point.
 # : ${INPUTRC:=~/.inputrc}
@@ -217,7 +225,44 @@ fi
 
 # direnv must be near the very end.
 # "Make sure it appears even after rvm, git-prompt and other shell extensions that manipulate the prompt."
-eval "$(direnv hook bash)"
+# Do not run `direnv hook` or `direnv export` unless this tree has an
+# .envrc, or direnv has already loaded one (so leaving still unloads).
+if _DIRENV_BIN=$(command -v direnv); then
+  _direnv_hook() {
+    local previous_exit_status=$?
+    if [ -z "${DIRENV_DIR:-}" ]; then
+      local dir=$PWD found=
+      while true; do
+        if [ -f "$dir/.envrc" ]; then
+          found=1
+          break
+        fi
+        [ "$dir" = / ] && break
+        dir=${dir%/*}
+        [ -n "$dir" ] || dir=/
+      done
+      if [ -z "$found" ]; then
+        return $previous_exit_status
+      fi
+    fi
+    local previous_sigint_trap vars
+    previous_sigint_trap="$(trap -p SIGINT)"
+    vars="$("$_DIRENV_BIN" export bash)"
+    trap -- '' SIGINT
+    eval "$vars"
+    eval "${previous_sigint_trap:-trap - SIGINT}"
+    return $previous_exit_status
+  }
+  if [[ ${BLE_VERSION-} ]] && (( _ble_version >= 400 )); then
+    blehook PRECMD!="_direnv_hook"
+  elif [[ ";${PROMPT_COMMAND[*]:-};" != *";_direnv_hook;"* ]]; then
+    if [[ "$(declare -p PROMPT_COMMAND 2>&1)" == "declare -a"* ]]; then
+      PROMPT_COMMAND=(_direnv_hook "${PROMPT_COMMAND[@]}")
+    else
+      PROMPT_COMMAND="_direnv_hook${PROMPT_COMMAND:+;$PROMPT_COMMAND}"
+    fi
+  fi
+fi
 
 # TODO: Output to a log that .bashrc was run. Include the date, the PID, the PPID, etc.
 

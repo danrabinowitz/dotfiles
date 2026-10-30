@@ -10,9 +10,38 @@ shopt -s no_empty_cmd_completion >/dev/null 2>&1
 
 # TODO: Refactor this to use the Path manipulation functions such as pathprepend and pathappend in ~/Config/bash/path
 if [ "$UNAME" = Darwin ]; then
-  if [ -f `brew --prefix`/etc/bash_completion ]; then
-    . `brew --prefix`/etc/bash_completion
+  # Prefer a completion file we can see. `brew --prefix` is only for a
+  # Homebrew install outside the usual prefixes.
+  _bash_completion=
+  for _f in \
+    /opt/homebrew/etc/bash_completion \
+    /usr/local/etc/bash_completion \
+    /opt/homebrew/share/bash-completion/bash_completion \
+    /usr/local/share/bash-completion/bash_completion
+  do
+    if [ -r "$_f" ]; then
+      _bash_completion=$_f
+      break
+    fi
+  done
+  if [ -z "$_bash_completion" ] && command -v brew >/dev/null 2>&1; then
+    case "$(command -v brew)" in
+      /opt/homebrew/bin/brew|/usr/local/bin/brew) ;;
+      *)
+        _bp=$(brew --prefix)
+        if [ -r "$_bp/etc/bash_completion" ]; then
+          _bash_completion=$_bp/etc/bash_completion
+        elif [ -r "$_bp/share/bash-completion/bash_completion" ]; then
+          _bash_completion=$_bp/share/bash-completion/bash_completion
+        fi
+        unset _bp
+        ;;
+    esac
   fi
+  if [ -n "$_bash_completion" ]; then
+    . "$_bash_completion"
+  fi
+  unset _bash_completion _f
 else
 
     test -z "$BASH_COMPLETION" && {

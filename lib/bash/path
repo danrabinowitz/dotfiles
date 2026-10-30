@@ -35,17 +35,8 @@ else
         export PATH="${PATH:+${PATH}:}$1"
     }
 
-    # Usage: puniq [<path>]
-    # Remove duplicate entries from a PATH style value while retaining
-    # the original order. Use PATH if no <path> is given.
-    #
-    # Example:
-    #   $ puniq /usr/bin:/usr/local/bin:/usr/bin
-    #   /usr/bin:/usr/local/bin
-    function puniq () {
-        echo "$1" |tr : '\n' |nl |sort -u -k 2,2 |sort -n |
-        cut -f 2- |tr '\n' : |sed -e 's/:$//' -e 's/^://'
-    }
+    # Duplicate PATH entries are removed below, in-process. The old
+    # implementation forked tr/nl/sort/cut/sed.
 
     # Set the initial path
     # export PATH=/bin:/usr/bin
@@ -105,16 +96,32 @@ else
     # Now to clean up
     unset pathremove pathprepend pathappend
 
-    # puniq forks tr/nl/sort/cut/sed. zsh can drop duplicate PATH entries
-    # in-process; ZSH_VERSION stays set when this file is sourced with
-    # `emulate sh`. Strip one leading and one trailing empty component so
-    # the result matches puniq.
+    # First entry wins. Empty fields are dropped, matching the old puniq
+    # pipeline (nl skips blank lines). zsh uses its tied path array;
+    # ZSH_VERSION stays set when this file is sourced with `emulate sh`.
     if [ -n "$ZSH_VERSION" ]; then
         typeset -U path
         PATH=${PATH#:}
         PATH=${PATH%:}
     else
-        PATH=$(puniq "$PATH")
+        _deduped=
+        _rest=$PATH
+        while [ -n "$_rest" ]; do
+            case "$_rest" in
+                *:*) _dir=${_rest%%:*} ; _rest=${_rest#*:} ;;
+                *) _dir=$_rest ; _rest= ;;
+            esac
+            # nl(1) in the old pipeline dropped empty fields, so "a::b" became "a:b".
+            [ -n "$_dir" ] || continue
+            case ":${_deduped}:" in
+                *":${_dir}:"*) ;;
+                *) _deduped=${_deduped:+${_deduped}:}${_dir} ;;
+            esac
+        done
+        PATH=$_deduped
+        PATH=${PATH#:}
+        PATH=${PATH%:}
+        unset _deduped _rest _dir
     fi
 fi
 

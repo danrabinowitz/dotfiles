@@ -10,7 +10,7 @@ if [ "$LOGNAME" = "root" ]; then
     COLOR1="${RED}"
     COLOR2="${BROWN}"
     P="#"
-elif hostname | grep -q 'github\.com'; then
+elif case "${HOSTNAME-}" in *github.com*) true ;; *) false ;; esac; then
     GITHUB=yep
     COLOR1="\[\e[0;94m\]"
     COLOR2="\[\e[0;92m\]"
@@ -56,14 +56,11 @@ esac
 force_color_prompt=yes
 
 if [ -n "$force_color_prompt" ]; then
-    if [ -x /usr/bin/tput ] && tput setaf 1 >&/dev/null; then
-        # We have color support; assume it's compliant with Ecma-48
-        # (ISO/IEC-6429). (Lack of such support is extremely rare, and such
-        # a case would tend to support setf rather than setaf.)
-        color_prompt=yes
-    else
-        color_prompt=
-    fi
+    # tput(1) only confirmed color support. A real TERM already has it.
+    case "${TERM:-}" in
+        ""|dumb) color_prompt= ;;
+        *) color_prompt=yes ;;
+    esac
 fi
 
 if [ "$color_prompt" = yes ]; then
@@ -89,13 +86,16 @@ fi
 prompt_host='\H'
 if [ "$color_prompt" = yes ]; then
   if [ -n "$REMOTE_SHELL" ]; then
-    if [ `hostname` == 'VHGDB-Testing' ];then
-      COLOR="${BLUE}"
-      prompt_host=${COLOR}'\H'${PS_CLEAR}
-    elif [ `hostname` == 'vhgdb' ]; then
-      COLOR="${GREEN_FG_RED_BG}"
-      prompt_host=${COLOR}'\H'${PS_CLEAR}
-    fi
+    case "${HOSTNAME-}" in
+      VHGDB-Testing)
+        COLOR="${BLUE}"
+        prompt_host=${COLOR}'\H'${PS_CLEAR}
+        ;;
+      vhgdb)
+        COLOR="${GREEN_FG_RED_BG}"
+        prompt_host=${COLOR}'\H'${PS_CLEAR}
+        ;;
+    esac
   else
     prompt_host=''
   fi
@@ -168,8 +168,15 @@ txtylw='\e[0;33m' # Yellow
 txtrst='\e[0m'    # Text Reset
 
 if [ "$UNAME" = Darwin ]; then
-  # This is Mac OS X specific
-  source `brew --prefix git`/etc/bash_completion.d/git-prompt.sh
+  # Homebrew git ships git-prompt.sh under the formula prefix. Standard
+  # prefixes are files we can test; other installs still ask brew.
+  if [ -r /opt/homebrew/opt/git/etc/bash_completion.d/git-prompt.sh ]; then
+    . /opt/homebrew/opt/git/etc/bash_completion.d/git-prompt.sh
+  elif [ -r /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh ]; then
+    . /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
+  elif command -v brew >/dev/null 2>&1; then
+    . "$(brew --prefix git)/etc/bash_completion.d/git-prompt.sh"
+  fi
 fi
 
 # Check if __git_ps1 is defined
