@@ -22,3 +22,5 @@
 /.byebug_history
 
 /.personal-notes.txt
+
+**/.claude/settings.local.json
