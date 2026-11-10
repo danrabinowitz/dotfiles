@@ -1,7 +1,9 @@
 #!/bin/bash
-# Delete local branches already merged into HEAD. If a merged branch is checked
-# out in another worktree, remove that worktree first (refuses if dirty;
-# GITCLEAN_FORCE_WORKTREE=1 forces removal). Skips main/master/develop and HEAD.
+# Delete local branches already merged into HEAD. Branches checked out in a
+# worktree are skipped by default and reported, so a live checkout is never
+# removed. Set GITCLEAN_REMOVE_WORKTREES=1 to restore the previous behavior:
+# remove the worktree first (refuses if dirty; GITCLEAN_FORCE_WORKTREE=1 forces
+# removal). Skips main/master/develop and HEAD.
 #
 # Second pass: also delete branches whose commits are all patch-equivalent to
 # the default remote branch (origin/HEAD, else origin/main or origin/master) —
@@ -10,11 +12,61 @@
 # 'git branch -D' since their content provably exists upstream. Disable with
 # GITCLEAN_SKIP_PATCH_CHECK=1.
 #
+# Flags:
+#   --porcelain  emit stable tab-separated records instead of prose:
+#                  deleted<TAB><branch><TAB><sha>
+#                  skipped-worktree<TAB><branch><TAB><path>
+#                  skipped-protected<TAB><branch>
+#                  failed<TAB><branch><TAB><reason>
+#
 # Older variants:
 #   http://kakar.ca/2012/07/18/deleting-merged-branches-with-git.html
 #   https://gist.github.com/jkakar/3139743
 
 set -uo pipefail
+
+PORCELAIN=0
+while (($# > 0)); do
+  case "$1" in
+    --porcelain) PORCELAIN=1 ;;
+    -h|--help)
+      sed -n '2,24p' "$0"
+      exit 0
+      ;;
+    --) shift; break ;;
+    -*) printf 'unknown flag: %s\n' "$1" >&2; exit 2 ;;
+    *) break ;;
+  esac
+  shift
+done
+
+porcelain() { ((PORCELAIN == 1)); }
+
+report_deleted() {
+  porcelain && printf 'deleted\t%s\t%s\n' "$1" "$2"
+}
+
+report_skipped_worktree() {
+  if porcelain; then
+    printf 'skipped-worktree\t%s\t%s\n' "$1" "$2"
+  else
+    printf 'skip %s: worktree at %s\n' "$1" "$2" >&2
+  fi
+}
+
+report_skipped_protected() {
+  porcelain && printf 'skipped-protected\t%s\n' "$1"
+}
+
+report_failed() {
+  local reason
+  reason=$(printf '%s' "$2" | tr '\t\n' '  ')
+  if porcelain; then
+    printf 'failed\t%s\t%s\n' "$1" "${reason}"
+  else
+    printf 'failed %s: %s\n' "$1" "${reason}" >&2
+  fi
+}
 
 protected() {
   case "$1" in
@@ -25,34 +77,68 @@ protected() {
 
 current=$(git symbolic-ref --short HEAD 2>/dev/null || true)
 
-delete_branch() {
-  branch=$1
-  mode=$2  # "safe" (-d) or "force" (-D)
-  wt=$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
+worktree_for_branch() {
+  git worktree list --porcelain | awk -v b="refs/heads/$1" '
     /^worktree / { path = substr($0, 10) }
     $0 == "branch " b { print path; exit }
-  ')
+  '
+}
+
+delete_branch() {
+  local branch=$1 mode=$2 wt sha out rc=0
+  if ! wt=$(worktree_for_branch "$branch"); then
+    report_failed "$branch" "git worktree list failed"
+    return 0
+  fi
+
   if [ -n "$wt" ]; then
+    # Safe default: never remove a worktree. Report the branch as skipped.
+    if [ -z "${GITCLEAN_REMOVE_WORKTREES:-}" ] && [ -z "${GITCLEAN_FORCE_WORKTREE:-}" ]; then
+      report_skipped_worktree "$branch" "$wt"
+      return 0
+    fi
     if [ -n "${GITCLEAN_FORCE_WORKTREE:-}" ]; then
-      git worktree remove --force "$wt" || return 0
+      if ! git worktree remove --force "$wt" >/dev/null 2>&1; then
+        report_failed "$branch" "worktree remove failed: $wt"
+        return 0
+      fi
     else
-      if ! git worktree remove "$wt"; then
-        echo "skip $branch: worktree dirty at $wt (GITCLEAN_FORCE_WORKTREE=1 to force)" >&2
+      if ! git worktree remove "$wt" >/dev/null 2>&1; then
+        if porcelain; then
+          report_skipped_worktree "$branch" "$wt"
+        else
+          printf 'skip %s: worktree dirty at %s (GITCLEAN_REMOVE_WORKTREES=1 GITCLEAN_FORCE_WORKTREE=1 to force)\n' \
+            "$branch" "$wt" >&2
+        fi
         return 0
       fi
     fi
   fi
+
+  sha=$(git rev-parse "$branch" 2>/dev/null || true)
   if [ "$mode" = force ]; then
-    git branch -D "$branch"
+    out=$(git branch -D "$branch" 2>&1) || rc=$?
   else
-    git branch -d "$branch" || true
+    out=$(git branch -d "$branch" 2>&1) || rc=$?
+  fi
+  if [ "$rc" -ne 0 ]; then
+    report_failed "$branch" "$out"
+    return 0
+  fi
+  if porcelain; then
+    report_deleted "$branch" "$sha"
+  else
+    printf '%s\n' "$out"
   fi
 }
 
 # Pass 1: branches merged into HEAD.
 git for-each-ref --format='%(refname:short)' refs/heads --merged=HEAD |
   while IFS= read -r branch; do
-    protected "$branch" && continue
+    if protected "$branch"; then
+      report_skipped_protected "$branch"
+      continue
+    fi
     if [ "$current" = "$branch" ]; then
       continue
     fi
@@ -74,7 +160,10 @@ if [ -z "${GITCLEAN_SKIP_PATCH_CHECK:-}" ]; then
   if [ -n "$base" ]; then
     git for-each-ref --format='%(refname:short)' refs/heads |
       while IFS= read -r branch; do
-        protected "$branch" && continue
+        if protected "$branch"; then
+          report_skipped_protected "$branch"
+          continue
+        fi
         if [ "$current" = "$branch" ]; then
           continue
         fi
@@ -84,10 +173,14 @@ if [ -z "${GITCLEAN_SKIP_PATCH_CHECK:-}" ]; then
         fi
         # git cherry marks commits with no patch-equivalent upstream as '+'.
         # No '+' lines means rebasing onto $base would empty the branch.
-        if git cherry "$base" "$branch" | grep -q '^+'; then
+        if ! cherry=$(git cherry "$base" "$branch" 2>/dev/null); then
+          report_failed "$branch" "git cherry failed against $base"
           continue
         fi
-        echo "$branch: all commits already in $base by patch; force-deleting" >&2
+        if printf '%s\n' "$cherry" | grep -q '^+'; then
+          continue
+        fi
+        porcelain || echo "$branch: all commits already in $base by patch; force-deleting" >&2
         delete_branch "$branch" force
       done
   fi
