@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "keybindings": {},
+  "platforms": {
+    "darwin": {
+      "tab.nextTerminal": [],
+      "worktree.history.forward": [
+        "Mod+ArrowDown"
+      ],
+      "worktree.history.back": [
+        "Mod+ArrowUp"
+      ],
+      "tab.previousSameType": [],
+      "tab.nextSameType": [],
+      "tab.nextAllTypes": [
+        "Mod+Alt+ArrowRight"
+      ],
+      "tab.previousAllTypes": [
+        "Mod+Alt+ArrowLeft"
+      ],
+      "worktree.navigateUp": [
+        "Mod+Alt+ArrowUp"
+      ],
+      "worktree.navigateDown": [
+        "Mod+Alt+ArrowDown"
+      ]
+    },
+    "linux": {},
+    "win32": {}
+  }
+}

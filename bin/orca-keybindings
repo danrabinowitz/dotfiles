@@ -1,0 +1,46 @@
+#!/bin/bash
+#
+# Track ~/.orca/keybindings.json in this dotfiles repo.
+#
+# Orca saves keybindings atomically (write .tmp, then rename over the file),
+# so the live file cannot be a symlink into this repo -- the symlink would be
+# replaced on the first save. Keep two copies and sync explicitly instead.
+
+set -euo pipefail
+
+repo="$HOME/.dotfiles.git/dot.orca/keybindings.json"
+live="$HOME/.orca/keybindings.json"
+
+usage() {
+  cat <<'EOF'
+usage: orca-keybindings <command>
+
+  save   Copy the live ~/.orca/keybindings.json into the repo (after editing
+         shortcuts in Orca; then commit and push).
+  load   Copy the repo copy over the live file (after git pull on the other
+         machine). Quit Orca first, or reopen its Settings, so the app does
+         not overwrite it from stale in-memory state.
+  diff   Show any difference between the repo copy and the live file.
+EOF
+}
+
+[ -f "$repo" ] || { echo "missing repo copy: $repo" >&2; exit 1; }
+[ -f "$live" ] || { echo "missing live file: $live" >&2; exit 1; }
+
+case "${1:-}" in
+  save)
+    cp "$live" "$repo"
+    echo "saved: $live -> $repo"
+    ;;
+  load)
+    cp "$repo" "$live"
+    echo "loaded: $repo -> $live"
+    ;;
+  diff)
+    diff -u "$repo" "$live" && echo "no differences"
+    ;;
+  *)
+    usage
+    exit 2
+    ;;
+esac
