@@ -23,7 +23,6 @@ are handled separately:
 
 | Path | How it reaches `$HOME` |
 | --- | --- |
-| `dot.emacs.d/` | Linked from `dotfiles/.emacs.d -> ../dot.emacs.d` |
 | `dot.orca/` | **Copied**, not linked — see below |
 
 ### Orca keybindings (`dot.orca/keybindings.json`)
