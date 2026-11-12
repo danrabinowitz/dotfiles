@@ -476,6 +476,3 @@ fi
 # # Enabling the next line allows us to run zsh-prompt-benchmark
 # source ~/code/src/github.com/romkatv/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
 export PATH="$HOME/.local/bin:$PATH"
-
-# opencode
-export PATH=/Users/djr/.opencode/bin:$PATH

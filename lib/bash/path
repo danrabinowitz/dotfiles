@@ -4,125 +4,118 @@ if [ -n "$LOG_DOTFILE_TIMES" ]; then
   log "Start of DJR_DOTFILES_DIR:bash/path"
 fi
 
-if [ -r ~/.dotfiles/preprocess/processed/path ]; then
-    if [ -n "$LOG_DOTFILE_TIMES" ]; then
-        log "Sourcing the preprocessed path file"
-    fi
-    source ~/.dotfiles/preprocess/processed/path
+# These functions are from: http://www.linuxfromscratch.org/blfs/view/cvs/postlfs/profile.html
+
+# Functions to help us manage paths.
+function pathremove () {
+    local IFS=':'
+    local NEWPATH
+    local DIR
+    for DIR in "$PATH" ; do
+        if [ "$DIR" != "$1" ] ; then
+            NEWPATH="${NEWPATH:+$NEWPATH:}$DIR"
+        fi
+    done
+    export PATH="$NEWPATH"
+}
+
+function pathprepend () {
+    pathremove $1 $2
+    export PATH="$1${PATH:+:${PATH}}"
+}
+
+function pathappend () {
+    pathremove $1 $2
+    export PATH="${PATH:+${PATH}:}$1"
+}
+
+# Duplicate PATH entries are removed below, in-process. The old
+# implementation forked tr/nl/sort/cut/sed.
+
+# Set the initial path
+# export PATH=/bin:/usr/bin
+if [ -z "$PATH" ] ; then
+    export PATH=""
+fi
+
+pathappend /bin:/usr/bin
+
+pathprepend /usr/local/bin
+pathappend /usr/local/sbin:/usr/sbin:/sbin
+
+# Added on Oct 16, 2013 for node npm
+if [ -d "/usr/local/share/npm/bin" ] ; then
+    pathappend /usr/local/share/npm/bin
+fi
+
+# With XQuartz (needed for Selenium testing)
+if [ -d "/opt/X11/bin" ] ; then
+    pathappend /opt/X11/bin
+fi
+
+if [ -d "/usr/local/go/bin" ] ; then
+    pathappend /usr/local/go/bin
+fi
+
+if [ -d "/opt/homebrew/bin" ] ; then
+    pathprepend "/opt/homebrew/bin"
+fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/bin" ] ; then
+    pathprepend "$HOME/bin"
+fi
+if [ -d "$HOME/code/bin" ] ; then
+    pathprepend "$HOME/code/bin"
+fi
+
+# set PATH so it includes user's private bin if it exists
+if [ -d "$HOME/rootdir/usr/local/bin" ] ; then
+    pathprepend "$HOME/rootdir/usr/local/bin"
+fi
+
+# I was using this. I think I may not need it, so I'm commenting it out on 12/15/12.
+# PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
+
+# Not using ~/.nix-flake/bin because I'm using nix profiles instead.
+# if [ -d "$HOME/.nix-flake/bin" ]; then
+#     pathprepend "$HOME/.nix-flake/bin"
+# fi
+
+if [ -d "$HOME/.nix-profile/bin" ]; then
+    pathprepend "$HOME/.nix-profile/bin"
+fi
+
+
+# Now to clean up
+unset pathremove pathprepend pathappend
+
+# First entry wins. Empty fields are dropped, matching the old puniq
+# pipeline (nl skips blank lines). zsh uses its tied path array;
+# ZSH_VERSION stays set when this file is sourced with `emulate sh`.
+if [ -n "$ZSH_VERSION" ]; then
+    typeset -U path
+    PATH=${PATH#:}
+    PATH=${PATH%:}
 else
-    # These functions are from: http://www.linuxfromscratch.org/blfs/view/cvs/postlfs/profile.html
-
-    # Functions to help us manage paths.
-    function pathremove () {
-        local IFS=':'
-        local NEWPATH
-        local DIR
-        for DIR in "$PATH" ; do
-            if [ "$DIR" != "$1" ] ; then
-                NEWPATH="${NEWPATH:+$NEWPATH:}$DIR"
-            fi
-        done
-        export PATH="$NEWPATH"
-    }
-
-    function pathprepend () {
-        pathremove $1 $2
-        export PATH="$1${PATH:+:${PATH}}"
-    }
-
-    function pathappend () {
-        pathremove $1 $2
-        export PATH="${PATH:+${PATH}:}$1"
-    }
-
-    # Duplicate PATH entries are removed below, in-process. The old
-    # implementation forked tr/nl/sort/cut/sed.
-
-    # Set the initial path
-    # export PATH=/bin:/usr/bin
-    if [ -z "$PATH" ] ; then
-        export PATH=""
-    fi
-
-    pathappend /bin:/usr/bin
-
-    pathprepend /usr/local/bin
-    pathappend /usr/local/sbin:/usr/sbin:/sbin
-
-    # Added on Oct 16, 2013 for node npm
-    if [ -d "/usr/local/share/npm/bin" ] ; then
-        pathappend /usr/local/share/npm/bin
-    fi
-
-    # With XQuartz (needed for Selenium testing)
-    if [ -d "/opt/X11/bin" ] ; then
-        pathappend /opt/X11/bin
-    fi
-
-    if [ -d "/usr/local/go/bin" ] ; then
-        pathappend /usr/local/go/bin
-    fi
-
-    if [ -d "/opt/homebrew/bin" ] ; then
-        pathprepend "/opt/homebrew/bin"
-    fi
-
-    # set PATH so it includes user's private bin if it exists
-    if [ -d "$HOME/bin" ] ; then
-        pathprepend "$HOME/bin"
-    fi
-    if [ -d "$HOME/code/bin" ] ; then
-        pathprepend "$HOME/code/bin"
-    fi
-
-    # set PATH so it includes user's private bin if it exists
-    if [ -d "$HOME/rootdir/usr/local/bin" ] ; then
-        pathprepend "$HOME/rootdir/usr/local/bin"
-    fi
-
-    # I was using this. I think I may not need it, so I'm commenting it out on 12/15/12.
-    # PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
-    # Not using ~/.nix-flake/bin because I'm using nix profiles instead.
-    # if [ -d "$HOME/.nix-flake/bin" ]; then
-    #     pathprepend "$HOME/.nix-flake/bin"
-    # fi
-
-    if [ -d "$HOME/.nix-profile/bin" ]; then
-        pathprepend "$HOME/.nix-profile/bin"
-    fi
-
-
-    # Now to clean up
-    unset pathremove pathprepend pathappend
-
-    # First entry wins. Empty fields are dropped, matching the old puniq
-    # pipeline (nl skips blank lines). zsh uses its tied path array;
-    # ZSH_VERSION stays set when this file is sourced with `emulate sh`.
-    if [ -n "$ZSH_VERSION" ]; then
-        typeset -U path
-        PATH=${PATH#:}
-        PATH=${PATH%:}
-    else
-        _deduped=
-        _rest=$PATH
-        while [ -n "$_rest" ]; do
-            case "$_rest" in
-                *:*) _dir=${_rest%%:*} ; _rest=${_rest#*:} ;;
-                *) _dir=$_rest ; _rest= ;;
-            esac
-            # nl(1) in the old pipeline dropped empty fields, so "a::b" became "a:b".
-            [ -n "$_dir" ] || continue
-            case ":${_deduped}:" in
-                *":${_dir}:"*) ;;
-                *) _deduped=${_deduped:+${_deduped}:}${_dir} ;;
-            esac
-        done
-        PATH=$_deduped
-        PATH=${PATH#:}
-        PATH=${PATH%:}
-        unset _deduped _rest _dir
-    fi
+    _deduped=
+    _rest=$PATH
+    while [ -n "$_rest" ]; do
+        case "$_rest" in
+            *:*) _dir=${_rest%%:*} ; _rest=${_rest#*:} ;;
+            *) _dir=$_rest ; _rest= ;;
+        esac
+        # nl(1) in the old pipeline dropped empty fields, so "a::b" became "a:b".
+        [ -n "$_dir" ] || continue
+        case ":${_deduped}:" in
+            *":${_dir}:"*) ;;
+            *) _deduped=${_deduped:+${_deduped}:}${_dir} ;;
+        esac
+    done
+    PATH=$_deduped
+    PATH=${PATH#:}
+    PATH=${PATH%:}
+    unset _deduped _rest _dir
 fi
 
 # Set CDPATH for bash completion
