@@ -53,6 +53,13 @@ setopt inc_append_history
 # share command history data
 setopt share_history 
 
+# Orca moves ORCA_HISTFILE to _orca_histfile, then unsets the former before
+# sourcing user configuration. Preload its file to avoid stale initial history.
+if [[ -n "${_orca_histfile:-}" && "$_orca_histfile" != "$HISTFILE" ]]; then
+  HISTFILE="$_orca_histfile"
+  fc -R "$HISTFILE"
+fi
+
 setopt HIST_IGNORE_SPACE
 
 # ===================
