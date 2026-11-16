@@ -1,66 +1,165 @@
 #!/bin/bash
 
-# Exit immediately if any command fails.
-set -e
+# Link the flat dotfiles into $HOME without replacing unrelated user files.
+set -euo pipefail
 
-# Print a message to stderr when attempting to expand a variable that is not set. Also, immediately exit.
-set -u
+repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+mode="${1:-install}"
+conflicts=0
 
-# Cause pipelines to fail on the first command which fails instead of dying later on down the pipeline.
-set -o pipefail
+usage() {
+  cat <<'EOF'
+Usage: bin/install [check|dry-run|install]
 
-################################################################################
-function main {
-  init
-  create_symlinks
+Run from any directory after cloning to ~/.dotfiles.git.
+
+  check      Report the current destinations without changing anything.
+  dry-run    Preview changes without changing anything. (--dry-run also works)
+  install    Install or migrate links. This is the default.
+
+Ordinary files are moved to <name>_orig, or <name>_orig.N if needed.
+Unexpected directories and unrelated symlinks stop the whole installation.
+EOF
 }
 
-function init {
-  local script_dir=$( cd $(dirname ${BASH_SOURCE[0]}) ; pwd -P )
-  repo_dir=$( cd "${script_dir}/.." ; pwd -P )
-}
-
-function create_symlinks {
-  # Ensure we have a ~/.dotfiles symlink or dir
-  local dest=".dotfiles"
-  local src="$repo_dir"
-  if [ -L "$dest" ]; then
-    rm -f "$dest"
-  elif [ -f "$dest" ]; then
-    echo "${dest} already exists, so it is being moved to ${dest}_orig"
-    mv "$dest" "${dest}_orig"
+# Set paths for one root-level file in dotfiles/. File names are quoted
+# throughout, so whitespace in a checkout or HOME is preserved.
+prepare_file() {
+  local name="$1"
+  file_source="$repo_dir/dotfiles/$name"
+  file_dest="$HOME/$name"
+  file_name="$name"
+  if [ "$repo_dir" = "$HOME/.dotfiles.git" ]; then
+    file_target=".dotfiles.git/dotfiles/$name"
+  else
+    file_target="$repo_dir/dotfiles/$name"
   fi
-  ln -s "$src" "$dest"
+}
 
-  local files="$repo_dir"/dotfiles/.*
-  for f in $files; do
-    f2=$(basename "$f")
-    if [ "$f2" = "." -o "$f2" = ".." ]; then
-      continue
-    fi
-    create_symlink "$f2"
+choose_backup() {
+  local dest="$1" number=0
+  file_backup="${dest}_orig"
+  while [ -e "$file_backup" ] || [ -L "$file_backup" ]; do
+    number=$((number + 1))
+    file_backup="${dest}_orig.${number}"
   done
 }
 
-function create_symlink {
-  local f="$1"
-  local dest="${HOME}/$f"
-  local src="${HOME}/.dotfiles/dotfiles/$f"
+# Classify an item without modifying it. Equivalent links are safe to replace;
+# a symlink to any other file or a dangling symlink is left untouched.
+inspect_file() {
+  local current_target
 
-  echo "Checking if ${dest} exists already..."
-
-  if [ -f "${dest}" -o -d "${dest}" -o -L "${dest}" ] ; then
-    if [ -L "${dest}" ] ; then
-      # echo "It is a link"
-      rm -f "${dest}"
-    else
-      echo "$f already exists, so it is being moved to ${f}_orig"
-      mv "${dest}" "${dest}_orig"
-    fi
+  file_backup=''
+  if [ ! -e "$file_dest" ] && [ ! -L "$file_dest" ]; then
+    file_state=create
+    file_detail="$file_name -> $file_target"
+    return
   fi
-  cd $HOME && ln -s ".dotfiles/dotfiles/$f" "$f"
+
+  if [ -L "$file_dest" ]; then
+    current_target=$(readlink "$file_dest")
+    if [ "$current_target" = "$file_target" ] && [ "$file_dest" -ef "$file_source" ]; then
+      file_state=unchanged
+      file_detail="$file_name -> $file_target"
+    elif [ -e "$file_dest" ] && [ "$file_dest" -ef "$file_source" ]; then
+      file_state=migrate
+      file_detail="$file_name -> $file_target (legacy link)"
+    else
+      file_state=conflict
+      file_detail="$file_name points to a different target: $current_target"
+    fi
+    return
+  fi
+
+  if [ -d "$file_dest" ]; then
+    file_state=conflict
+    file_detail="$file_name is an existing directory; move it manually first"
+  elif [ -f "$file_dest" ]; then
+    choose_backup "$file_dest"
+    file_state=backup
+    file_detail="$file_name: save to ${file_backup##*/}, then link to $file_target"
+  else
+    file_state=conflict
+    file_detail="$file_name is not a regular file"
+  fi
 }
 
-################################################################################
-main
+inspect_all() {
+  local source name
+  conflicts=0
+  printf 'Dotfiles: %s\nHome: %s\n' "$repo_dir" "$HOME"
 
+  for source in "$repo_dir"/dotfiles/.*; do
+    name="${source##*/}"
+    case "$name" in
+      .|..) continue ;;
+    esac
+    [ -f "$source" ] || continue
+
+    prepare_file "$name"
+    inspect_file
+    if [ "$file_state" = conflict ]; then
+      conflicts=$((conflicts + 1))
+      printf 'CONFLICT  %s\n' "$file_detail"
+    else
+      printf '%-9s %s\n' "$file_state" "$file_detail"
+    fi
+  done
+
+  [ "$conflicts" -eq 0 ]
+}
+
+install_links() {
+  local source name
+
+  for source in "$repo_dir"/dotfiles/.*; do
+    name="${source##*/}"
+    case "$name" in
+      .|..) continue ;;
+    esac
+    [ -f "$source" ] || continue
+
+    prepare_file "$name"
+    inspect_file
+    case "$file_state" in
+      unchanged) ;;
+      backup)
+        mv -- "$file_dest" "$file_backup"
+        ln -sfn "$file_target" "$file_dest"
+        ;;
+      create|migrate)
+        ln -sfn "$file_target" "$file_dest"
+        ;;
+      conflict)
+        printf 'Destination changed during installation: %s\n' "$file_dest" >&2
+        return 1
+        ;;
+    esac
+  done
+}
+
+case "$mode" in
+  check|--check)
+    inspect_all
+    [ "$conflicts" -eq 0 ]
+    ;;
+  dry-run|--dry-run)
+    inspect_all
+    [ "$conflicts" -eq 0 ]
+    ;;
+  install|--install)
+    if ! inspect_all; then
+      printf '\nRefusing to modify anything. Inspect the conflicts, then retry.\n' >&2
+      exit 1
+    fi
+    install_links
+    ;;
+  -h|--help|help)
+    usage
+    ;;
+  *)
+    usage >&2
+    exit 2
+    ;;
+esac

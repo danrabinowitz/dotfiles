@@ -17,7 +17,7 @@ fi
 
 [ -r ~/.profile_local ] && source ~/.profile_local
 
-DJR_DOTFILES_DIR=${DJR_DOTFILES_DIR:-$HOME/.dotfiles}
+DJR_DOTFILES_DIR=${DJR_DOTFILES_DIR:-$HOME/.dotfiles.git}
 umask 0077
 ulimit -S -c 0
 

@@ -127,7 +127,7 @@ alias less="$PAGER"
 # ----------------------------------------------------------------------
 # NOTE: I am putting completion BEFORE prompt so that __git_ps1 gets defined before prompt
 
-: ${DJR_DOTFILES_DIR:=${HOME}/.dotfiles}
+: ${DJR_DOTFILES_DIR:=${HOME}/.dotfiles.git}
 [ -r "${DJR_DOTFILES_DIR}/lib/bash/completion" ] && . "${DJR_DOTFILES_DIR}/lib/bash/completion"
 
 # ----------------------------------------------------------------------

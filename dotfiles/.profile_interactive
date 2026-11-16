@@ -14,7 +14,7 @@ if [[ "$OSTYPE" == "darwin"* ]] && ! type "fzf" > /dev/null 2>&1; then
   echo '  Run `brew install fzf`'
 fi
 
-: ${DJR_DOTFILES_DIR:=$HOME/.dotfiles}
+: ${DJR_DOTFILES_DIR:=$HOME/.dotfiles.git}
 [ -r "$DJR_DOTFILES_DIR/lib/bash/aliases" ] && source "$DJR_DOTFILES_DIR/lib/bash/aliases"
 
 export EDITOR="vim"

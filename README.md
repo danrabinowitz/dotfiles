@@ -1,19 +1,58 @@
-# This is the personal "dotfiles" repo of Dan Rabinowitz. YMMV.
+# Personal dotfiles
 
+YMMV.
 
+## Install
 
+The canonical checkout is `$HOME/.dotfiles.git`. The installer links each flat
+file in `dotfiles/` directly into `$HOME`; it does not create a `~/.dotfiles`
+alias or depend on the directory from which it is invoked.
 
-To install these dotfiles on a new machine:
+For a new machine:
+
+```sh
+# Skip this command when already working on the target machine.
 ssh -A user@host
-# git clone git@github.com:danrabinowitz/dotfiles.git
-# mv dotfiles .dotfiles.git
-# cd .dotfiles.git
-# git status
-# ./bin/install
-# exit
+git clone git@github.com:danrabinowitz/dotfiles.git "$HOME/.dotfiles.git"
+cd "$HOME/.dotfiles.git"
+git status
+./bin/install --dry-run
+./bin/install
+```
 
-ssh user@host
-> Check that things look good
+Installer behavior:
+
+- **Normal files:** preserved as `<name>_orig`, or `<name>_orig.N` if the first
+  backup already exists. Existing backups are never overwritten.
+- **Equivalent legacy links:** replaced with direct links to this checkout.
+- **Unrelated or dangling symlinks, and existing directories:** stop the entire
+  installation before anything is changed. Inspect and move these manually,
+  then rerun the installer.
+- **Up-to-date links:** left alone; rerunning installation is idempotent.
+
+`./bin/install check` and `./bin/install --dry-run` make no changes and print
+what installation would do. They return nonzero for conflicts, not merely for
+missing or uninstalled links.
+
+On an existing machine, review repository changes and then migrate the links:
+
+```sh
+cd "$HOME/.dotfiles.git"
+git pull --ff-only
+./bin/install --dry-run
+./bin/install
+./bin/install check
+```
+
+The old `~/.dotfiles` alias is not removed, so machine-local references to it
+keep working. The installer no longer creates new references through it. Files
+that are not in the `dotfiles/` manifest are not touched, including removed
+Emacs and tmux configs.
+
+For a checkout outside `$HOME/.dotfiles.git`, the installer uses absolute link
+targets. Set `DJR_DOTFILES_DIR` to that checkout in `~/.profile_local` so the
+shell finds its shared libraries too; otherwise it defaults to
+`$HOME/.dotfiles.git`.
 
 ## Shell startup
 
