@@ -125,7 +125,7 @@ worktree_for_branch() {
 }
 
 delete_branch() {
-  local branch=$1 mode=$2 wt sha out rc=0
+  local branch=$1 mode=$2 base=${3:-} wt sha out rc=0
   if ! wt=$(worktree_for_branch "$branch"); then
     report_failed "$branch" "git worktree list failed"
     return 0
@@ -167,8 +167,15 @@ delete_branch() {
   fi
 
   if [ "$DRY_RUN" = 1 ]; then
+    if [ "$mode" = force ] && [ -n "$base" ] && ! porcelain; then
+      echo "$branch: all commits already in $base by patch; would force-delete" >&2
+    fi
     report_would_delete "$branch" "$sha" "$mode"
     return 0
+  fi
+
+  if [ "$mode" = force ] && [ -n "$base" ] && ! porcelain; then
+    echo "$branch: all commits already in $base by patch; force-deleting" >&2
   fi
 
   if [ "$mode" = force ]; then
@@ -235,14 +242,7 @@ if [ -z "${GITCLEAN_SKIP_PATCH_CHECK:-}" ]; then
         if printf '%s\n' "$cherry" | grep -q '^+'; then
           continue
         fi
-        if ! porcelain; then
-          if [ "$DRY_RUN" = 1 ]; then
-            echo "$branch: all commits already in $base by patch; would force-delete" >&2
-          else
-            echo "$branch: all commits already in $base by patch; force-deleting" >&2
-          fi
-        fi
-        delete_branch "$branch" force
+        delete_branch "$branch" force "$base"
       done
   fi
 fi
