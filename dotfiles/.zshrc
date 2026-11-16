@@ -46,11 +46,12 @@ setopt inc_append_history
 # share command history data
 setopt share_history
 
-# Orca moves ORCA_HISTFILE to _orca_histfile, then unsets the former before
-# sourcing user configuration. Preload its file to avoid stale initial history.
-if [[ -n "${_orca_histfile:-}" && "$_orca_histfile" != "$HISTFILE" ]]; then
-  HISTFILE="$_orca_histfile"
-  fc -R "$HISTFILE"
+# Orca scopes history to each worktree by default. Keep the normal global
+# history so Orca shares it with Ghostty, and override Orca's saved path so its
+# deferred startup does not switch HISTFILE back to the worktree file.
+if [[ -n "${_orca_histfile:-}" ]]; then
+  HISTFILE="$HOME/.zsh_history"
+  _orca_histfile="$HISTFILE"
 fi
 
 # ===================
