@@ -24,13 +24,6 @@ fi
 [ -r ~/.profile_interactive ] && source ~/.profile_interactive
 
 # =============
-#    CONFIG CHECK
-# =============
-#if [ -z "$check_config_called" ]; then
-#  echo "WARNING: Config check not detected"
-#fi
-
-# =============
 #    HISTORY
 # =============
 
@@ -46,12 +39,12 @@ setopt append_history
 setopt extended_history
 setopt hist_expire_dups_first
 # ignore duplication command history list
-setopt hist_ignore_dups 
+setopt hist_ignore_dups
 setopt hist_ignore_space
 setopt hist_verify
 setopt inc_append_history
 # share command history data
-setopt share_history 
+setopt share_history
 
 # Orca moves ORCA_HISTFILE to _orca_histfile, then unsets the former before
 # sourcing user configuration. Preload its file to avoid stale initial history.
@@ -59,8 +52,6 @@ if [[ -n "${_orca_histfile:-}" && "$_orca_histfile" != "$HISTFILE" ]]; then
   HISTFILE="$_orca_histfile"
   fc -R "$HISTFILE"
 fi
-
-setopt HIST_IGNORE_SPACE
 
 # ===================
 #    AUTOCOMPLETION
@@ -105,26 +96,6 @@ zstyle ':completion:*' rehash true
 
 # Keep directories and files separated
 zstyle ':completion:*' list-dirs-first true
-
-# zsh-histdb
-# zsh_plugins_dir="$HOME/.zsh-plugins"
-# zsh_histdb_dir="$HOME/.zsh-plugins/zsh-histdb"
-# if [ -d "${zsh_plugins_dir}/zsh-histdb" ]; then
-#   if [[ "$OSTYPE" == "darwin"* ]]; then
-#     HISTDB_TABULATE_CMD=(sed -e $'s/\x1f/\t/g')
-#   fi
-
-#   HISTDB_FILE="$HOME/.dev-files/histdb/zsh-history.db"
-#   source ${zsh_plugins_dir}/zsh-histdb/sqlite-history.zsh
-#   autoload -Uz add-zsh-hook
-#   source ${zsh_plugins_dir}/zsh-histdb/histdb-interactive.zsh
-
-
-
-# else
-#   echo "WARNING: zsh-histdb is not installed. To install run:"
-#   echo "mkdir -p ${zsh_plugins_dir} && git clone https://github.com/larkery/zsh-histdb ${zsh_plugins_dir}/zsh-histdb"
-# fi
 
 # ===================
 #    KEY BINDINGS
@@ -189,56 +160,64 @@ typeset -U path PATH cdpath CDPATH fpath FPATH manpath MANPATH
 #    PLUGINS
 # ===================
 
-if [ -f "$HOME/.nix-profile/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
-  source "$HOME/.nix-profile/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-elif [ -f "$HOME/.nix-flake/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" ]; then
-  source "$HOME/.nix-flake/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-elif [ -f /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-  source /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-elif [ -f /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-  source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-elif [ -f /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]; then
-  source /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# Return the first readable file in REPLY. Source it at the top level:
+# sourcing plugins inside this helper could change their variable scope.
+function _zsh_first_file {
+  local candidate
+  for candidate in "$@"; do
+    if [ -f "$candidate" ]; then
+      REPLY="$candidate"
+      return 0
+    fi
+  done
+  return 1
+}
+
+function _zsh_warn_missing {
+  printf '%s\n' "$1"
+  printf '  Install: %s\n' "$3"
+  printf '  Source: %s\n' "$2"
+}
+
+# Keep successful tool checks quiet; offer installation help on failure.
+function _zsh_require_tool {
+  local command="$1"
+  shift
+  if type "$command" >/dev/null 2>&1; then
+    return 0
+  fi
+  _zsh_warn_missing "$@"
+  return 1
+}
+
+if _zsh_first_file \
+  "$HOME/.nix-profile/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" \
+  "$HOME/.nix-flake/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh" \
+  /usr/local/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+  /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh \
+  /opt/homebrew/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+then
+  source "$REPLY"
 else
-  echo "WARNING: zsh-syntax-highlighting is not installed"
-  echo "  source: https://github.com/zsh-users/zsh-syntax-highlighting"
-  case "$OSTYPE" in
-    darwin*)
-      echo '  Run `brew install zsh-syntax-highlighting` to install'
-    ;;
-    linux*)
-      echo "  Run... TODO"
-    ;;
-    *)
-      echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
-    ;;
-  esac
+  _zsh_warn_missing \
+    'WARNING: zsh-syntax-highlighting is not installed' \
+    'https://github.com/zsh-users/zsh-syntax-highlighting' \
+    'brew install zsh-syntax-highlighting'
 fi
 
-if [ -f "$HOME/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-  source "$HOME/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-elif [ -f "$HOME/.nix-flake/share/zsh-autosuggestions/zsh-autosuggestions.zsh" ]; then
-  source "$HOME/.nix-flake/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
-elif [ -f /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-  source /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-elif [ -f /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-  source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
-elif [ -f /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]; then
-  source /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+if _zsh_first_file \
+  "$HOME/.nix-profile/share/zsh-autosuggestions/zsh-autosuggestions.zsh" \
+  "$HOME/.nix-flake/share/zsh-autosuggestions/zsh-autosuggestions.zsh" \
+  /usr/local/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh \
+  /opt/homebrew/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+then
+  source "$REPLY"
 else
-  echo "WARNING: zsh-autosuggestions is not installed"
-  echo "  source: https://github.com/zsh-users/zsh-autosuggestions"
-  case "$OSTYPE" in
-    darwin*)
-      echo '  Run `brew install zsh-autosuggestions` to install'
-    ;;
-    linux*)
-      echo "  Run... TODO"
-    ;;
-    *)
-      echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
-    ;;
-  esac
+  _zsh_warn_missing \
+    'WARNING: zsh-autosuggestions is not installed' \
+    'https://github.com/zsh-users/zsh-autosuggestions' \
+    'brew install zsh-autosuggestions'
 fi
 
 #bindkey '^[c' autosuggest-clear
@@ -248,21 +227,11 @@ fi
 #    THIRD PARTY
 # ===================
 # jump
-if ! type "jump" > /dev/null; then
-  echo "WARNING: jump is not installed"
-  echo "  source: https://github.com/gsamokovarov/jump"
-  case "$OSTYPE" in
-    darwin*)
-      echo '  Run `brew install jump` to install'
-    ;;
-    linux*)
-      echo "  Run... TODO"
-    ;;
-    *)
-      echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
-    ;;
-  esac
-else
+if _zsh_require_tool jump \
+  'WARNING: jump is not installed' \
+  'https://github.com/gsamokovarov/jump' \
+  'brew install jump'
+then
   eval "$(jump shell zsh)"
 fi
 
@@ -270,21 +239,11 @@ fi
 # compdef sshrc=ssh
 
 # direnv
-if ! type "direnv" > /dev/null; then
-  echo "WARNING: direnv is not installed"
-  echo "  source: https://github.com/direnv/direnv"
-  case "$OSTYPE" in
-    darwin*)
-      echo '  Run `brew install direnv` to install'
-    ;;
-    linux*)
-      echo "  Run... TODO"
-    ;;
-    *)
-      echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
-    ;;
-  esac
-else
+if _zsh_require_tool direnv \
+  'WARNING: direnv is not installed' \
+  'https://github.com/direnv/direnv' \
+  'brew install direnv'
+then
   # `direnv hook` and `direnv export` each start a process. Remember the
   # binary path once, and run export only when this tree has an .envrc or
   # direnv has already loaded one (so leaving that directory still unloads).
@@ -333,37 +292,10 @@ fi
 
 # PURE!
 
-if ! type "delta" > /dev/null; then
-  echo "WARNING: git-delta is not installed"
-  echo "  source: https://dandavison.github.io/delta/installation.html or https://github.com/dandavison/delta"
-  case "$OSTYPE" in
-    darwin*)
-      echo '  Run `brew install git-delta` to install'
-    ;;
-    linux*)
-      echo "  Run... TODO"
-    ;;
-    *)
-      echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
-    ;;
-  esac
-fi
-
-#if ! type "diff-so-fancy" > /dev/null; then
-#  echo "WARNING: diff-so-fancy is not installed"
-#  echo "  source: https://github.com/so-fancy/diff-so-fancy"
-#  case "$OSTYPE" in
-#    darwin*)
-#      echo '  Run `brew install diff-so-fancy` to install'
-#    ;;
-#    linux*)
-#      echo "  Run... TODO"
-#    ;;
-#    *)
-#      echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
-#    ;;
-#  esac
-#fi
+_zsh_require_tool delta \
+  'WARNING: git-delta is not installed' \
+  'https://dandavison.github.io/delta/installation.html or https://github.com/dandavison/delta' \
+  'brew install git-delta'
 
 if [ -r "$HOME/.nix-profile/share/zsh/site-functions/prompt_pure_setup" ] || [ -r "$HOME/.nix-flake/share/zsh/site-functions/prompt_pure_setup" ] || [ -r "/usr/local/lib/node_modules/pure-prompt" ] || [ -r "$HOME/.zsh/pure" ]; then
   if [ -r "$HOME/.nix-profile/share/zsh/site-functions/prompt_pure_setup" ]; then
@@ -407,51 +339,29 @@ else
   fi
 fi
 
-# Enabling this adds 10 ms to prompt times per zsh-prompt-benchmark
-# if [[ -r "/usr/local/opt/mcfly/mcfly.zsh" ]]; then
-#   export MCFLY_FUZZY=true
-#   source "/usr/local/opt/mcfly/mcfly.zsh"
-# else
-
-if ! type "fzf" > /dev/null; then
-  echo "WARNING: fzf is not installed"
-  echo "  source: https://github.com/junegunn/fzf"
-  case "$OSTYPE" in
-    darwin*)
-      echo '  Run `git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install` to install.'
-    ;;
-    linux*)
-      echo '  Run `git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install` to install.'
-    ;;
-    *)
-      echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
-    ;;
-  esac
-else
-  if [ ! -r ~/.fzf.zsh ]; then
-    echo "WARNING: ~/.fzf.zsh is not readable"
-    case "$OSTYPE" in
-      darwin*)
-        echo '  Run `git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install` to install.'
-      ;;
-      linux*)
-        echo '  Run `git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install` to install.'
-      ;;
-      *)
-        echo "  WARNING: Unknown OSTYPE=${OSTYPE}"
-      ;;
-    esac
-  else
+if _zsh_require_tool fzf \
+  'WARNING: fzf is not installed' \
+  'https://github.com/junegunn/fzf' \
+  'git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install'
+then
+  if [ -r ~/.fzf.zsh ]; then
     source ~/.fzf.zsh
+  else
+    _zsh_warn_missing \
+      'WARNING: ~/.fzf.zsh is not readable' \
+      'https://github.com/junegunn/fzf' \
+      'git clone --depth 1 https://github.com/junegunn/fzf.git ~/.fzf && ~/.fzf/install'
   fi
 fi
-
-# fi
 
 if ! type "nix-env" > /dev/null; then
   echo "WARNING: nix is not installed"
   echo "  source: https://zero-to-nix.com/start/install"
 fi
+
+# Keep helper functions out of the interactive shell.
+unfunction _zsh_first_file _zsh_warn_missing _zsh_require_tool
+unset REPLY
 
 if [ -f "$HOME/.zshrc_local" ]; then
     . "$HOME/.zshrc_local"
@@ -462,18 +372,6 @@ fi
 #if command -v docc &> /dev/null; then
 #  source <(SYSLOG_OFF=true docc completion zsh)
 #fi
-
-# # Enabling this changes the results of zsh-prompt-benchmark from 40ms to 170ms
-# if command -v change-tab-color-pwd &> /dev/null; then
-#   function tab_color_precmd {
-#     change-tab-color-pwd 0.5 0.5
-#   }
-#   autoload -U add-zsh-hook
-#   add-zsh-hook precmd tab_color_precmd
-# fi
-
-# if [ -e /Users/djr/.nix-profile/etc/profile.d/nix.sh ]; then . /Users/djr/.nix-profile/etc/profile.d/nix.sh; fi # added by Nix installer
-
 
 # NOTE: Using https://github.com/romkatv/zsh-prompt-benchmark I have the prompt benchmarked to 30ms.
 
