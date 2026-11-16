@@ -1,41 +1,17 @@
-# ~/.bashrc
-# For notes about this file, and what goes in ~/.bash_profile versus ~/.profile versus ~/.bashrc see Bash_Dotfiles.txt
+# Bash startup. Keep noninteractive startup free of output.
 
-# IMPORTANT: This file MUST be clean with NO OUTPUT
-# TODO: Add reference as to why this is
-
-#############################################################################
-# This file is designed to work on OS X and Debian
-
-# TODO:
-# Add tests?
-# Speed test this?
-# Find out how many times .profile is run versus .bashrc
-
-# TODO: Consider this idea
-# Create a temp file at the start of .bashrc, and delete it at the end.
-# Check if it exists on starting .bashrc, and if it does then exit, assuming that there's a problem with .bashrc
-
-# Not sure why yet, but this seems needed for app-shell01
-# Source global definitions
+# Some remote hosts provide useful global definitions here.
 if [ -f /etc/bashrc ]; then
-    . /etc/bashrc
+  . /etc/bashrc
 fi
 
-# if [ -f ~/.bashrc_local_non_interactive ]; then
-#     . ~/.bashrc_local_non_interactive
-# fi
-
-if [ -f ~/.profile ]; then
-  source ~/.profile
+# Login Bash already loaded this via .bash_profile. Other Bash shells must still
+# load the shared environment before the interactive-only return below.
+if [ -z "${PROFILE_SOURCED:-}" ] && [ -r "$HOME/.profile" ]; then
+  source "$HOME/.profile"
 fi
 
-# If not running interactively, don't do anything
-# This "interactive" quality is distinct from the login/non-login shell (vis a vis .profile / .bashrc). It simply ensures that nothing is output for non-interactive shells.
-# TODO: We need to be able to log something if DEBUG is set, even if non-interactive
 [ -z "$PS1" ] && return
-
-#echo "Start of .bashrc -- WARNING .bashrc MUST be clean with NO OUTPUT!"
 
 # ----------------------------------------------------------------------
 #  THE BASICS
@@ -95,18 +71,6 @@ shopt -s checkwinsize
 # ENVIRONMENT CONFIGURATION
 # ----------------------------------------------------------------------
 
-# detect interactive shell
-case "$-" in
-    *i*) INTERACTIVE=yes ;;
-    *)   unset INTERACTIVE ;;
-esac
-
-# detect login shell
-case "$0" in
-    -*) LOGIN=yes ;;
-    *)  unset LOGIN ;;
-esac
-
 # enable en_US locale w/ utf-8 encodings if not already configured
 : ${LANG:="en_US.UTF-8"}
 : ${LANGUAGE:="en"}
@@ -123,7 +87,6 @@ export LANG LANGUAGE LC_CTYPE LC_ALL
 # http://stackoverflow.com/questions/9457233/unlimited-bash-history
 export HISTFILESIZE=
 export HISTSIZE=
-export HISTTIMEFORMAT="[%F %T] "
 export HISTTIMEFORMAT="%m/%d/%y %T "
 # Change the file location because certain bash sessions truncate .bash_history file upon close.
 # http://superuser.com/questions/575479/bash-history-truncated-to-500-lines-on-each-login
@@ -139,13 +102,9 @@ fi
 
 
 # ----------------------------------------------------------------------
-# PAGER / EDITOR
+# PAGER
 # ----------------------------------------------------------------------
 
-# export EDITOR='sbl -w'
-export EDITOR=vim
-
-# PAGER
 if test -n "$(command -v less)" ; then
 # Use "-R" per this post: http://playingwithsid.blogspot.com/2008/01/raw-control-characters-in-less-pager.html
     PAGER="less -FirSwXR"
@@ -177,49 +136,12 @@ alias less="$PAGER"
 
 [ -r "${DJR_DOTFILES_DIR}/lib/bash/prompt" ] && . "${DJR_DOTFILES_DIR}/lib/bash/prompt"
 
-# -------------------------------------------------------------------
-# MOTD / FORTUNE
-# -------------------------------------------------------------------
-
-#test -n "$INTERACTIVE" -a -n "$LOGIN" && {
-#    echo "FYI: .bashrc is reporting that this is an INTERACTIVE and LOGIN shell "
-#    uname -npsr
-#    uptime
-#}
-
-
-### End block
-
-# Set aliases and variables for specific programs which are used from an INTERACTIVE bash session
-export LESS_TERMCAP_mb=$'\E[01;31m'
-export LESS_TERMCAP_md=$'\E[01;34m'
-export LESS_TERMCAP_me=$'\E[0m'
-export LESS_TERMCAP_se=$'\E[0m'
-export LESS_TERMCAP_so=$'\E[01;44;33m'
-export LESS_TERMCAP_ue=$'\E[0m'
-export LESS_TERMCAP_us=$'\E[01;32m'
-
-#export RUBYGEMS_GEMDEPS="-"
-
-
-#if [ "$UNAME" = Darwin ]; then
-#  LUNCHY_DIR=$(dirname `gem which lunchy`)/../extras
-#  if [ -f $LUNCHY_DIR/lunchy-completion.bash ]; then
-#    . $LUNCHY_DIR/lunchy-completion.bash
-#  fi
-#fi
-
-# Load aliases. Depends on PAGER being set
-# (also loaded via ~/.profile_interactive below)
-# [ -r "${DJR_DOTFILES_DIR}/lib/bash/aliases" ] && . "${DJR_DOTFILES_DIR}/lib/bash/aliases"
-source ~/.profile_interactive
+# Shared aliases, editor, terminal colors, and local interactive overrides.
+[ -r "$HOME/.profile_interactive" ] && source "$HOME/.profile_interactive"
 
 if [ -f ~/.bashrc_local ]; then
     . ~/.bashrc_local
 fi
-
-### Added by the Heroku Toolbelt
-# export PATH="/usr/local/heroku/bin:$PATH"
 
 [ -f ~/.fzf.bash ] && source ~/.fzf.bash
 

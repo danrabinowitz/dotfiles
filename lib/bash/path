@@ -1,132 +1,67 @@
-# declare -r SCRIPT_NAME=$(readlink -f ${BASH_SOURCE[0]})
+# Shared PATH setup for Bash and Zsh (under `emulate sh`).
 
 if [ -n "$LOG_DOTFILE_TIMES" ]; then
   log "Start of DJR_DOTFILES_DIR:bash/path"
 fi
 
-# These functions are from: http://www.linuxfromscratch.org/blfs/view/cvs/postlfs/profile.html
-
-# Functions to help us manage paths.
-function pathremove () {
-    local IFS=':'
-    local NEWPATH
-    local DIR
-    for DIR in "$PATH" ; do
-        if [ "$DIR" != "$1" ] ; then
-            NEWPATH="${NEWPATH:+$NEWPATH:}$DIR"
-        fi
-    done
-    export PATH="$NEWPATH"
+# Build the path before deduplicating it. The first occurrence wins below.
+function _path_prepend {
+  export PATH="$1${PATH:+:${PATH}}"
 }
 
-function pathprepend () {
-    pathremove $1 $2
-    export PATH="$1${PATH:+:${PATH}}"
+function _path_append {
+  export PATH="${PATH:+${PATH}:}$1"
 }
 
-function pathappend () {
-    pathremove $1 $2
-    export PATH="${PATH:+${PATH}:}$1"
-}
+_path_append /bin:/usr/bin
+_path_prepend /usr/local/bin
+_path_append /usr/local/sbin:/usr/sbin:/sbin
 
-# Duplicate PATH entries are removed below, in-process. The old
-# implementation forked tr/nl/sort/cut/sed.
+for _path_dir in /usr/local/share/npm/bin /opt/X11/bin /usr/local/go/bin; do
+  [ -d "$_path_dir" ] && _path_append "$_path_dir"
+done
 
-# Set the initial path
-# export PATH=/bin:/usr/bin
-if [ -z "$PATH" ] ; then
-    export PATH=""
-fi
+[ -d /opt/homebrew/bin ] && _path_prepend /opt/homebrew/bin
 
-pathappend /bin:/usr/bin
+# Prepends in this order; later entries take precedence.
+for _path_dir in "$HOME/bin" "$HOME/code/bin" "$HOME/rootdir/usr/local/bin" "$HOME/.nix-profile/bin"; do
+  [ -d "$_path_dir" ] && _path_prepend "$_path_dir"
+done
 
-pathprepend /usr/local/bin
-pathappend /usr/local/sbin:/usr/sbin:/sbin
+unset -f _path_prepend _path_append
+unset _path_dir
 
-# Added on Oct 16, 2013 for node npm
-if [ -d "/usr/local/share/npm/bin" ] ; then
-    pathappend /usr/local/share/npm/bin
-fi
-
-# With XQuartz (needed for Selenium testing)
-if [ -d "/opt/X11/bin" ] ; then
-    pathappend /opt/X11/bin
-fi
-
-if [ -d "/usr/local/go/bin" ] ; then
-    pathappend /usr/local/go/bin
-fi
-
-if [ -d "/opt/homebrew/bin" ] ; then
-    pathprepend "/opt/homebrew/bin"
-fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/bin" ] ; then
-    pathprepend "$HOME/bin"
-fi
-if [ -d "$HOME/code/bin" ] ; then
-    pathprepend "$HOME/code/bin"
-fi
-
-# set PATH so it includes user's private bin if it exists
-if [ -d "$HOME/rootdir/usr/local/bin" ] ; then
-    pathprepend "$HOME/rootdir/usr/local/bin"
-fi
-
-# I was using this. I think I may not need it, so I'm commenting it out on 12/15/12.
-# PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-
-# Not using ~/.nix-flake/bin because I'm using nix profiles instead.
-# if [ -d "$HOME/.nix-flake/bin" ]; then
-#     pathprepend "$HOME/.nix-flake/bin"
-# fi
-
-if [ -d "$HOME/.nix-profile/bin" ]; then
-    pathprepend "$HOME/.nix-profile/bin"
-fi
-
-
-# Now to clean up
-unset pathremove pathprepend pathappend
-
-# First entry wins. Empty fields are dropped, matching the old puniq
-# pipeline (nl skips blank lines). zsh uses its tied path array;
-# ZSH_VERSION stays set when this file is sourced with `emulate sh`.
+# Deduplicate in-process instead of spawning tr/nl/sort/cut/sed.
+# First entry wins; empty fields are dropped.
 if [ -n "$ZSH_VERSION" ]; then
-    typeset -U path
-    PATH=${PATH#:}
-    PATH=${PATH%:}
+  typeset -U path
+  PATH=${PATH#:}
+  PATH=${PATH%:}
 else
-    _deduped=
-    _rest=$PATH
-    while [ -n "$_rest" ]; do
-        case "$_rest" in
-            *:*) _dir=${_rest%%:*} ; _rest=${_rest#*:} ;;
-            *) _dir=$_rest ; _rest= ;;
-        esac
-        # nl(1) in the old pipeline dropped empty fields, so "a::b" became "a:b".
-        [ -n "$_dir" ] || continue
-        case ":${_deduped}:" in
-            *":${_dir}:"*) ;;
-            *) _deduped=${_deduped:+${_deduped}:}${_dir} ;;
-        esac
-    done
-    PATH=$_deduped
-    PATH=${PATH#:}
-    PATH=${PATH%:}
-    unset _deduped _rest _dir
+  _deduped=
+  _rest=$PATH
+  while [ -n "$_rest" ]; do
+    case "$_rest" in
+      *:*) _dir=${_rest%%:*} ; _rest=${_rest#*:} ;;
+      *) _dir=$_rest ; _rest= ;;
+    esac
+    [ -n "$_dir" ] || continue
+    case ":${_deduped}:" in
+      *":${_dir}:"*) ;;
+      *) _deduped=${_deduped:+${_deduped}:}${_dir} ;;
+    esac
+  done
+  PATH=$_deduped
+  PATH=${PATH#:}
+  PATH=${PATH%:}
+  unset _deduped _rest _dir
 fi
 
-# Set CDPATH for bash completion
-# CDPATH=".:~/Code:~/code:~/code/LS"
-
-[ -r /usr/local/share/chruby/chruby.sh ] && source /usr/local/share/chruby/chruby.sh && \
-  [ -r /usr/local/share/chruby/auto.sh ] && source /usr/local/share/chruby/auto.sh
-[ -r /opt/homebrew/share/chruby/chruby.sh ] && source /opt/homebrew/share/chruby/chruby.sh && \
-  [ -r /opt/homebrew/share/chruby/auto.sh ] && source /opt/homebrew/share/chruby/auto.sh
-
-# The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
-# Local Variables:
-# mode: sh
-# End:
+# Load chruby at top level to preserve its environment and hook registration.
+for _chruby_root in /usr/local/share/chruby /opt/homebrew/share/chruby; do
+  if [ -r "$_chruby_root/chruby.sh" ]; then
+    source "$_chruby_root/chruby.sh"
+    [ -r "$_chruby_root/auto.sh" ] && source "$_chruby_root/auto.sh"
+  fi
+done
+unset _chruby_root

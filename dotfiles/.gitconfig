@@ -146,16 +146,6 @@
 
 
 
-# More I do not generally use
-  ap=add -p
-  dc = diff --cached
-  ds = diff --stat
-  log2=log --pretty
-  log3=log --pretty=oneline --abbrev-commit --graph --decorate
-  log4=log --pretty --graph --decorate
-  log5=log --pretty=oneline -n 20 --graph --abbrev-commit
-
-  prune = fetch --prune
 
 
 #[push]

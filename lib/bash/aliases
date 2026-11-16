@@ -1,18 +1,9 @@
-# Must be loaded after $PAGER is set
+# Shared Bash and Zsh aliases and functions. Loaded after PAGER when applicable.
 
-#alias cat=bat
-
-# Prompt before removing a file
 alias rm="rm -i"
 
-
-
-# ----------------------------------------------------------------------
-# LS AND DIRCOLORS
-# ----------------------------------------------------------------------
-# Prefer GNU ls when available (Homebrew coreutils ships `gls`; nix/Linux use `ls`).
-# `gls` is GNU. Linux `ls` is GNU. macOS `ls` is BSD. Do not run
-# `ls --version | grep` here; that forks on every shell start.
+# Prefer GNU ls: Homebrew provides gls; Linux normally provides GNU ls.
+# Avoid subprocesses such as `ls --version | grep` at shell startup.
 ls_cmd=ls
 gnu_ls=
 case "$OSTYPE" in
@@ -23,42 +14,22 @@ if command -v gls >/dev/null 2>&1; then
   gnu_ls=1
 fi
 
-# we always pass these to ls(1)
 ls_common="-hbF"
-
 if [ -n "$gnu_ls" ]; then
-  # https://geoff.greer.fm/lscolors/
-  # LS_COLORS is used by GNU/Linux ls
   export LS_COLORS="di=32:ln=1;31:so=37:pi=1;33:ex=35:bd=37:cd=37:su=37:sg=37:tw=32:ow=32"
   ls_color=' --color=auto'
 else
-  # BSD ls (macOS default) — supported fallback
-  # https://geoff.greer.fm/lscolors/
-  # LSCOLORS is used by BSD "ls" which is the default on MacOS
-  # export LSCOLORS=Exfxcxdxbxegedabagacad
+  # BSD ls on macOS.
   export LSCOLORS=cxBxhxDxfxhxhxhxhxcxcx
   ls_color='-G'
 fi
 
 alias ls="${ls_cmd} ${ls_common} ${ls_color}"
-unset ls_cmd
-unset ls_common
-unset ls_color
-unset gnu_ls
-
-
-# these use the ls alias above
 alias ll="ls -l"
 alias l.="ls -d .*"
-# ----------------------------------------------------------------------
-# ----------------------------------------------------------------------
+unset ls_cmd ls_common ls_color gnu_ls
 
-
-# alias sq='git rebase -i $(git merge-base $(git rev-parse --abbrev-ref HEAD) master)'
-
-
-
-# git aliases
+# Git shortcuts. Command aliases live in .gitconfig.
 alias gca='GIT_COMMITTER_DATE="`date`" git commit --amend --date="$(date)" -C HEAD'
 alias gl='git l'
 alias gs='git s'
@@ -66,99 +37,17 @@ alias ga='git a'
 alias gcm='git checkout master'
 
 alias man='man -P less'
-
-# Ruby and Rails
-#real_rails=`which rails`
-#rails() {
-#    args="$@"
-#    if [ "$1" == "db" ]; then
-#        args="$args --include-password"
-#        echo "Running rails db with --include-password appended"
-#    fi
-#    "$real_rails" $args
-#}
-#alias r=rails
-
-# rails() {
-#   args="$@"
-#   real_rails=`which rails`
-#   cmd=$real_rails
-#   if [ -e "bin/rails" ]; then
-#     cmd="bin/rails"
-#   fi
-#   "$cmd" $args
-# }
-# alias rc='rails c'
-
-# rake() {
-#   args="$@"
-#   real_rake=`which rake`
-#   cmd=$real_rake
-#   if [ -e "bin/rake" ]; then
-#     cmd="bin/rake"
-#   fi
-#   "$cmd" $args
-# }
-
-# rspec() {
-#   args="$@"
-#   real_rspec=`which rspec`
-#   cmd=$real_rspec
-#   if [ -e "bin/rspec" ]; then
-#     cmd="bin/rspec"
-#   fi
-#   "$cmd" $args
-# }
-
 alias be="bundle exec"
 alias bi="bundle install"
-#alias bil=bi
 
-# disk usage with human sizes and minimal depth
-alias du1='du -h --max-depth=1'
+# One directory level, using both GNU and BSD du.
+alias du1='du -h -d 1'
 
-# Usage: pls [<var>]
-# List path entries of PATH or environment variable <var>.
-pls () { eval echo \$${1:-PATH} |tr : '\n'; }
+# Usage: pls [<var>] — list PATH or another colon-separated variable.
+pls () { eval echo \$${1:-PATH} | tr : '\n'; }
 
-# This is crap. Delete it.
-set_iterm_bgcolor () {
-   local R=$1
-   local G=$2
-   local B=$3
-   /usr/bin/osascript <<EOF
-tell application "iTerm"
-    tell the first terminal
-        tell the current session
-            set background color to {$(($R*65535/255)), $(($G*65535/255)), $(($B*65535/255))}
-        end tell
-    end tell
-end tell
-EOF
-}
-
-function notify_branches_which_are_behind {
-    mdfind -onlyin ~ '(kMDItemFSName = ".git" )'|grep -v -e '/Users/danrabinowitz/.rvm' -e '/Users/danrabinowitz/.Trash' -e '/Users/danrabinowitz/.sbt/staging/' | while read gitdir; do repodir=$(echo $gitdir | sed 's/\/.git$//') && (cd "$repodir" >& /dev/null && git fetch >& /dev/null && (git status 2>/dev/null | grep -c '^# Your branch is behind' >& /dev/null)) && (echo "NOTICE: $repodir is behind" | growlnotify -s) ; done
-}
-
+# Use `git cleanbranches` for safe merged/worktree-aware branch cleanup.
 # From: https://seb.jambor.dev/posts/improving-shell-workflows-with-fzf/
-function delete-branches-simple() {
-  local branches_to_delete
-  branches_to_delete=$(git branch | fzf --multi)
-
-  if [ -n "$branches_to_delete" ]; then 
-    git branch --delete --force "$branches_to_delete"
-  fi
-}
-
-function delete-branches() {
-  git branch |
-    grep --invert-match '\*' |
-    cut -c 3- |
-    fzf --multi --preview="git log {} --" |
-    xargs --no-run-if-empty git branch --delete --force
-}
-
 function pr-checkout() {
   local jq_template pr_number
 
@@ -189,72 +78,33 @@ function pr-checkout() {
 }
 
 randpw(){ LC_ALL=C tr -dc '[:graph:]' </dev/urandom | head -c 16; echo; }
-randpw2(){ < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-16};echo;}
+randpw2(){ < /dev/urandom tr -dc _A-Z-a-z-0-9 | head -c${1:-16};echo; }
 
 alias fixopenwith='/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister -kill -r -domain local -domain system -domain user'
-
-alias nomorebundleexec='gem install rubygems-bundler && gem regenerate_binstubs'
-
-# From: https://coderwall.com/p/o5ewia
-alias reinstallnokogiri='gem install nokogiri -- --with-xml2-dir=/usr --with-xslt-dir=/opt/local --with-iconv-dir=/opt/local'
-
-# From: https://twitter.com/kntreadway/status/390531943260909568
-function conflicts { subl -n `git diff --name-only --diff-filter=U | tr "\\n" " "`; }
-
-case "$OSTYPE" in
-  darwin*)
-#  alias dns="sudo /usr/bin/killall -HUP mDNSResponder"
-    alias dns="sudo discoveryutil mdnsflushcache;sudo discoveryutil udnsflushcaches"
-    ;;
-esac
-
-# Awesome tip for Mac OS X, thanks to Eric Harrison.
-# Fix for camera not found
-alias fix_cam='sudo killall VDCAssistant'
-
-#alias ssh="sshrc"
-
 alias typeless='history 1 | tail -n 20000 | sed "s/.*  //" | sort | uniq -c | sort -g | tail -n 100'
 
-
-
-# From Sam Phippen: https://github.com/samphippen/dotfiles/blob/7ef2087e76d951b86623b5f7c13f00d77ab05931/bash/bash_profile.symlink#L179-L202
+# Project navigation using fzf (already required by the shell setup).
 projswitch() {
-    BASE=$2
-    if [ -z "$3" ]
-    then
-        clear
-        builtin cd $BASE && builtin cd $(find . -type d -maxdepth $1 | grep -v "\.git" | selecta)
-        cd .
-        clear
-        clear
-        ls
-    else
-        builtin cd $BASE/$3
-    fi
+  local depth="$1" base="$2" target="$3"
+  if [ -n "$target" ]; then
+    builtin cd "$base/$target"
+    return
+  fi
+
+  builtin cd "$base" || return
+  target=$(find . -type d -maxdepth "$depth" | grep -v '\.git' | fzf) || return
+  [ -z "$target" ] || builtin cd "$target"
 }
 
 dop() {
-    projswitch 2 "${HOME}/code/src/DigitalOcean/" $1
+  projswitch 2 "$HOME/code/src/DigitalOcean" "$1"
 }
 
 ctp() {
-    projswitch 10 "${HOME}/code/src/DigitalOcean/cthulhu" $1
+  projswitch 10 "$HOME/code/src/DigitalOcean/cthulhu" "$1"
 }
 
-# From https://twitter.com/elithrar/status/971314557372239872
-# Used for certain "public" WiFi networks, such as on airplanes
-function get_new_mac_address {
-  sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && sudo ifconfig en0 ether a0$(openssl rand -hex 5 | sed 's/\(..\)/:\1/g') && networksetup -detectnewhardware
-}
-
-function get_new_mac_address_display_eth {
-  sudo /System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -z && sudo ifconfig en7 ether a0$(openssl rand -hex 5 | sed 's/\(..\)/:\1/g') && networksetup -detectnewhardware
-}
-
-# ===================
-#    TMUX EXIT: DETACH ON EXIT
-# ===================
+# In a one-window, one-pane tmux session, detach rather than exit the session.
 exit() {
   if [[ -z $TMUX ]]; then
     builtin exit
@@ -270,41 +120,29 @@ exit() {
     builtin exit
   fi
 }
-# ===================
-# ===================
 
 alias netcheck1="date; sudo mtr -rw 8.8.8.8"
 
-VSCODIUM_EXE='code'
-function vscodium_wrapper {
-  local args="${@}"
-#  echo "WARNING: Running vscode instead of ${EDITOR}"
-  if [ ! -z "$args" -a "${args}" != "." ]; then
-    eval $VSCODIUM_EXE "$args"
+function edit_code {
+  if [ "$#" -eq 0 ]; then
+    command code .
   else
-    eval $VSCODIUM_EXE .
+    command code "$@"
   fi
 }
 
-alias vsc=vscodium_wrapper
-alias edit=vscodium_wrapper
-alias e=vscodium_wrapper
-
+alias vsc=edit_code
+alias edit=edit_code
+alias e=edit_code
 
 alias beep="echo -ne '\007'"
 
 function cover {
-    local t=$(mktemp -t cover)
-    go test $COVERFLAGS -coverprofile=$t $@ \
-        && go tool cover -func=$t \
-        && unlink $t
+  local t=$(mktemp -t cover)
+  go test $COVERFLAGS -coverprofile=$t "$@" \
+    && go tool cover -func=$t \
+    && unlink $t
 }
 
 alias edit_nix="vim ~djr/code/src/danrabinowitz/nix/profiles/default/flake.nix && nix-profile-upgrade"
-
 alias prlog="git log --decorate-refs-exclude=refs/tags --pretty='%s' HEAD...master | tail -r"
-
-# The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
-# Local Variables:
-# mode: sh
-# End:

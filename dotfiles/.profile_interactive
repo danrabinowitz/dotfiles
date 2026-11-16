@@ -1,35 +1,22 @@
+# Shared interactive setup for Bash and Zsh.
+
 if [ -n "$LOG_DOTFILE_TIMES" ]; then
   log "Start of ~/.profile_interactive"
 fi
 
-##########
-# Requirements
-##########
-# We need a way to alert
 function alert {
   local msg="$1"
   osascript -e 'display notification "'"$msg"'"'
 }
-# alert "hi 123 456"
 
-# Require fzf
-if [[ "$OSTYPE" == "darwin"* ]]; then
-  if ! type "fzf" > /dev/null; then
-    echo "WARNING: fzf is not installed"
-    echo '  Run `brew install fzf`'
-  fi
+if [[ "$OSTYPE" == "darwin"* ]] && ! type "fzf" > /dev/null 2>&1; then
+  echo "WARNING: fzf is not installed"
+  echo '  Run `brew install fzf`'
 fi
 
+: ${DJR_DOTFILES_DIR:=$HOME/.dotfiles}
+[ -r "$DJR_DOTFILES_DIR/lib/bash/aliases" ] && source "$DJR_DOTFILES_DIR/lib/bash/aliases"
 
-##########
-# Aliases
-##########
-
-source ~/.dotfiles/lib/bash/aliases
-
-# =============
-#    EXPORT
-# =============
 export EDITOR="vim"
 
 # support colors in less
@@ -42,5 +29,5 @@ export LESS_TERMCAP_ue=$'\E[0m'
 export LESS_TERMCAP_us=$'\E[01;32m'
 
 if [ -f ~/.profile_interactive_local ]; then
-    . ~/.profile_interactive_local
+  . ~/.profile_interactive_local
 fi

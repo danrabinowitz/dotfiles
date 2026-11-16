@@ -1,30 +1,12 @@
-# ~/.bash_profile
-# This file is designed to work on OS X and Debian
+# Bash login shell. .bashrc uses PROFILE_SOURCED to avoid loading the shared
+# environment a second time, but still handles noninteractive shells directly.
 
-###############################################################################
-#echo "Start of .bash_profile"
+[ -f "$HOME/.profile" ] && . "$HOME/.profile"
+[ -f "$HOME/.bashrc" ] && . "$HOME/.bashrc"
+[ -f "$HOME/.bash_profile_local" ] && . "$HOME/.bash_profile_local"
 
-if [ -f "$HOME/.profile" ]; then
-    . "$HOME/.profile"
-fi
-
-if [ -f "$HOME/.bashrc" ]; then
-    . "$HOME/.bashrc"
-fi
-
-#[[ -s "$HOME/.rvm/scripts/rvm" ]] && source "$HOME/.rvm/scripts/rvm" # Load RVM into a shell session *as a function*
-
-if [ -f "$HOME/.bash_profile_local" ]; then
-    . "$HOME/.bash_profile_local"
-fi
-
-# The following 3 lines, which must be near the END of the file, tell Emacs to use sh mode for this file
-# Local Variables:
-# mode: sh
-# End:
-
-# The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/danrabinowitz/google-cloud-sdk/path.bash.inc' ]; then source '/Users/danrabinowitz/google-cloud-sdk/path.bash.inc'; fi
-
-# The next line enables shell command completion for gcloud.
-if [ -f '/Users/danrabinowitz/google-cloud-sdk/completion.bash.inc' ]; then source '/Users/danrabinowitz/google-cloud-sdk/completion.bash.inc'; fi
+for _gcloud_config in path.bash.inc completion.bash.inc; do
+  [ -f "$HOME/google-cloud-sdk/$_gcloud_config" ] && \
+    . "$HOME/google-cloud-sdk/$_gcloud_config"
+done
+unset _gcloud_config
