@@ -364,10 +364,6 @@ fi
 unfunction _zsh_first_file _zsh_warn_missing _zsh_require_tool
 unset REPLY
 
-if [ -f "$HOME/.zshrc_local" ]; then
-    . "$HOME/.zshrc_local"
-fi
-
 ###
 # docc completion seems to require vpn and hangs with no vpn. Test this.
 #if command -v docc &> /dev/null; then
@@ -382,3 +378,10 @@ fi
 # # Enabling the next line allows us to run zsh-prompt-benchmark
 # source ~/code/src/github.com/romkatv/zsh-prompt-benchmark/zsh-prompt-benchmark.plugin.zsh
 export PATH="$HOME/.local/bin:$PATH"
+
+if [ -f "$HOME/.zshrc_local" ]; then
+    . "$HOME/.zshrc_local"
+fi
+
+# opencode
+export PATH=/Users/djr/.opencode/bin:$PATH
