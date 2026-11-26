@@ -175,7 +175,11 @@ if [ "$UNAME" = Darwin ]; then
   elif [ -r /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh ]; then
     . /usr/local/opt/git/etc/bash_completion.d/git-prompt.sh
   elif command -v brew >/dev/null 2>&1; then
-    . "$(brew --prefix git)/etc/bash_completion.d/git-prompt.sh"
+    # `brew --prefix git` returns a path even when git is not installed from
+    # Homebrew, so test the file before sourcing it.
+    _git_prompt="$(brew --prefix git)/etc/bash_completion.d/git-prompt.sh"
+    [ -r "$_git_prompt" ] && . "$_git_prompt"
+    unset _git_prompt
   fi
 fi
 
